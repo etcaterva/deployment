@@ -1,0 +1,74 @@
+---
+- hosts: VPS
+  remote_user: ubuntu
+  sudo: yes
+  vars:
+    echaloasuerte_root: "/data/apache/serve/echaloasuerte"
+    echaloasuerte_venv: "{{ echaloasuerte_root }}/venv"
+    echaloasuerte_app: "{{ echaloasuerte_root }}/web-app"
+  tasks:
+#  - set_fact: echaloasuerte_venv="{{ echaloasuerte_root }}/venv"
+  - name: ensure git is installed
+    apt: pkg=git state=present
+  - name: ensure PIP is installed
+    apt: pkg=python-pip state=present
+  - pip: name=virtualenv
+  - name: ensure gettext is installed
+    apt: pkg=gettext state=present
+  - pip: name=django virtualenv={{ echaloasuerte_venv }}
+  - pip: name=django-bootstrap-form virtualenv={{ echaloasuerte_venv }}
+  - pip: name=django-crispy-forms virtualenv={{ echaloasuerte_venv }}
+  - pip: name=pymongo virtualenv={{ echaloasuerte_venv }}
+
+
+  - shell: |
+            cd {{ echaloasuerte_app }}
+            {{ echaloasuerte_venv }}/bin/python manage.py compilemessages
+  
+  - name: enusre echaloasuerte project tree exists with the right permissions
+    file: path={{ item }} state=directory mode=0777 owner=www-data
+    with_items:
+    - "{{ echaloasuerte_root }}/logs"
+    - "{{ echaloasuerte_root }}/static"
+    - "{{ echaloasuerte_app }}"
+
+  - git: repo=git://github.com/Mariocj89/EchaloASuerte.git dest={{ echaloasuerte_app }} update=no
+
+  - name: enusre echaloasuerte project tree exists with the right permissions
+    file: path={{ item }} state=directory mode=0777 owner=www-data recurse=yes
+    with_items:
+    - "{{ echaloasuerte_root }}/logs"
+    - "{{ echaloasuerte_root }}/static"
+    - "{{ echaloasuerte_app }}"
+
+  - django_manage: >
+      command=syncdb
+      app_path={{ echaloasuerte_app }}
+      virtualenv={{ echaloasuerte_venv }}
+
+  - django_manage: >
+      command=collectstatic	
+      app_path={{ echaloasuerte_app }}
+      virtualenv={{ echaloasuerte_venv }}
+
+#  - shell: python /data/apache/serve/echaloasuerte/web-app/manage.py collectstatic --noinput -c
+#  - shell: python /data/apache/serve/echaloasuerte/web-app/manage.py syncdb --noinput
+#  - shell: '{{ echaloasuerte_venv }}/bin/python' '{{ echaloasuerte_root }}/web-app/manage.py' compilemessages
+
+  - name: ensure apache is installed
+    apt: pkg=apache2 state=present
+  - name: ensure libapache2-mod-wsgi is installed
+    apt: pkg=libapache2-mod-wsgi state=present
+  - apache2_module: state=present name=wsgi
+
+  - name: write the apache config file
+    template: src=backup/configs/apache/sites/echaloasuerte.conf dest=/etc/apache2/sites-available/echaloasuerte.conf
+  - name: enable apache site ecaheloasuerte
+    file: src=../sites-available/echaloasuerte.conf dest=/etc/apache2/sites-enabled/echaloasuerte.conf state=link
+    notify:
+    - restart apache
+  - name: ensure apache is running
+    service: name=apache2 state=started
+  handlers:
+    - name: restart apache
+      service: name=apache2 state=restarted
