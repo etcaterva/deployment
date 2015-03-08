@@ -22,4 +22,10 @@
   - name: Install the latest pymongo package
     pip: name=pymongo state=latest use_mirrors=no
 
-  - copy: src=mongodb/mongodb.conf dest=/etc/mongodb.conf
+  - template: src=mongodb/mongod.conf dest=/etc/mongod.conf
+    notify:
+    - restart mongod
+
+  handlers:
+    - name: restart mongod
+      service: name=mongod state=restarted
