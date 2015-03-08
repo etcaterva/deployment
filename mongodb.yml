@@ -20,4 +20,6 @@
     - python-pip
 
   - name: Install the latest pymongo package
-    pip: name=pymongo state=latest use_mirrors=no 
+    pip: name=pymongo state=latest use_mirrors=no
+
+  - copy: src=mongodb/mongodb.conf dest=/etc/mongodb.conf
