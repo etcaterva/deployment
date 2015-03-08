@@ -22,6 +22,11 @@
 
   - git: repo=git://github.com/Mariocj89/EchaloASuerte.git dest={{ echaloasuerte_app }} update=no accept_hostkey=True
 
+  - name: Add virtualenv info in echaloasuerte.wsgi
+    template: src=echaloasuerte/echaloasuerte.wsgi dest={{ echaloasuerte_app }}/echaloasuerte.wsgi
+    notify:
+    - restart apache
+
   - shell: |
            {{ echaloasuerte_venv }}/bin/python {{ echaloasuerte_app }}/manage.py compilemessages
   
@@ -62,7 +67,7 @@
   - apache2_module: state=present name=wsgi
 
   - name: write the apache config file
-    template: src=echaloasuerte.conf dest=/etc/apache2/sites-available/echaloasuerte.conf
+    template: src=echaloasuerte/echaloasuerte.conf dest=/etc/apache2/sites-available/echaloasuerte.conf
   - name: enable apache site ecaheloasuerte
     file: src=../sites-available/echaloasuerte.conf dest=/etc/apache2/sites-enabled/echaloasuerte.conf state=link
     notify:
