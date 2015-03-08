@@ -1,13 +1,11 @@
 ---
 - hosts: VPS
-  remote_user: ubuntu
-  sudo: yes
+  remote_user: root
   vars:
     echaloasuerte_root: "/data/apache/serve/echaloasuerte"
     echaloasuerte_app: "{{ echaloasuerte_root }}/web-app"
-    echaloasuerte_venv: "{{ echaloasuerte_app }}/venv"
+    echaloasuerte_venv: "{{ echaloasuerte_root }}/venv"
   tasks:
-#  - set_fact: echaloasuerte_venv="{{ echaloasuerte_root }}/venv"
   - name: ensure git is installed
     apt: pkg=git state=present
   - name: ensure PIP is installed
@@ -18,14 +16,14 @@
   - pip: name=django virtualenv={{ echaloasuerte_venv }}
   - pip: name=django-bootstrap-form virtualenv={{ echaloasuerte_venv }}
   - pip: name=django-crispy-forms virtualenv={{ echaloasuerte_venv }}
-  - pip: name=pymongo virtualenv={{ echaloasuerte_venv }}
-  - pip: name=pytz virtualenv={{ echaloasuerte_venv }}
+#  - pip: name=pymongo virtualenv={{ echaloasuerte_venv }}
+#  - pip: name=pytz virtualenv={{ echaloasuerte_venv }}
   - pip: name=pytz
 
+  - git: repo=git://github.com/Mariocj89/EchaloASuerte.git dest={{ echaloasuerte_app }} update=no accept_hostkey=True
 
   - shell: |
-            cd {{ echaloasuerte_app }}
-            {{ echaloasuerte_venv }}/bin/python manage.py compilemessages
+           {{ echaloasuerte_venv }}/bin/python {{ echaloasuerte_app }}/manage.py compilemessages
   
   - name: enusre echaloasuerte project tree exists with the right permissions
     file: path={{ item }} state=directory mode=0777 owner=www-data
@@ -34,7 +32,6 @@
     - "{{ echaloasuerte_root }}/static"
     - "{{ echaloasuerte_app }}"
 
-#  - git: repo=git://github.com/Mariocj89/EchaloASuerte.git dest={{ echaloasuerte_app }} update=no
 
   - name: enusre echaloasuerte project tree exists with the right permissions
     file: path={{ item }} state=directory mode=0777 owner=www-data recurse=yes
