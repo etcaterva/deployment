@@ -4,6 +4,8 @@
   vars:
     datadir: "/data"
     mongodb_datadir_prefix: "{{ datadir }}/mongodb"
+    mongodb_admin_user: siteadmin
+    mongodb_admin_password: PASSSWORRRDD
   tasks:
 
 #  This user/group is created by default
@@ -36,6 +38,7 @@
     notify:
     - restart mongod
 
+  - mongodb_user: database=admin name={{ mongodb_admin_user }} password={{ mongodb_admin_password }} roles='userAdminAnyDatabase' state=present
   handlers:
     - name: restart mongod
       service: name=mongod state=restarted
