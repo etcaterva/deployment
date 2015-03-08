@@ -4,8 +4,8 @@
   sudo: yes
   vars:
     echaloasuerte_root: "/data/apache/serve/echaloasuerte"
-    echaloasuerte_venv: "{{ echaloasuerte_root }}/venv"
     echaloasuerte_app: "{{ echaloasuerte_root }}/web-app"
+    echaloasuerte_venv: "{{ echaloasuerte_app }}/venv"
   tasks:
 #  - set_fact: echaloasuerte_venv="{{ echaloasuerte_root }}/venv"
   - name: ensure git is installed
@@ -19,6 +19,8 @@
   - pip: name=django-bootstrap-form virtualenv={{ echaloasuerte_venv }}
   - pip: name=django-crispy-forms virtualenv={{ echaloasuerte_venv }}
   - pip: name=pymongo virtualenv={{ echaloasuerte_venv }}
+  - pip: name=pytz virtualenv={{ echaloasuerte_venv }}
+  - pip: name=pytz
 
 
   - shell: |
@@ -32,7 +34,7 @@
     - "{{ echaloasuerte_root }}/static"
     - "{{ echaloasuerte_app }}"
 
-  - git: repo=git://github.com/Mariocj89/EchaloASuerte.git dest={{ echaloasuerte_app }} update=no
+#  - git: repo=git://github.com/Mariocj89/EchaloASuerte.git dest={{ echaloasuerte_app }} update=no
 
   - name: enusre echaloasuerte project tree exists with the right permissions
     file: path={{ item }} state=directory mode=0777 owner=www-data recurse=yes
@@ -40,6 +42,7 @@
     - "{{ echaloasuerte_root }}/logs"
     - "{{ echaloasuerte_root }}/static"
     - "{{ echaloasuerte_app }}"
+    - "{{ echaloasuerte_venv }}"
 
   - django_manage: >
       command=syncdb
@@ -62,7 +65,7 @@
   - apache2_module: state=present name=wsgi
 
   - name: write the apache config file
-    template: src=backup/configs/apache/sites/echaloasuerte.conf dest=/etc/apache2/sites-available/echaloasuerte.conf
+    template: src=echaloasuerte.conf dest=/etc/apache2/sites-available/echaloasuerte.conf
   - name: enable apache site ecaheloasuerte
     file: src=../sites-available/echaloasuerte.conf dest=/etc/apache2/sites-enabled/echaloasuerte.conf state=link
     notify:
