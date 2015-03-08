@@ -2,15 +2,16 @@
 - hosts: VPS
   remote_user: root
   vars:
-    mongodb_datadir_prefix: "/data/mongodb"
+    datadir: "/data"
+    mongodb_datadir_prefix: "{{ datadir }}/mongodb"
   tasks:
 
-  - name: Create the mongod user
-    user: name=mongod comment="MongoD"
+#  This user/group is created by default
+#  - name: Create the mongodb user
+#    user: name=mongodb comment="MongoD"
 
-  - name: Create the data directory for the namenode metadata
-    file: path={{ mongodb_datadir_prefix }} owner=mongod group=mongod state=directory
 
+# This apt_key may not be right
   - apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=7F0CEB10
   - apt_repository: repo='deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse' state=present
   - name: Install the mongodb package
@@ -21,6 +22,15 @@
 
   - name: Install the latest pymongo package
     pip: name=pymongo state=latest use_mirrors=no
+
+  - name: Create the data directory for the namenode metadata
+    file: path={{ item }} owner=mongodb group=mongodb state=directory
+    with_items:
+    - "{{ mongodb_datadir_prefix }}/db"
+    - "{{ mongodb_datadir_prefix }}/log"
+
+  - name: Fix datadir owner
+    file: path={{ datadir }} owner=root group=root state=directory
 
   - template: src=mongodb/mongod.conf dest=/etc/mongod.conf
     notify:
