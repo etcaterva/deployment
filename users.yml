@@ -1,0 +1,18 @@
+---
+- hosts: VPS
+  remote_user: root
+  vars:
+     users:
+     - pedro
+     - mario
+     - david
+  tasks:
+
+  - user: name={{ item }} shell=/bin/bash groups=sudo append=yes
+    with_items: users
+
+  - name: Set up authorized_keys for the deploy user
+    authorized_key: user={{ item }} key="{{ lookup('file', 'public_keys/' + item) }}"
+    with_items: users
+
+  - lineinfile: "dest=/etc/sudoers state=present regexp='^%sudo' line='%sudo ALL=(ALL) NOPASSWD: ALL'"
