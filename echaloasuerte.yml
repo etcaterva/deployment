@@ -20,7 +20,7 @@
 #  - pip: name=pytz virtualenv={{ echaloasuerte_venv }}
   - pip: name=pytz
 
-  - git: repo=git://github.com/Mariocj89/EchaloASuerte.git dest={{ echaloasuerte_app }} update=no accept_hostkey=True
+  - git: repo=git://github.com/etcaterva/EchaloASuerte.git dest={{ echaloasuerte_app }} update=yes accept_hostkey=True
 
   - name: Add virtualenv info in echaloasuerte.wsgi
     template: src=echaloasuerte/echaloasuerte.wsgi dest={{ echaloasuerte_app }}/echaloasuerte.wsgi
