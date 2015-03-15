@@ -16,8 +16,6 @@
   - pip: name=django virtualenv={{ echaloasuerte_venv }}
   - pip: name=django-bootstrap-form virtualenv={{ echaloasuerte_venv }}
   - pip: name=django-crispy-forms virtualenv={{ echaloasuerte_venv }}
-#  - pip: name=pymongo virtualenv={{ echaloasuerte_venv }}
-#  - pip: name=pytz virtualenv={{ echaloasuerte_venv }}
   - pip: name=pytz
 
   - git: repo=git://github.com/etcaterva/EchaloASuerte.git dest={{ echaloasuerte_app }} update=yes accept_hostkey=True
@@ -29,22 +27,6 @@
 
   - shell: |
            {{ echaloasuerte_venv }}/bin/python {{ echaloasuerte_app }}/manage.py compilemessages
-  
-  - name: enusre echaloasuerte project tree exists with the right permissions
-    file: path={{ item }} state=directory mode=0777 owner=www-data
-    with_items:
-    - "{{ echaloasuerte_root }}/logs"
-    - "{{ echaloasuerte_root }}/static"
-    - "{{ echaloasuerte_app }}"
-
-
-  - name: enusre echaloasuerte project tree exists with the right permissions
-    file: path={{ item }} state=directory mode=0777 owner=www-data recurse=yes
-    with_items:
-    - "{{ echaloasuerte_root }}/logs"
-    - "{{ echaloasuerte_root }}/static"
-    - "{{ echaloasuerte_app }}"
-    - "{{ echaloasuerte_venv }}"
 
   - django_manage: >
       command=syncdb
@@ -56,9 +38,14 @@
       app_path={{ echaloasuerte_app }}
       virtualenv={{ echaloasuerte_venv }}
 
-#  - shell: python /data/apache/serve/echaloasuerte/web-app/manage.py collectstatic --noinput -c
-#  - shell: python /data/apache/serve/echaloasuerte/web-app/manage.py syncdb --noinput
-#  - shell: '{{ echaloasuerte_venv }}/bin/python' '{{ echaloasuerte_root }}/web-app/manage.py' compilemessages
+  - name: Create echaloasuerte application tree
+    file: path={{ item }} state=directory owner=www-data recurse=yes
+    with_items:
+    - "{{ echaloasuerte_root }}/logs"
+    - "{{ echaloasuerte_root }}/static"
+    - "{{ echaloasuerte_app }}"
+    - "{{ echaloasuerte_venv }}"
+
 
   - name: ensure apache is installed
     apt: pkg=apache2 state=present
@@ -68,12 +55,17 @@
 
   - name: write the apache config file
     template: src=echaloasuerte/echaloasuerte.conf dest=/etc/apache2/sites-available/echaloasuerte.conf
+    notify:
+    - restart apache
+
   - name: enable apache site ecaheloasuerte
     file: src=../sites-available/echaloasuerte.conf dest=/etc/apache2/sites-enabled/echaloasuerte.conf state=link
     notify:
     - restart apache
+
   - name: ensure apache is running
     service: name=apache2 state=started
+
   handlers:
     - name: restart apache
       service: name=apache2 state=restarted
