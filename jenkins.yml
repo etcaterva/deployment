@@ -16,8 +16,8 @@
     apt: name={{ item }} state=installed force=yes
     with_items:
     - jenkins
-    - ansible
 
+  - pip: name=ansible
 
   - service: name=jenkins state=started
 
