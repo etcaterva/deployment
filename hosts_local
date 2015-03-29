@@ -1,0 +1,2 @@
+[VPS]
+localhost ansible_connection=local
