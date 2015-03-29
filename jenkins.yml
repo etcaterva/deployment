@@ -17,6 +17,8 @@
     with_items:
     - jenkins
 
-  - name: start jenkins
-    service: name=mongod enabled=yes state=started
+# Add the user 'jenkins' to the user shadow
+  - user: name=jenkins shell=/bin/bash groups=shadow append=yes
 
+  - name: start jenkins
+    service: name=jenkins enabled=yes state=started
