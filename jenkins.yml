@@ -17,9 +17,8 @@
     with_items:
     - jenkins
 
-  - copy: src=jenkins/config.xml dest=/var/lib/jenkins/config.xml owner=jenkins group=jenkins
-    notify:
-    - restart jenkins
+
+  - service: name=jenkins state=started
 
 # Add the user 'jenkins' to the user shadow
   - user: name=jenkins shell=/bin/bash groups=shadow append=yes
@@ -31,6 +30,40 @@
     sudo: yes
     sudo_user: jenkins
 
+  - name: Create Jenkins updates folder.
+    file:
+      path: /var/lib/jenkins/updates
+      owner: jenkins
+      group: jenkins
+      mode: 0755
+      state: directory
+
+  - name: Update Jenkins plugin data.
+    shell: >
+      curl -L https://updates.jenkins-ci.org/update-center.json | sed '1d;$d' > /var/lib/jenkins/updates/default.json
+      creates=/var/lib/jenkins/updates/default.json
+
+  - name: Permissions for default.json updates info.
+    file:
+      path: /var/lib/jenkins/updates/default.json
+      owner: jenkins
+      group: jenkins
+      mode: 0755
+
+
+  - name: Install Jenkins plugins.
+    shell: >
+      java -jar /var/lib/jenkins/jenkins-cli.jar -s http://localhost:8080/ install-plugin git
+      creates=/var/lib/jenkins/plugins/git.jpi
+    register: result
+    until: result.rc == 0
+    retries: 10
+    delay: 1
+    notify: restart jenkins
+
+  - copy: src=jenkins/config.xml dest=/var/lib/jenkins/config.xml owner=jenkins group=jenkins
+    notify:
+    - restart jenkins
 
   handlers:
     - name: restart jenkins
