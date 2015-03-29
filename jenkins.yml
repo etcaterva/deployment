@@ -26,6 +26,12 @@
     notify:
     - restart jenkins
 
+
+  - shell: wget localhost:8080/jnlpJars/jenkins-cli.jar -O /var/lib/jenkins/jenkins-cli.jar creates=/var/lib/jenkins/jenkins-cli.jar
+    sudo: yes
+    sudo_user: jenkins
+
+
   handlers:
     - name: restart jenkins
       service: name=jenkins state=restarted
