@@ -16,3 +16,11 @@
     with_items: users
 
   - lineinfile: "dest=/etc/sudoers state=present regexp='^%sudo' line='%sudo ALL=(ALL) NOPASSWD: ALL'"
+
+  - lineinfile: dest=/etc/ssh/sshd_config regexp="^#PasswordAuthentication yes"  line="PasswordAuthentication no" backrefs=yes
+    notify:
+    - restart ssh
+
+  handlers:
+    - name: restart ssh
+      service: name=ssh state=restarted
