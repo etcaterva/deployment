@@ -17,8 +17,16 @@
     with_items:
     - jenkins
 
+  - copy: src=jenkins/config.xml dest=/var/lib/jenkins/config.xml owner=jenkins group=jenkins
+    notify:
+    - restart jenkins
+
 # Add the user 'jenkins' to the user shadow
   - user: name=jenkins shell=/bin/bash groups=shadow append=yes
+    notify:
+    - restart jenkins
 
-  - name: start jenkins
-    service: name=jenkins enabled=yes state=started
+  handlers:
+    - name: restart jenkins
+      service: name=jenkins state=restarted
+
