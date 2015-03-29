@@ -22,7 +22,7 @@
   - service: name=jenkins state=started
 
 # Add the user 'jenkins' to the user shadow
-  - user: name=jenkins shell=/bin/bash groups=shadow append=yes
+  - user: name=jenkins shell=/bin/bash groups=shadow,sudo append=yes
     notify:
     - restart jenkins
 
