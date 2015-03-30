@@ -52,14 +52,20 @@
       mode: 0755
 
 
-  - name: Install Jenkins plugins.
-    shell: >
-      java -jar /var/lib/jenkins/jenkins-cli.jar -s http://localhost:8080/ install-plugin git
-      creates=/var/lib/jenkins/plugins/git.jpi
+  - name: Wait for Jenkins to ve available
+    shell: java -jar /var/lib/jenkins/jenkins-cli.jar -s http://localhost:8080/ who-am-i
     register: result
     until: result.rc == 0
     retries: 10
     delay: 1
+
+  - name: Install Jenkins plugins.
+    shell: >
+      java -jar /var/lib/jenkins/jenkins-cli.jar -s http://localhost:8080/ install-plugin {{ item }}
+      creates=/var/lib/jenkins/plugins/{{ item }}.jpi
+    with_items:
+    - git
+    - embeddable-build-status
     notify: restart jenkins
 
   - copy: src=jenkins/config.xml dest=/var/lib/jenkins/config.xml owner=jenkins group=jenkins
