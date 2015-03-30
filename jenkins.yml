@@ -12,10 +12,11 @@
 # This apt_key may not be right
   - apt_key: url=https://jenkins-ci.org/debian/jenkins-ci.org.key state=present
   - apt_repository: repo='deb http://pkg.jenkins-ci.org/debian binary/' state=present
-  - name: Install jenkins
+  - name: Install jenkins and curl, needed to configure jenkins
     apt: name={{ item }} state=installed force=yes
     with_items:
     - jenkins
+    - curl
 
   - pip: name=ansible
 
