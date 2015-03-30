@@ -28,7 +28,8 @@
     - restart jenkins
 
 
-  - shell: wget localhost:8080/jnlpJars/jenkins-cli.jar -O /var/lib/jenkins/jenkins-cli.jar creates=/var/lib/jenkins/jenkins-cli.jar
+  - name: Download jenkins client
+    shell: wget https://ci.jenkins-ci.org/jnlpJars/jenkins-cli.jar -O /var/lib/jenkins/jenkins-cli.jar creates=/var/lib/jenkins/jenkins-cli.jar
     sudo: yes
     sudo_user: jenkins
 
