@@ -26,7 +26,8 @@ want to create only one playbook per server. These playbooks will be located
 in the top level folder.
 
 To install Ansible you can follow [Ansible install guide], or just try with
-a classic `sudo apt-get install ansible`.
+a classic `sudo apt-get install ansible` (although I had problems with that
+version, having to install it using `sudo pip install ansible`).
 
 [Ansible install guide]: http://docs.ansible.com/intro_installation.html
 
