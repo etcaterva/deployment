@@ -31,6 +31,16 @@
     sudo: yes
     sudo_user: jenkins
 
+  - name: Install jobs
+    copy:
+      src: jenkins/jobs/
+      dest: /var/lib/jenkins/jobs
+      owner: jenkins
+      group: jenkins
+    notify:
+    - restart jenkins
+
+
   - name: Create Jenkins updates folder.
     file:
       path: /var/lib/jenkins/updates
