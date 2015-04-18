@@ -13,9 +13,7 @@
   - pip: name=virtualenv
   - name: ensure gettext is installed
     apt: pkg=gettext state=present
-  - pip: name=django virtualenv={{ echaloasuerte_venv }}
-  - pip: name=django-bootstrap-form virtualenv={{ echaloasuerte_venv }}
-  - pip: name=django-crispy-forms virtualenv={{ echaloasuerte_venv }}
+  - pip: requirements={{ echaloasuerte_app }}/requirements.txt virtualenv={{ echaloasuerte_venv }}
   - pip: name=pytz
 
   - git: repo=git://github.com/etcaterva/EchaloASuerte.git dest={{ echaloasuerte_app }} update=yes accept_hostkey=True force=yes
