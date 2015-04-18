@@ -14,7 +14,10 @@
   - name: ensure gettext is installed
     apt: pkg=gettext state=present
   - pip: requirements={{ echaloasuerte_app }}/requirements.txt virtualenv={{ echaloasuerte_venv }}
+
+  # There are some problems with these two in the virtual environment.
   - pip: name=pytz
+  - pip: name=pymongo
 
   - git: repo=git://github.com/etcaterva/EchaloASuerte.git dest={{ echaloasuerte_app }} update=yes accept_hostkey=True force=yes
 
