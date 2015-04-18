@@ -6,67 +6,116 @@
     echaloasuerte_app: "{{ echaloasuerte_root }}/web-app"
     echaloasuerte_venv: "{{ echaloasuerte_root }}/venv"
   tasks:
-  - name: ensure git is installed
-    apt: pkg=git state=present
-  - name: ensure PIP is installed
-    apt: pkg=python-pip state=present
-  - pip: name=virtualenv
-  - name: ensure gettext is installed
-    apt: pkg=gettext state=present
-  - pip: requirements={{ echaloasuerte_app }}/requirements.txt virtualenv={{ echaloasuerte_venv }}
 
-  # There are some problems with these two in the virtual environment.
-  - pip: name=pytz
-  - pip: name=pymongo
+  - name: Install packages needed from apt
+    apt:
+      pkg: "{{ item }}"
+      state: present
+    with_items:
+    - git
+    - python-pip
+    - gettext
+    - apache2
+    - libapache2-mod-wsgi
 
-  - git: repo=git://github.com/etcaterva/EchaloASuerte.git dest={{ echaloasuerte_app }} update=yes accept_hostkey=True force=yes
-
-  - name: Add virtualenv info in echaloasuerte.wsgi
-    template: src=echaloasuerte/echaloasuerte.wsgi dest={{ echaloasuerte_app }}/echaloasuerte.wsgi
-    notify:
-    - restart apache
-
-  - shell: |
-           {{ echaloasuerte_venv }}/bin/python {{ echaloasuerte_app }}/manage.py compilemessages
-
-  - django_manage: >
-      command=syncdb
-      app_path={{ echaloasuerte_app }}
-      virtualenv={{ echaloasuerte_venv }}
-
-  - django_manage: >
-      command=collectstatic	
-      app_path={{ echaloasuerte_app }}
-      virtualenv={{ echaloasuerte_venv }}
+  - name: Install apache modules needed
+    apache2_module:
+      name: wsgi
+      state: present
 
   - name: Create echaloasuerte application tree
-    file: path={{ item }} state=directory owner=www-data recurse=yes
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: www-data
+      recurse: yes
     with_items:
     - "{{ echaloasuerte_root }}/logs"
     - "{{ echaloasuerte_root }}/static"
     - "{{ echaloasuerte_app }}"
     - "{{ echaloasuerte_venv }}"
 
+  - name: Install virtualenv from pip
+    pip:
+      name: virtualenv
 
-  - name: ensure apache is installed
-    apt: pkg=apache2 state=present
-  - name: ensure libapache2-mod-wsgi is installed
-    apt: pkg=libapache2-mod-wsgi state=present
-  - apache2_module: state=present name=wsgi
+  - name: Setup virtual environment for the app using requirements.txt
+    pip:
+      requirements: "{{ echaloasuerte_app }}/requirements.txt"
+      virtualenv: "{{ echaloasuerte_venv }}"
 
-  - name: write the apache config file
-    template: src=echaloasuerte/echaloasuerte.conf dest=/etc/apache2/sites-available/echaloasuerte.conf
+  - name: Install python packages needed outside of the virtual environment
+    pip:
+      name: "{{ item }}"
+    with_items:
+    - pytz
+    - pymongo
+
+  - name: Clone/update repository in {{ echaloasuerte_app }}
+    git:
+      repo: git://github.com/etcaterva/EchaloASuerte.git
+      dest: "{{ echaloasuerte_app }}"
+      update: yes
+      accept_hostkey: True
+      force: yes
+
+  - name: Add virtualenv info in echaloasuerte.wsgi
+    template:
+      src: echaloasuerte/echaloasuerte.wsgi
+      dest: "{{ echaloasuerte_app }}/echaloasuerte.wsgi"
     notify:
     - restart apache
 
-  - name: enable apache site ecaheloasuerte
-    file: src=../sites-available/echaloasuerte.conf dest=/etc/apache2/sites-enabled/echaloasuerte.conf state=link
+  - name: Compile messages of django application
+    shell: |
+           {{ echaloasuerte_venv }}/bin/python {{ echaloasuerte_app }}/manage.py compilemessages
+
+  - name: Synchronize django app database
+    django_manage:
+      command: syncdb
+      app_path: "{{ echaloasuerte_app }}"
+      virtualenv: "{{ echaloasuerte_venv }}"
+
+  - name: Collect statics files of django application
+    django_manage:
+      command: collectstatic
+      app_path: "{{ echaloasuerte_app }}"
+      virtualenv: "{{ echaloasuerte_venv }}"
+
+  - name: Fix owners of echaloasuerte application tree
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: www-data
+      recurse: yes
+    with_items:
+    - "{{ echaloasuerte_root }}/logs"
+    - "{{ echaloasuerte_root }}/static"
+    - "{{ echaloasuerte_app }}"
+    - "{{ echaloasuerte_venv }}"
+
+  - name: Create the apache config file
+    template:
+      src: echaloasuerte/echaloasuerte.conf
+      dest: /etc/apache2/sites-available/echaloasuerte.conf
     notify:
     - restart apache
 
-  - name: ensure apache is running
-    service: name=apache2 state=started
+  - name: Enable apache site ecaheloasuerte
+    file:
+      src: ../sites-available/echaloasuerte.conf
+      dest: /etc/apache2/sites-enabled/echaloasuerte.conf
+      state: link
+    notify:
+    - restart apache
+
+  - name: Ensure apache is running
+    service:
+      name: apache2
+      state: started
 
   handlers:
     - name: restart apache
-      service: name=apache2 state=restarted
+      service:
+        name: apache2
+        state: restarted
