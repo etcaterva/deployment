@@ -78,6 +78,9 @@
     with_items:
     - git
     - embeddable-build-status
+    - greenballs
+    - cobertura
+    - violations
     notify: restart jenkins
 
   - copy: src=jenkins/config.xml dest=/var/lib/jenkins/config.xml owner=jenkins group=jenkins
