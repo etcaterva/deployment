@@ -18,7 +18,13 @@
     - jenkins
     - curl
 
-  - pip: name=ansible
+  - name: Install packages needed for running jobs
+    pip:
+      name: "{{ items }}"
+    with_items:
+    - ansible
+    - pylint
+    - coverage
 
   - service: name=jenkins state=started
 
