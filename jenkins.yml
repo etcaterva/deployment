@@ -10,26 +10,47 @@
 
 
 # This apt_key may not be right
-  - apt_key: url=https://jenkins-ci.org/debian/jenkins-ci.org.key state=present
-  - apt_repository: repo='deb http://pkg.jenkins-ci.org/debian binary/' state=present
+  - apt_key:
+      url: https://jenkins-ci.org/debian/jenkins-ci.org.key
+      state: present
+  - apt_repository:
+      repo: deb http://pkg.jenkins-ci.org/debian binary/
+      state: present
   - name: Install jenkins and curl, needed to configure jenkins
-    apt: name={{ item }} state=installed force=yes
+    apt:
+      name: "{{ item }}"
+      state: installed
+      force: yes
     with_items:
     - jenkins
     - curl
+    - python-pip
 
-  - pip: name=ansible
+  - name: Install packages needed for running jobs
+    pip:
+      name: "{{ item }}"
+    with_items:
+    - ansible
+    - pylint
+    - coverage
 
-  - service: name=jenkins state=started
+  - service:
+      name: jenkins
+      state: started
 
 # Add the user 'jenkins' to the user shadow
-  - user: name=jenkins shell=/bin/bash groups=shadow,sudo append=yes
+  - user:
+      name: jenkins
+      shell: /bin/bash
+      groups: shadow,sudo
+      append: yes
     notify:
     - restart jenkins
 
-
   - name: Download jenkins client
-    shell: wget https://ci.jenkins-ci.org/jnlpJars/jenkins-cli.jar -O /var/lib/jenkins/jenkins-cli.jar creates=/var/lib/jenkins/jenkins-cli.jar
+    shell: wget https://ci.jenkins-ci.org/jnlpJars/jenkins-cli.jar -O /var/lib/jenkins/jenkins-cli.jar
+    args:
+      creates: /var/lib/jenkins/jenkins-cli.jar
     sudo: yes
     sudo_user: jenkins
 
@@ -54,7 +75,8 @@
   - name: Update Jenkins plugin data.
     shell: >
       curl -L https://updates.jenkins-ci.org/update-center.json | sed '1d;$d' > /var/lib/jenkins/updates/default.json
-      creates=/var/lib/jenkins/updates/default.json
+    args:
+      creates: /var/lib/jenkins/updates/default.json
 
   - name: Permissions for default.json updates info.
     file:
@@ -74,17 +96,27 @@
   - name: Install Jenkins plugins.
     shell: >
       java -jar /var/lib/jenkins/jenkins-cli.jar -s http://localhost:8080/ install-plugin {{ item }}
-      creates=/var/lib/jenkins/plugins/{{ item }}.jpi
+    args:
+      creates: /var/lib/jenkins/plugins/{{ item }}.jpi
     with_items:
     - git
     - embeddable-build-status
+    - greenballs
+    - cobertura
+    - violations
     notify: restart jenkins
 
-  - copy: src=jenkins/config.xml dest=/var/lib/jenkins/config.xml owner=jenkins group=jenkins
+  - copy:
+      src: jenkins/config.xml
+      dest: /var/lib/jenkins/config.xml
+      owner: jenkins
+      group: jenkins
     notify:
     - restart jenkins
 
   handlers:
     - name: restart jenkins
-      service: name=jenkins state=restarted
+      service:
+        name: jenkins
+        state: restarted
 
