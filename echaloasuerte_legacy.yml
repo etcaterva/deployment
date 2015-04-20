@@ -18,14 +18,14 @@
     - python-mysqldb
     - php5-mysql
 
-  - name: Create a new database
-    mysql_db: name=echaloasuerte state=present collation=utf8_general_ci
-
   - name: Create a database user
-    mysql_user: name=root password=toor priv=*.*:ALL host=localhost state=present
+    mysql_user: name=root password=toor priv=*.*:ALL host=localhost state=present login_user=root login_password=toor
+
+  - name: Create a new database
+    mysql_db: name=echaloasuerte state=present collation=utf8_general_ci login_user=root login_password=toor
 
   - name: Create tables
-    shell: cat echloasuerte_legacy | mysql -u root -ptoor echaloasuerte
+    shell: cat echloasuerte_legacy/create_db.sql | mysql -u root -ptoor echaloasuerte
 
 
   - name: Create echaloasuerte application tree
