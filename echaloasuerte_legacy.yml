@@ -2,7 +2,7 @@
 - hosts: PROD
   remote_user: root
   vars:
-    app_root_dir: "/data/apache/serve/echaloasuerte_legacy"
+    app_root_dir: "/data/apache/serve/echaloasuerte_2011"
   tasks:
 
   - name: Install packages needed from apt
