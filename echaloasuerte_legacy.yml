@@ -1,0 +1,89 @@
+---
+- hosts: PROD
+  remote_user: root
+  vars:
+    app_root_dir: "/data/apache/serve/echaloasuerte_legacy"
+  tasks:
+
+  - name: Install packages needed from apt
+    apt:
+      pkg: "{{ item }}"
+      state: present
+    with_items:
+    - git
+    - gettext
+    - apache2
+    - libapache2-mod-php5
+    - mariadb-server
+    - python-mysqldb
+    - php5-mysql
+
+  - name: Create a database user
+    mysql_user: name=root password=toor priv=*.*:ALL host=localhost state=present login_user=root login_password=toor
+
+  - name: Create a new database
+    mysql_db: name=echaloasuerte state=present collation=utf8_general_ci login_user=root login_password=toor
+
+  - name: Create tables
+    shell: cat echloasuerte_legacy/create_db.sql | mysql -u root -ptoor echaloasuerte
+
+
+  - name: Create echaloasuerte application tree
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: www-data
+      recurse: yes
+    with_items:
+    - "{{ app_root_dir }}/logs"
+    - "{{ app_root_dir }}/app"
+
+  - name: Remove apache default
+    file:
+        path: "/etc/apache2/sites-enabled/000-default.conf"
+        state: absent
+
+  - name: Clone/update repository in {{ app_root_dir }}
+    git:
+      repo: git://github.com/etcaterva/Echaloasuerte_legacy.git
+      dest: "{{ app_root_dir }}/app"
+      update: yes
+      accept_hostkey: True
+      force: yes
+
+  - name: Fix owners of echaloasuerte application tree
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: www-data
+      recurse: yes
+    with_items:
+    - "{{ app_root_dir }}/logs"
+    - "{{ app_root_dir }}/app"
+
+  - name: Create the apache config file
+    template:
+      src: echaloasuerte_legacy/apache_website.conf
+      dest: /etc/apache2/sites-available/echaloasuerte_legacy.conf
+    notify:
+    - restart apache
+
+  - name: Enable apache site ecaheloasuerte
+    file:
+      src: ../sites-available/echaloasuerte_legacy.conf
+      dest: /etc/apache2/sites-enabled/echaloasuerte_legacy.conf
+      state: link
+    notify:
+    - restart apache
+
+  - name: Ensure apache is running
+    service:
+      name: apache2
+      state: started
+
+  handlers:
+    - name: restart apache
+      service:
+        name: apache2
+        state: restarted
+        sleep: 5
