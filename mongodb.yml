@@ -19,6 +19,7 @@
     apt:
       name: "{{ item }}"
       state: installed
+      update-cache: yes
       force: yes
     with_items:
     - mongodb-org
