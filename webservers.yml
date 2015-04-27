@@ -1,0 +1,4 @@
+- hosts: PROD
+  remote_user: root
+  roles:
+  - users
