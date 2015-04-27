@@ -1,5 +1,5 @@
 ---
-- hosts: VPS
+- hosts: all
   remote_user: root
   vars:
      users:
