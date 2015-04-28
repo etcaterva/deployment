@@ -12,6 +12,7 @@
     apt:
       pkg: "{{ item }}"
       state: present
+      update-cache: yes
     with_items:
     - git
     - gettext
