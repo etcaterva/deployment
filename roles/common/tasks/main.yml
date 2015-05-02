@@ -1,0 +1,14 @@
+---
+- name: Install packages needed from apt
+  apt:
+    pkg: "{{ item }}"
+    state: present
+    update-cache: yes
+  with_items:
+  - git
+  - python-pip
+  - gettext
+
+- name: Install virtualenv from pip
+  pip:
+    name: virtualenv
