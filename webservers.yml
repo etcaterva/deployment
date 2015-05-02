@@ -3,3 +3,4 @@
   roles:
   - users
   - apache
+  - { role: echaloasuerte_django, datadir: "/data" }
