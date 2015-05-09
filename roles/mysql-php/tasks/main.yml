@@ -12,8 +12,8 @@
 
 - name: Create a database user (for the first run only)
   mysql_user:
-    name: "{{ mysqldb_admin_user }}"
-    password: "{{ mysqldb_admin_password }}"
+    name: "{{ mysqldb_admin_user | default('root') }}"
+    password: "{{ mysqldb_admin_password | default('toor') }}"
     priv: "*.*:ALL"
     host: localhost
     state: present
