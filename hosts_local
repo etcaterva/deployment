@@ -1,2 +1,5 @@
-[VPS]
+[ECHALOASUERTE]
+localhost ansible_connection=local
+
+[MONGO_DATABASES]
 localhost ansible_connection=local
