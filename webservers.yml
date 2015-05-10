@@ -1,0 +1,7 @@
+- hosts: ECHALOASUERTE
+  remote_user: root
+  roles:
+  - users
+  - apache
+  - { role: echaloasuerte_django, datadir: "/data" }
+  - { role: echaloasuerte_php, datadir: "/data" }

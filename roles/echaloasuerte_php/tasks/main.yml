@@ -1,0 +1,75 @@
+---
+- set_fact:
+    legacy_app_dir: "{{ datadir }}/apache/serve/echaloasuerte/legacy"
+
+- set_fact:
+    root_app_dir: "{{ legacy_app_dir }}/app"
+    root_log_dir: "{{ legacy_app_dir }}/log"
+
+- set_fact:
+    web_2011_dir: "{{ root_app_dir }}/web-2011"
+    web_2009_dir: "{{ root_app_dir }}/web-2009"
+
+- name: Create a new database for echaloasuerte
+  mysql_db:
+    name: echaloasuerte
+    state: present
+    collation: utf8_general_ci
+    login_user: "{{ mysqldb_admin_user | default('root') }}"
+    login_password: "{{ mysqldb_admin_password | default('toor') }}"
+
+- copy: src=create_db.sql dest=/tmp
+#- mysql_db:
+#    name: echaloasuerte
+#    state: import
+#    target: /tmp/create_db.sql
+#    login_user: "{{ mysqldb_admin_user }}"
+#    login_password: "{{ mysqldb_admin_password }}"
+
+- name: Create tables
+  shell: cat /tmp/create_db.sql | mysql -u {{ mysqldb_admin_user | default('root') }} -p{{ mysqldb_admin_password | default ('toor') }} echaloasuerte
+
+- name: Clone/update repository in {{ root_app_dir }}
+  git:
+    repo: git://github.com/etcaterva/Echaloasuerte_legacy.git
+    dest: "{{ root_app_dir }}"
+    update: yes
+    accept_hostkey: True
+    force: yes
+
+- name: Create echaloasuerte application tree
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: www-data
+    recurse: yes
+  with_items:
+  - "{{ root_app_dir }}"
+  - "{{ root_log_dir }}"
+  - "{{ root_log_dir }}/2009"
+  - "{{ root_log_dir }}/2011"
+
+- name: Fix owners of echaloasuerte application tree
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: www-data
+    recurse: yes
+  with_items:
+  - "{{ root_app_dir }}"
+  - "{{ root_log_dir }}"
+
+- name: Create the apache config file
+  template:
+    src: apache_website.conf
+    dest: /etc/apache2/sites-available/echaloasuerte_legacy.conf
+  notify:
+  - restart apache
+
+- name: Enable apache site ecaheloasuerte
+  file:
+    src: ../sites-available/echaloasuerte_legacy.conf
+    dest: /etc/apache2/sites-enabled/echaloasuerte_legacy.conf
+    state: link
+  notify:
+  - restart apache

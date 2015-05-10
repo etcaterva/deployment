@@ -1,0 +1,92 @@
+- set_fact:
+    echaloasuerte_root: "{{ datadir }}/apache/serve/echaloasuerte"
+- set_fact:
+    echaloasuerte_app: "{{ echaloasuerte_root }}/web-app"
+    echaloasuerte_venv: "{{ echaloasuerte_root }}/venv"
+
+- name: Create echaloasuerte application tree
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: www-data
+    recurse: yes
+  with_items:
+  - "{{ echaloasuerte_root }}/logs"
+  - "{{ echaloasuerte_root }}/static"
+  - "{{ echaloasuerte_app }}"
+  - "{{ echaloasuerte_venv }}"
+
+- name: Clone/update repository in {{ echaloasuerte_app }}
+  git:
+    repo: git://github.com/etcaterva/EchaloASuerte.git
+    dest: "{{ echaloasuerte_app }}"
+    update: yes
+    accept_hostkey: True
+    force: yes
+
+- name: Setup virtual environment for the app using requirements.txt
+  pip:
+    requirements: "{{ echaloasuerte_app }}/requirements.txt"
+    virtualenv: "{{ echaloasuerte_venv }}"
+
+- name: Install python packages needed outside of the virtual environment
+  pip:
+    name: "{{ item }}"
+  with_items:
+  - pytz
+  - pymongo
+
+- name: Add virtualenv info in echaloasuerte.wsgi
+  template:
+    src: echaloasuerte.wsgi
+    dest: "{{ echaloasuerte_app }}/echaloasuerte.wsgi"
+  notify:
+  - restart apache
+
+- name: Compile messages of django application
+  shell: |
+         {{ echaloasuerte_venv }}/bin/python {{ echaloasuerte_app }}/manage.py compilemessages
+
+- name: Synchronize django app database
+  django_manage:
+    command: syncdb
+    app_path: "{{ echaloasuerte_app }}"
+    virtualenv: "{{ echaloasuerte_venv }}"
+
+- name: Collect statics files of django application
+  django_manage:
+    command: collectstatic
+    app_path: "{{ echaloasuerte_app }}"
+    virtualenv: "{{ echaloasuerte_venv }}"
+
+- name: Fix owners of echaloasuerte application tree
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: www-data
+    recurse: yes
+  with_items:
+  - "{{ echaloasuerte_root }}/logs"
+  - "{{ echaloasuerte_root }}/static"
+  - "{{ echaloasuerte_app }}"
+  - "{{ echaloasuerte_venv }}"
+
+- name: Create the apache config file
+  template:
+    src: echaloasuerte.conf
+    dest: /etc/apache2/sites-available/echaloasuerte.conf
+  notify:
+  - restart apache
+
+- name: Enable apache site ecaheloasuerte
+  file:
+    src: ../sites-available/echaloasuerte.conf
+    dest: /etc/apache2/sites-enabled/echaloasuerte.conf
+    state: link
+  notify:
+  - restart apache
+
+- name: Ensure apache is running
+  service:
+    name: apache2
+    state: started

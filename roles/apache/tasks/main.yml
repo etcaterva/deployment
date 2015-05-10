@@ -1,0 +1,26 @@
+---
+- name: Install packages needed from apt
+  apt:
+    pkg: "{{ item }}"
+    state: present
+    update-cache: yes
+  with_items:
+  - apache2
+  - libapache2-mod-wsgi
+
+- name: Install apache modules needed
+  apache2_module:
+    name: wsgi
+    state: present
+
+- name: Ensure apache is running
+  service:
+    name: apache2
+    state: started
+
+- name: Disable apache default site
+  file:
+      path: "/etc/apache2/sites-enabled/000-default.conf"
+      state: absent
+  notify:
+  - restart apache
