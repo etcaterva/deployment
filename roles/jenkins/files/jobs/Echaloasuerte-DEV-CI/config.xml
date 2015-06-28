@@ -55,6 +55,7 @@ pip --version
 pip install -r requirements.txt
 pip install nose
 pip install coverage
+pip install pylint
 
 python manage.py syncdb --noinput
 export DJANGO_SETTINGS_MODULE=&quot;echaloasuerte.settings.test&quot;
