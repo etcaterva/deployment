@@ -43,6 +43,9 @@
   notify:
   - restart apache
 
+- name: Set gmail password
+  shell: sed -i "s/GMAIL_PASSWORD_PLACEHOLDER/{{ echaloasuerte_gmail_password }}/g" {{ echaloasuerte_app }}/settings/common.py
+
 - name: Compile messages of django application
   shell: |
          {{ echaloasuerte_venv }}/bin/python {{ echaloasuerte_app }}/manage.py compilemessages
