@@ -59,7 +59,7 @@
 
 - mongodb_user:
     database: admin
-    name: "{{ mongodb_admin_user | default('root') }}"
-    password: "{{ mongodb_admin_password | default('toor') }}"
+    name: "{{ mongodb_admin_user }}"
+    password: "{{ mongodb_admin_password }}"
     roles: userAdminAnyDatabase
     state: present
