@@ -68,6 +68,9 @@
   retries: 5
   delay: 1
 
-- copy: src=indexes.js dest=/tmp
+- copy:
+    src: indexes.js
+    dest: /tmp
+
 - name: Add mongodb indexes
   shell: mongo < /tmp/indexes.js

@@ -18,7 +18,6 @@
     login_user: "{{ mysqldb_admin_user }}"
     login_password: "{{ mysqldb_admin_password }}"
 
-- copy: src=create_db.sql dest=/tmp
 #- mysql_db:
 #    name: echaloasuerte
 #    state: import
@@ -26,6 +25,9 @@
 #    login_user: "{{ mysqldb_admin_user }}"
 #    login_password: "{{ mysqldb_admin_password }}"
 
+- copy:
+    src: create_db.sql
+    dest: /tmp
 - name: Create tables
   shell: cat /tmp/create_db.sql | mysql -u {{ mysqldb_admin_user }} -p{{ mysqldb_admin_password }} echaloasuerte
 
