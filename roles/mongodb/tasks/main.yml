@@ -63,3 +63,7 @@
     password: "{{ mongodb_admin_password }}"
     roles: userAdminAnyDatabase
     state: present
+
+- copy: src=indexes.js dest=/tmp
+- name: Add mongodb indexes
+  shell: mongo < /tmp/indexes.js
