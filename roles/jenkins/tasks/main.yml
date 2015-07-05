@@ -95,6 +95,7 @@
   - greenballs
   - cobertura
   - violations
+  - github
   notify: restart jenkins
 
 - copy:

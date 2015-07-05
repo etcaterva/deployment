@@ -15,8 +15,8 @@
     name: echaloasuerte
     state: present
     collation: utf8_general_ci
-    login_user: "{{ mysqldb_admin_user | default('root') }}"
-    login_password: "{{ mysqldb_admin_password | default('toor') }}"
+    login_user: "{{ mysqldb_admin_user }}"
+    login_password: "{{ mysqldb_admin_password }}"
 
 - copy: src=create_db.sql dest=/tmp
 #- mysql_db:
@@ -27,7 +27,7 @@
 #    login_password: "{{ mysqldb_admin_password }}"
 
 - name: Create tables
-  shell: cat /tmp/create_db.sql | mysql -u {{ mysqldb_admin_user | default('root') }} -p{{ mysqldb_admin_password | default ('toor') }} echaloasuerte
+  shell: cat /tmp/create_db.sql | mysql -u {{ mysqldb_admin_user }} -p{{ mysqldb_admin_password }} echaloasuerte
 
 - name: Clone/update repository in {{ root_app_dir }}
   git:
