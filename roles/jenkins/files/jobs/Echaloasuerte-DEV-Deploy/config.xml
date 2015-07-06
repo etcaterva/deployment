@@ -49,7 +49,7 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-    <command>sudo ansible-playbook -i hosts_dev webservers.yml --vault-password-file=~/.ansible.pwd </command>
+    <command>sudo ansible-playbook -i hosts_local webservers.yml --vault-password-file=~/.ansible.pwd </command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>
