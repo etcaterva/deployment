@@ -23,6 +23,8 @@
     update: yes
     accept_hostkey: True
     force: yes
+  notify:
+  - restart apache
 
 - name: Add xip.io to the ALLOWED_HOSTS list when TEST_DEPLOYMENT is defined
   lineinfile:
