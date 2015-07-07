@@ -23,6 +23,16 @@
     update: yes
     accept_hostkey: True
     force: yes
+  notify:
+  - restart apache
+
+- name: Add xip.io to the ALLOWED_HOSTS list when TEST_DEPLOYMENT is defined
+  lineinfile:
+    dest: "{{ echaloasuerte_app }}/echaloasuerte/settings/common.py"
+    regexp: "xip.io"
+    insertafter: "^ALLOWED_HOSTS"
+    line: "    '.xip.io',"
+  when: TEST_DEPLOYMENT is defined
 
 - name: Setup virtual environment for the app using requirements.txt
   pip:
