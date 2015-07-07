@@ -25,6 +25,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         mongodb_admin_user: "root",
         mongodb_admin_password: "rootpass",
         echaloasuerte_gmail_password: "gmailpass",
+        TEST_DEPLOYMENT: "True",
+        cloudflare_api_token: "faketoken",
+        cloudflare_echaloasuerte_id: "fakeid",
+        cloudflare_pickforme_id: "fakeid",
       }
 
       ansible.groups = {
