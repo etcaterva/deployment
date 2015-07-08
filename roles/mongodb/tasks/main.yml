@@ -12,15 +12,15 @@
     repo: deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse
     state: present
 
-- name: Install the mongodb package
-  apt:
-    name: "{{ item }}"
-    state: installed
-    update-cache: yes
-    force: yes
-  with_items:
-  - mongodb-org
-  - python-pip
+#- name: Install the mongodb package
+#  apt:
+#    name: "{{ item }}"
+#    state: installed
+#    update-cache: yes
+#    force: yes
+#  with_items:
+#  - mongodb-org
+#  - python-pip
 
 - name: Install the latest pymongo package
   pip:
@@ -28,35 +28,35 @@
     state: latest
     use_mirrors: no
 
-- name: Create the data directory for the namenode metadata
-  file:
-    path: "{{ item }}"
-    owner: mongodb
-    group: mongodb
-    state: directory
-  with_items:
-  - "{{ mongodb_datadir_prefix }}/db"
-  - "{{ mongodb_datadir_prefix }}/log"
+#- name: Create the data directory for the namenode metadata
+#  file:
+#    path: "{{ item }}"
+#    owner: mongodb
+#    group: mongodb
+#    state: directory
+#  with_items:
+#  - "{{ mongodb_datadir_prefix }}/db"
+#  - "{{ mongodb_datadir_prefix }}/log"
 
-- name: Fix datadir owner
-  file:
-    path: "{{ datadir }}"
-    owner: root
-    group: root
-    state: directory
+#- name: Fix datadir owner
+#  file:
+#    path: "{{ datadir }}"
+#    owner: root
+#    group: root
+#    state: directory
 
-- template:
-    src: mongod.conf
-    dest: /etc/mongod.conf
-  notify:
-  - restart mongod
+#- template:
+#    src: mongod.conf
+#    dest: /etc/mongod.conf
+#  notify:
+#  - restart mongod
 
-- name: Start mongod before creating users
-  service:
-    name: mongod
-    state: restarted
-    sleep: 5
-
+#- name: Start mongod before creating users
+#  service:
+#    name: mongod
+#    state: restarted
+#    sleep: 5
+#
 - mongodb_user:
     database: admin
     name: "{{ mongodb_admin_user }}"
