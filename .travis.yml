@@ -1,0 +1,25 @@
+install:
+  - sudo apt-get update -q
+  - sudo apt-get install virtualbox-4.1
+#  - sudo apt-get install -q virtualbox --fix-missing
+#  - sudo apt-get install -q virtualbox-ose-dkms linux-headers-$(uname -r)
+#  - sudo apt-get install -q vagrant --fix-missing
+  - sudo wget -nv https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.2_x86_64.deb
+  - sudo dpkg -i vagrant_1.7.2_x86_64.deb
+#  - bundle install
+  - sudo apt-get install zlib1g-dev
+  - sudo apt-get install nfs-kernel-server
+  - sudo apt-get install libvirt-dev
+  - sudo apt-get install qemu-utils
+
+script:
+#  - VBoxManage --version
+#  - vagrant plugin install vagrant-libvirt
+#  - vagrant plugin install vagrant-mutate
+  - vagrant box add ubuntu/trusty64
+#  - vagrant mutate ubuntu/trusty64 libvirt
+
+  - vagrant up
+
+
+#VAGRANT_DEFAULT_PROVIDER=libvirt
