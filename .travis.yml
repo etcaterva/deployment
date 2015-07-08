@@ -13,4 +13,4 @@ install:
 #  - sudo dpkg -i vagrant_1.0.5_i686.deb
 script:
   - mv group_vars/test_vars group_vars/all
-  - ansible-playbook -i hosts_local site.yml
+  - sudo ansible-playbook -i hosts_local site.yml
