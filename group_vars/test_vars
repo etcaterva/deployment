@@ -1,0 +1,13 @@
+---
+ansible_ssh_user: 'vagrant'
+ES_FQDN: "192.168.77.22.xip.io"
+mysqldb_admin_user: "root"
+mysqldb_admin_password: "rootpass"
+mongodb_admin_user: "root"
+mongodb_admin_password: "rootpass"
+echaloasuerte_gmail_password: "gmailpass"
+TEST_DEPLOYMENT: "True"
+cloudflare_api_token: "faketoken"
+cloudflare_echaloasuerte_id: "fakeid"
+cloudflare_pickforme_id: "fakeid"
+
