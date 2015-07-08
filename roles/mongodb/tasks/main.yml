@@ -65,7 +65,7 @@
     state: present
   register: result_mongodb_user
   until: not result_mongodb_user|failed
-  retries: 5
+  retries: 50
   delay: 1
 
 - copy:
