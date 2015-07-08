@@ -1,6 +1,8 @@
 language: ruby
 rvm:
   - "1.9.3"
+services:
+  - mongodb
 install:
   - sudo pip install ansible
 #  - sudo echo "deb http://download.virtualbox.org/virtualbox/debian precise contrib" | sudo tee -a /etc/apt/sources.list
