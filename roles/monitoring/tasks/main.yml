@@ -1,0 +1,20 @@
+---
+- name: Install packages needed from apt
+  apt:
+    pkg: "{{ item }}"
+    state: present
+    update-cache: yes
+  with_items:
+  - monit
+
+- name: Set monit config file
+  template:
+    src: monitrc
+    dest: "/etc/monit/monitrc"
+    mode: 0700
+
+- name: Ensure monit is running
+  service:
+    name: monit
+    state: restarted
+

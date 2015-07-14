@@ -1,0 +1,31 @@
+set daemon 120
+set alert mariocj89@gmail.com
+set alert palvarez89@gmail.com
+set alert dnaranjo89@gmail.com
+
+set mail-format {
+    from: echaloasuerte@gmail.com
+    subject: [echaloasuerte][monitoring] $SERVICE $EVENT at $DATE
+    message: Monit $ACTION $SERVICE at $DATE on $HOST: $DESCRIPTION.
+        by monit
+}
+
+set httpd port 2812
+    use address 0.0.0.0
+    allow @dev read-only
+
+set mailserver smtp.gmail.com port 587
+    username "echaloasuerte@gmail.com"
+    password "{{ echaloasuerte_gmail_password }}"
+    using tlsv1 with timeout 30 seconds
+
+check system $HOST
+  if memory > 80% 2 times within 3 cycles then alert
+  if swap > 20% for 4 cycles then alert
+  if cpu(user) > 75% for 2 cycles then alert
+  if cpu(system) > 65% for 2 cycles then alert
+
+check device data with path /data
+    if SPACE usage > 70% then alert
+
+
