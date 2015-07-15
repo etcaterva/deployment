@@ -8,6 +8,7 @@
   - git
   - python-pip
   - gettext
+  - curl
 
 - name: Install virtualenv from pip
   pip:
