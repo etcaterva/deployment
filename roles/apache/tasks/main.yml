@@ -18,6 +18,16 @@
     name: apache2
     state: started
 
+- copy:
+    src: deny_raw_access.conf
+    dest: /etc/apache2/sites-available/deny_raw_access.conf
+
+- name: Enable apache the prev config
+  file:
+    src: ../sites-available/deny_raw_access.conf
+    dest: /etc/apache2/sites-enabled/deny_raw_access.conf
+    state: link
+
 - name: Disable apache default site
   file:
       path: "/etc/apache2/sites-enabled/000-default.conf"

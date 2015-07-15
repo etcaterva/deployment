@@ -105,7 +105,7 @@
     state: started
 
 - name: Purge cloudflare cache
-  shell: 'curl -X DELETE "https://api.cloudflare.com/client/v4/zones/{{item}}/purge_cache" -H "X-Auth-Email: mariocj89@gmail.com" -H "X-Auth-Key: {{cloudflare_api_token}}"'
+  shell: 'curl -X DELETE "https://api.cloudflare.com/client/v4/zones/{{item}}/purge_cache" -H "X-Auth-Email: mariocj89@gmail.com" -H "X-Auth-Key: {{cloudflare_api_token}}" --data "{\"purge_everything\":true}" -H "Content-Type: application/json"'
   with_items:
     - "{{cloudflare_echaloasuerte_id}}"
     - "{{cloudflare_pickforme_id}}"
