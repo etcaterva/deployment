@@ -96,6 +96,7 @@
   - cobertura
   - violations
   - github
+  - role-strategy
   notify: restart jenkins
 
 - copy:
