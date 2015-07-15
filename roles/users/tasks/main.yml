@@ -1,8 +1,12 @@
 ---
+- group:
+    name: dev
+    state: present
+
 - user:
     name: "{{ item }}"
     shell: /bin/bash
-    groups: sudo
+    groups: sudo,dev
     append: yes
   with_items: users
 
@@ -25,3 +29,4 @@
     backrefs: yes
   notify:
   - restart ssh
+
