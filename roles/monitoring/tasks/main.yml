@@ -13,8 +13,11 @@
     dest: "/etc/monit/monitrc"
     mode: 0700
 
+- name: reload monit config
+  shell: monit reload
+
 - name: Ensure monit is running
   service:
     name: monit
-    state: restarted
+    state: started
 

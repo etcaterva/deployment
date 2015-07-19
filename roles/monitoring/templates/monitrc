@@ -1,7 +1,7 @@
 set daemon 120
-set alert mariocj89@gmail.com
-set alert palvarez89@gmail.com
-set alert dnaranjo89@gmail.com
+set alert mariocj89@gmail.com but not on {instance}
+set alert palvarez89@gmail.com but not on {instance}
+set alert dnaranjo89@gmail.com but not on {instance}
 
 set mail-format {
     from: echaloasuerte@gmail.com
@@ -21,7 +21,6 @@ set mailserver smtp.gmail.com port 587
 
 check system $HOST
   if memory > 80% 2 times within 3 cycles then alert
-  if swap > 20% for 4 cycles then alert
   if cpu(user) > 75% for 2 cycles then alert
   if cpu(system) > 65% for 2 cycles then alert
 
