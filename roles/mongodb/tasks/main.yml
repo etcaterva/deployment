@@ -74,3 +74,8 @@
 
 - name: Add mongodb indexes
   shell: mongo < /tmp/indexes.js
+
+- name: Remove huge journal files not needed
+  file:
+    path: /var/lib/mongodb/journal
+    state: absent
