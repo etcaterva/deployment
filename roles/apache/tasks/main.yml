@@ -18,15 +18,26 @@
     name: apache2
     state: started
 
-- copy:
-    src: deny_raw_access.conf
-    dest: /etc/apache2/sites-available/deny_raw_access.conf
+- name: Copy server_status, and deny_raw_access
+  copy:
+    src: "{{ item }}"
+    dest: /etc/apache2/sites-available/{{ item }}
+  with_items:
+  - deny_raw_access.conf
+  - server_status.conf
+  notify:
+  - restart apache
 
 - name: Enable apache the prev config
   file:
-    src: ../sites-available/deny_raw_access.conf
-    dest: /etc/apache2/sites-enabled/deny_raw_access.conf
+    src: ../sites-available/{{ item }}
+    dest: /etc/apache2/sites-enabled/{{ item }}
     state: link
+  with_items:
+  - deny_raw_access.conf
+  - server_status.conf
+  notify:
+  - restart apache
 
 - name: Disable apache default site
   file:
