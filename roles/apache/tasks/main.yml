@@ -10,8 +10,12 @@
 
 - name: Install apache modules needed
   apache2_module:
-    name: wsgi
+    name: "{{ item }}"
     state: present
+  with_items:
+  - wsgi
+  - expires
+  - headers
 
 - name: Ensure apache is running
   service:
