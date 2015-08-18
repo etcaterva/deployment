@@ -21,7 +21,7 @@
   pip:
     name: "{{ item }}"
   with_items:
-#  - ansible
+  - ansible
   - pylint
   - coverage
 
