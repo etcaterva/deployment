@@ -52,6 +52,7 @@
           <sid>pedro</sid>
           <sid>mario</sid>
           <sid>david</sid>
+          <sid>jenkins</sid>
         </assignedSIDs>
       </role>
     </roleMap>
