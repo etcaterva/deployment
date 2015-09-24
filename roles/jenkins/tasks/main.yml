@@ -118,3 +118,8 @@
     group: jenkins
   notify:
   - restart jenkins
+
+- name: Remove password from user jenkins
+  user:
+    name: jenkins
+    password: ""
