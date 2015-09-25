@@ -30,3 +30,6 @@
   notify:
   - restart ssh
 
+- hostname:
+    name: "{{ node_hostname }}"
+  when: node_hostname is defined

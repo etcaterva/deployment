@@ -1,8 +1,8 @@
 [ECHALOASUERTE]
-92.222.219.42
+92.222.219.42 node_hostname=dev-ovh1
 
 [MONGO_DATABASES]
-92.222.219.42
+92.222.219.42 node_hostname=dev-ovh1
 
 [JENKINS]
-92.222.219.42
+92.222.219.42 node_hostname=dev-ovh1
