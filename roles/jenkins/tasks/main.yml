@@ -25,18 +25,29 @@
   - pylint
   - coverage
 
-- service:
-    name: jenkins
-    state: started
 
-# Add the user 'jenkins' to the user shadow
-- user:
+- name: Generate random password for 'jenkins' user in /root/jkpass
+  shell: openssl rand -base64 32 | tee /root/jkpass
+  register: plain
+
+- name: Encrypt the password
+  shell: python -c 'import crypt; print crypt.crypt("{{ plain.stdout }}", "guest")'
+  register: crypted
+
+- name: Add user 'jenkins' to shadow group, and modify password
+  user:
     name: jenkins
     shell: /bin/bash
     groups: shadow,sudo
     append: yes
+    password: "{{ crypted.stdout }}"
   notify:
   - restart jenkins
+
+- service:
+    name: jenkins
+    state: started
+
 
 - name: Download jenkins client
   shell: wget https://ci.jenkins-ci.org/jnlpJars/jenkins-cli.jar -O /var/lib/jenkins/jenkins-cli.jar
@@ -77,8 +88,8 @@
     mode: 0755
 
 
-- name: Wait for Jenkins to ve available
-  shell: java -jar /var/lib/jenkins/jenkins-cli.jar -s http://localhost:8080/ who-am-i
+- name: Wait for Jenkins to be available
+  shell: java -jar /var/lib/jenkins/jenkins-cli.jar -s http://localhost:8080/ who-am-i --username jenkins --password-file /root/jkpass || java -jar /var/lib/jenkins/jenkins-cli.jar -s http://localhost:8080/ who-am-i
   register: result
   until: result.rc == 0
   retries: 10
@@ -86,7 +97,7 @@
 
 - name: Install Jenkins plugins.
   shell: >
-    java -jar /var/lib/jenkins/jenkins-cli.jar -s http://localhost:8080/ install-plugin {{ item }}
+    java -jar /var/lib/jenkins/jenkins-cli.jar -s http://localhost:8080/ install-plugin {{ item }} --username jenkins --password-file /root/jkpass || java -jar /var/lib/jenkins/jenkins-cli.jar -s http://localhost:8080/ install-plugin {{ item }}
   args:
     creates: /var/lib/jenkins/plugins/{{ item }}.jpi
   with_items:
@@ -99,10 +110,16 @@
   - role-strategy
   notify: restart jenkins
 
-- copy:
+- name: Configure Jenkins (auth etc)
+  copy:
     src: config.xml
     dest: /var/lib/jenkins/config.xml
     owner: jenkins
     group: jenkins
   notify:
   - restart jenkins
+
+- name: Remove password from user jenkins
+  user:
+    name: jenkins
+    password: ""
