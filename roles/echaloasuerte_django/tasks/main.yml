@@ -109,3 +109,4 @@
   with_items:
     - "{{cloudflare_echaloasuerte_id}}"
     - "{{cloudflare_pickforme_id}}"
+    - "{{cloudflare_chooserandom_id}}"
