@@ -21,8 +21,8 @@ set mailserver smtp.gmail.com port 587
 
 check system $HOST
   if memory > 80% 2 times within 3 cycles then alert
-  if cpu(user) > 75% for 2 cycles then alert
-  if cpu(system) > 65% for 2 cycles then alert
+  if cpu(user) > 70% 4 times within 5 cycles then alert
+  if cpu(system) > 50% 4 times within 5 cycles then alert
 
 check device data with path /data
     if SPACE usage > 70% then alert
