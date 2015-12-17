@@ -16,6 +16,8 @@
   - wsgi
   - expires
   - headers
+  - proxy
+  - proxy_http
 
 - name: Ensure apache is running
   service:
@@ -29,6 +31,7 @@
   with_items:
   - deny_raw_access.conf
   - server_status.conf
+  - jenkins.conf
   notify:
   - restart apache
 
