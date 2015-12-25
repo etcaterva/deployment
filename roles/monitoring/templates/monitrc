@@ -44,10 +44,3 @@ check process mongodb with pidfile /var/run/mongodb.pid
   if failed port 27017 protocol http
     and request "/" with timeout 10 seconds then restart
   if 5 restarts within 5 cycles then timeout
-
-# Node.js monitorization
-
-check echaloasuerte-node with pidfile /var/run/echaloasuerte-node.pid
-  start program = "/usr/sbin/service echaloasuerte-node start"
-  stop program  = "/usr/sbin/service echaloasuerte-node stop"
-  if 5 restarts within 5 cycles then timeout
