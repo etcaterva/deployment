@@ -1,0 +1,3 @@
+[submodule "roles/ansible-nodejs"]
+	path = roles/ansible-nodejs
+	url = https://github.com/Oefenweb/ansible-nodejs

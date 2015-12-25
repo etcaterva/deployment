@@ -3,3 +3,9 @@
     name: apache2
     state: restarted
     sleep: 5
+
+- name: restart echaloasuerte-node
+  service:
+    name: echaloasuerte-node
+    state: restarted
+    sleep: 5
