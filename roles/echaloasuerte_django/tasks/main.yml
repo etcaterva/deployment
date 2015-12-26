@@ -1,26 +1,8 @@
 - set_fact:
     echaloasuerte_root: "{{ datadir }}/apache/serve/echaloasuerte"
-    echaloasuerte_node: "{{ datadir }}/node"
 - set_fact:
     echaloasuerte_app: "{{ echaloasuerte_root }}/web-app"
     echaloasuerte_venv: "{{ echaloasuerte_root }}/venv"
-
-- name: Create Node.js dirs
-  file:
-    path: "{{ item }}"
-    state: directory
-    owner: root
-    group: root
-  with_items:
-  - "{{ echaloasuerte_node }}"
-  - "{{ echaloasuerte_node }}/logs"
-
-- name: Create Upstart configuration for Node.js server
-  template:
-    src: echaloasuerte-node.conf
-    dest: /etc/init/echaloasuerte-node.conf
-  notify:
-  - restart echaloasuerte-node
 
 - name: Create echaloasuerte application tree
   file:
@@ -43,16 +25,6 @@
     force: yes
   notify:
   - restart apache
-  - restart echaloasuerte-node
-
-- name: Copy Node.js server files
-  shell: cp {{ echaloasuerte_app }}/socketio/* {{ echaloasuerte_node }}
-
-- name: Install npm dependencies
-  npm:
-    path: "{{ echaloasuerte_node }}"
-  notify:
-  - restart echaloasuerte-node
 
 - name: Add xip.io to the ALLOWED_HOSTS list when TEST_DEPLOYMENT is defined
   lineinfile:
