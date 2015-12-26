@@ -6,6 +6,7 @@
     update-cache: yes
   with_items:
   - git
+  - python-dev
   - python-pip
   - gettext
   - curl
