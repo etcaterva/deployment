@@ -12,6 +12,7 @@
   - python-pip
   - gettext
   - curl
+  - fail2ban
 
 - name: Install virtualenv from pip
   pip:
