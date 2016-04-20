@@ -21,7 +21,7 @@
     repo: git://github.com/etcaterva/EchaloASuerte.git
     dest: "{{ echaloasuerte_app }}"
     update: yes
-    accept_hostkey: True
+    accept_hostkey: yes
     force: yes
   notify:
   - restart apache
