@@ -22,11 +22,12 @@
     regexp: '^%sudo'
     line: '%sudo ALL=(ALL) NOPASSWD: ALL'
 
-- lineinfile:
+- name: Disallow password authentication
+  lineinfile:
     dest: /etc/ssh/sshd_config
-    regexp: "^#PasswordAuthentication yes"
+    regexp: "^#?PasswordAuthentication"
     line: PasswordAuthentication no
-    backrefs: yes
+    state: present
   notify:
   - restart ssh
 
