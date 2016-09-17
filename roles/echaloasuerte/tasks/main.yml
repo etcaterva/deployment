@@ -2,7 +2,7 @@
     echaloasuerte_root: "{{ datadir }}/apache/serve/echaloasuerte"
     echaloasuerte_app: "{{ echaloasuerte_root }}/web-app"
     echaloasuerte_venv: "{{ echaloasuerte_root }}/venv"
-    echaloasuerte_logs: "/var/logs/echaloasuerte"
+    echaloasuerte_logs: "/var/log/echaloasuerte"
 
 - name: Create echaloasuerte application tree
   file:
