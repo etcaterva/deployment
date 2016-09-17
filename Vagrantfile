@@ -20,8 +20,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ansible.extra_vars = {
         ansible_ssh_user: 'vagrant',
         ES_FQDN: "192.168.77.22.xip.io",
-        mysqldb_admin_user: "root",
-        mysqldb_admin_password: "rootpass",
         mongodb_admin_user: "root",
         mongodb_admin_password: "rootpass",
         echaloasuerte_gmail_password: "gmailpass",
