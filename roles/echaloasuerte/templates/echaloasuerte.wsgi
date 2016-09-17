@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "echaloasuerte.settings.prod")
+os.environ.setdefault("ECHALOASUERTE_LOGS_PATH", "{{echaloasuerte_logs}}")
 
 # Activate your virtual env
 activate_env=os.path.expanduser("{{ echaloasuerte_venv }}/bin/activate_this.py")
