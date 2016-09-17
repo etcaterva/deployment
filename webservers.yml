@@ -4,5 +4,4 @@
   - users
   - apache
   - { role: monitoring }
-  - { role: echaloasuerte_django, datadir: "/data" }
-  - { role: echaloasuerte_php, datadir: "/data" }
+  - { role: echaloasuerte, datadir: "/data" }
