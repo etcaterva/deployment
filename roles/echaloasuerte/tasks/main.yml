@@ -1,8 +1,8 @@
 - set_fact:
     echaloasuerte_root: "{{ datadir }}/apache/serve/echaloasuerte"
-- set_fact:
     echaloasuerte_app: "{{ echaloasuerte_root }}/web-app"
     echaloasuerte_venv: "{{ echaloasuerte_root }}/venv"
+    echaloasuerte_logs: "/var/logs/echaloasuerte"
 
 - name: Create echaloasuerte application tree
   file:
@@ -11,10 +11,10 @@
     owner: www-data
     recurse: yes
   with_items:
-  - "{{ echaloasuerte_root }}/logs"
   - "{{ echaloasuerte_root }}/static"
   - "{{ echaloasuerte_app }}"
   - "{{ echaloasuerte_venv }}"
+  - "{{ echaloasuerte_logs }}"
 
 - name: Clone/update repository in {{ echaloasuerte_app }}
   git:
@@ -53,12 +53,6 @@
   notify:
   - restart apache
 
-- name: Set pusher token
-  shell: sed -i "s/PUSHER_SECRET_PLACEHOLDER/{{ pusher_secret }}/g" {{ echaloasuerte_app }}/echaloasuerte/settings/common.py
-
-- name: Set gmail password
-  shell: sed -i "s/GMAIL_PASSWORD_PLACEHOLDER/{{ echaloasuerte_gmail_password }}/g" {{ echaloasuerte_app }}/echaloasuerte/settings/common.py
-
 - name: Compile messages of django application
   shell: |
          {{ echaloasuerte_venv }}/bin/python {{ echaloasuerte_app }}/manage.py compilemessages
@@ -82,10 +76,10 @@
     owner: www-data
     recurse: yes
   with_items:
-  - "{{ echaloasuerte_root }}/logs"
   - "{{ echaloasuerte_root }}/static"
   - "{{ echaloasuerte_app }}"
   - "{{ echaloasuerte_venv }}"
+  - "{{ echaloasuerte_logs }}"
 
 - name: Create the apache config file
   template:
