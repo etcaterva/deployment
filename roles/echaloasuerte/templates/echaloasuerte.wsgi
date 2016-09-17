@@ -10,6 +10,8 @@ https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "echaloasuerte.settings.prod")
 os.environ.setdefault("ECHALOASUERTE_LOGS_PATH", "{{echaloasuerte_logs}}")
+os.environ.setdefault("EAS_PUSHER_SECRET", "{{pusher_secret}}")
+os.environ.setdefault("EAS_MAIL_PASSWORD", "{{echaloasuerte_gmail_password}}")
 
 # Activate your virtual env
 activate_env=os.path.expanduser("{{ echaloasuerte_venv }}/bin/activate_this.py")

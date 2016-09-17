@@ -53,12 +53,6 @@
   notify:
   - restart apache
 
-- name: Set pusher token
-  shell: sed -i "s/PUSHER_SECRET_PLACEHOLDER/{{ pusher_secret }}/g" {{ echaloasuerte_app }}/echaloasuerte/settings/common.py
-
-- name: Set gmail password
-  shell: sed -i "s/GMAIL_PASSWORD_PLACEHOLDER/{{ echaloasuerte_gmail_password }}/g" {{ echaloasuerte_app }}/echaloasuerte/settings/common.py
-
 - name: Compile messages of django application
   shell: |
          {{ echaloasuerte_venv }}/bin/python {{ echaloasuerte_app }}/manage.py compilemessages
