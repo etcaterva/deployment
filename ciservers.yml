@@ -1,5 +1,0 @@
-- hosts: JENKINS
-  remote_user: root
-  roles:
-  - users
-  - jenkins
