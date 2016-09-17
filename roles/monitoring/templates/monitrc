@@ -4,7 +4,7 @@ set alert palvarez89@gmail.com but not on {instance, action}
 set alert dnaranjo89@gmail.com but not on {instance, action}
 
 set mail-format {
-    from: echaloasuerte@gmail.com
+    from: postmaster@chooserandom.com
     subject: [echaloasuerte][monitoring] $SERVICE $EVENT at $DATE
     message: Monit $ACTION $SERVICE at $DATE on $HOST: $DESCRIPTION.
         by monit
@@ -14,8 +14,8 @@ set httpd port 2812
     use address 0.0.0.0
     allow @dev read-only
 
-set mailserver smtp.gmail.com port 587
-    username "echaloasuerte@gmail.com"
+set mailserver smtp.mailgun.org port 587
+    username "postmaster@chooserandom.com"
     password "{{ echaloasuerte_gmail_password }}"
     using tlsv1 with timeout 30 seconds
 
