@@ -1,7 +1,7 @@
 - hosts: ECHALOASUERTE
   remote_user: root
   roles:
-  - users
-  - apache
-  - { role: monitoring }
-  - { role: echaloasuerte, datadir: "/data" }
+  - { role: users, become: yes }
+  - { role: apache, become: yes }
+  - { role: monitoring, become: yes  }
+  - { role: echaloasuerte, datadir: "/data", become: yes  }
