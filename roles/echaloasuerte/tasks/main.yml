@@ -1,5 +1,6 @@
 - set_fact:
     echaloasuerte_root: "{{ datadir }}/apache/serve/echaloasuerte"
+- set_fact:
     echaloasuerte_app: "{{ echaloasuerte_root }}/web-app"
     echaloasuerte_venv: "{{ echaloasuerte_root }}/venv"
     echaloasuerte_logs: "/var/log/echaloasuerte"
