@@ -8,13 +8,13 @@
     shell: /bin/bash
     groups: sudo,dev
     append: yes
-  with_items: users
+  with_items: "{{ users }}"
 
 - name: Set up authorized_keys for the users
   authorized_key:
     user: "{{ item }}"
     key: "{{ lookup('file', 'public_keys/' + item) }}"
-  with_items: users
+  with_items: "{{ users }}"
 
 - lineinfile:
     dest: /etc/sudoers
