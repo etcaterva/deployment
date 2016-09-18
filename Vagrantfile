@@ -22,7 +22,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         ES_FQDN: "192.168.77.22.xip.io",
         mongodb_admin_user: "root",
         mongodb_admin_password: "rootpass",
-        echaloasuerte_gmail_password: "gmailpass",
+        mail_password: "gmailpass",
         TEST_DEPLOYMENT: "True",
         cloudflare_api_token: "faketoken",
         cloudflare_echaloasuerte_id: "fakeid",

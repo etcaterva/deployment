@@ -16,7 +16,7 @@ set httpd port 2812
 
 set mailserver smtp.mailgun.org port 587
     username "postmaster@chooserandom.com"
-    password "{{ echaloasuerte_gmail_password }}"
+    password "{{ mail_password }}"
     using tlsv1 with timeout 30 seconds
 
 check system $HOST
