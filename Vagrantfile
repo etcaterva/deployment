@@ -28,6 +28,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         cloudflare_echaloasuerte_id: "fakeid",
         cloudflare_pickforme_id: "fakeid",
         cloudflare_chooserandom_id: "fakeid",
+        pusher_secret: "fakesecret",
       }
 
       ansible.groups = {
