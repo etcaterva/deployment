@@ -1,0 +1,11 @@
+sudo: required
+dist: trusty
+language: python
+python:
+-   "2.7"
+install:
+-   pip install ansible
+
+script:
+-   mv group_vars/testing_vars group_vars/all
+-   ansible-playbook -i hosts_local webservers.yml -vvvv
