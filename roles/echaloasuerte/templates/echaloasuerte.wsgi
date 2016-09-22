@@ -12,6 +12,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "echaloasuerte.settings.prod")
 os.environ.setdefault("ECHALOASUERTE_LOGS_PATH", "{{echaloasuerte_logs}}")
 os.environ.setdefault("EAS_PUSHER_SECRET", "{{pusher_secret}}")
 os.environ.setdefault("EAS_MAIL_PASSWORD", "{{mail_password}}")
+os.environ.setdefault("EAS_STATIC_ROOT", "{{echaloasuerte_static}}")
 
 # Activate your virtual env
 activate_env=os.path.expanduser("{{ echaloasuerte_venv }}/bin/activate_this.py")
