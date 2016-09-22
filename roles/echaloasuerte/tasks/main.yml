@@ -3,6 +3,7 @@
 - set_fact:
     echaloasuerte_app: "{{ echaloasuerte_root }}/web-app"
     echaloasuerte_venv: "{{ echaloasuerte_root }}/venv"
+    echaloasuerte_static: "{{ echaloasuerte_root }}/static"
     echaloasuerte_logs: "/var/log/echaloasuerte"
 
 - name: Create echaloasuerte application tree
@@ -12,7 +13,8 @@
     owner: www-data
     recurse: yes
   with_items:
-  - "{{ echaloasuerte_root }}/static"
+  - "{{ echaloasuerte_root }}"
+  - "{{ echaloasuerte_static }}"
   - "{{ echaloasuerte_app }}"
   - "{{ echaloasuerte_venv }}"
   - "{{ echaloasuerte_logs }}"
@@ -77,7 +79,8 @@
     owner: www-data
     recurse: yes
   with_items:
-  - "{{ echaloasuerte_root }}/static"
+  - "{{ echaloasuerte_root }}"
+  - "{{ echaloasuerte_static }}"
   - "{{ echaloasuerte_app }}"
   - "{{ echaloasuerte_venv }}"
   - "{{ echaloasuerte_logs }}"
