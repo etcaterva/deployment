@@ -27,7 +27,7 @@
     accept_hostkey: yes
     force: yes
   notify:
-  - restart apache
+  - restart uwsgi
 
 - name: Add xip.io to the ALLOWED_HOSTS list when TEST_DEPLOYMENT is defined
   lineinfile:
@@ -54,7 +54,7 @@
     src: echaloasuerte.wsgi
     dest: "{{ echaloasuerte_app }}/echaloasuerte.wsgi"
   notify:
-  - restart apache
+  - restart uwsgi
 
 - name: Compile messages of django application
   shell: |
@@ -85,24 +85,31 @@
   - "{{ echaloasuerte_venv }}"
   - "{{ echaloasuerte_logs }}"
 
-- name: Create the apache config file
+- name: Create uwsgi config file for echaloasuerte
   template:
-    src: echaloasuerte.conf
-    dest: /etc/apache2/sites-available/echaloasuerte.conf
+    src: echaloasuerte-uwsgi.ini
+    dest: /etc/uwsgi/sites/echaloasuerte.ini
   notify:
-  - restart apache
+  - restart uwsgi
 
-- name: Enable apache site ecaheloasuerte
+- name: Create the nginx config file for echaloasuerte
+  template:
+    src: echaloasuerte-nginx.conf
+    dest: /etc/nginx/sites-available/echaloasuerte.conf
+  notify:
+  - restart nginx
+
+- name: Enable nginx site ecaheloasuerte
   file:
     src: ../sites-available/echaloasuerte.conf
-    dest: /etc/apache2/sites-enabled/echaloasuerte.conf
+    dest: /etc/nginx/sites-enabled/echaloasuerte.conf
     state: link
   notify:
-  - restart apache
+  - restart nginx
 
-- name: Ensure apache is running
+- name: Ensure nginx is running
   service:
-    name: apache2
+    name: nginx
     state: started
 
 - name: Purge cloudflare cache
