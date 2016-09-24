@@ -1,0 +1,63 @@
+---
+- name: Remove Apache APT packages
+  apt:
+    pkg: "{{ item }}"
+    state: absent
+  with_items:
+  - apache2
+  - libapache2-mod-wsgi
+
+- name: Install packages needed from apt for nginx
+  apt:
+    pkg: "{{ item }}"
+    state: present
+    update-cache: yes
+  with_items:
+  - nginx
+
+- name: Ensure nginx is running
+  service:
+    name: nginx
+    state: started
+
+- name: Install the LTS version of uwsgi
+  pip:
+    name: https://projects.unbit.it/downloads/uwsgi-lts.tar.gz
+
+- name: Create uwsgi configuration dir for emperor mode
+  file:
+    path: /etc/uwsgi/sites
+    state: directory
+
+- name: Install uwsgi Upstart conf file
+  copy:
+    src: uwsgi-upstart.conf
+    dest: /etc/init/uwsgi.conf
+  notify:
+  - restart uwsgi
+
+- name: Copy deny_raw_access.conf
+  copy:
+    src: "{{ item }}"
+    dest: /etc/nginx/sites-available/{{ item }}
+  with_items:
+  - deny_raw_access.conf
+  notify:
+  - restart nginx
+
+- name: Enable sites previously copied for nginx
+  file:
+    src: ../sites-available/{{ item }}
+    dest: /etc/nginx/sites-enabled/{{ item }}
+    state: link
+  with_items:
+  - deny_raw_access.conf
+  notify:
+  - restart nginx
+
+- name: Disable nginx default site
+  file:
+      path: /etc/nginx/sites-enabled/default
+      state: absent
+  notify:
+  - restart nginx

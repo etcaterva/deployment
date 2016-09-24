@@ -1,0 +1,11 @@
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted
+    sleep: 5
+
+- name: restart uwsgi
+  service:
+    name: uwsgi
+    state: restarted
+    sleep: 5
