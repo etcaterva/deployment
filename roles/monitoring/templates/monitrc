@@ -27,14 +27,19 @@ check system $HOST
 check device data with path /data
     if SPACE usage > 70% then alert
 
-# Apache monitorization
+# Nginx monitorization
 
-check process apache with pidfile /var/run/apache2/apache2.pid
+check process nginx with pidfile /var/run/nginx.pid
   group www-data
-  start program = "/etc/init.d/apache2 start"
-  stop program  = "/etc/init.d/apache2 stop"
+  start program = "/etc/init.d/nginx start"
+  stop program  = "/etc/init.d/nginx stop"
   if 4 restarts within 20 cycles then timeout
-  if failed host localhost port 80 with protocol http and request "/server-status" with timeout 25 seconds for 4 times within 5 cycles then restart
+
+# uWSGI monitorization
+
+check process uwsgi with pidfile /var/run/uwsgi.pid
+  start program = "/usr/sbin/service uwsgi start"
+  stop program  = "/usr/sbin/service uwsgi stop"
 
 # MongoDB monitorization
 

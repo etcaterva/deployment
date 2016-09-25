@@ -2,6 +2,6 @@
   remote_user: root
   roles:
   - { role: users, become: yes }
-  - { role: apache, become: yes }
+  - { role: nginx, become: yes }
   - { role: monitoring, become: yes  }
   - { role: echaloasuerte, datadir: "/data", become: yes  }
