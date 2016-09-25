@@ -29,10 +29,34 @@
     path: /etc/uwsgi/sites
     state: directory
 
+- name: Create uwsgi logs directory
+  file:
+    path: /var/log/uwsgi
+    state: directory
+    owner: www-data
+    group: www-data
+
 - name: Install uwsgi Upstart conf file
   copy:
     src: uwsgi-upstart.conf
     dest: /etc/init/uwsgi.conf
+  when: ansible_service_mgr is undefined or ansible_service_mgr != "systemd"
+  notify:
+  - restart uwsgi
+
+- name: Ensure uwsgi is started and enabled on boot (systemd)
+  service:
+    name: uwsgi
+    state: started
+    enabled: yes
+  when: ansible_service_mgr is undefined or ansible_service_mgr != "systemd"
+
+- name: Install uwsgi Systemd service file
+  copy:
+    src: uwsgi-systemd.service
+    dest: /etc/systemd/system/uwsgi.service
+    mode: 0644
+  when: ansible_service_mgr is defined and ansible_service_mgr == "systemd"
   notify:
   - restart uwsgi
 

@@ -1,0 +1,14 @@
+[Unit]
+Description=uWSGI Emperor
+After=syslog.target
+
+[Service]
+ExecStart=/bin/sh -c '/usr/local/bin/uwsgi --uid www-data --gid www-data --emperor /etc/uwsgi/sites --pidfile /var/run/uwsgi.pid >> /var/log/uwsgi/emperor.log 2>&1'
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+NotifyAccess=all
+PIDFile=/var/run/uwsgi.pid
+
+[Install]
+WantedBy=multi-user.target
