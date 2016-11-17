@@ -1,12 +1,4 @@
 ---
-- name: Remove Apache APT packages
-  apt:
-    pkg: "{{ item }}"
-    state: absent
-  with_items:
-  - apache2
-  - libapache2-mod-wsgi
-
 - name: Install packages needed from apt for nginx
   apt:
     pkg: "{{ item }}"
