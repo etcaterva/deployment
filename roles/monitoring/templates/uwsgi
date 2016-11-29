@@ -1,0 +1,5 @@
+# uWSGI monitorization
+
+check process uwsgi{{ item }} with pidfile /var/run/uwsgi{{ item }}.pid
+  start program = "/usr/sbin/service uwsgi{{ item }} start"
+  stop program  = "/usr/sbin/service uwsgi{{ item }} stop"

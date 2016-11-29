@@ -1,4 +1,7 @@
 ---
+- set_fact:
+    uwsgi_n: 2
+
 - name: Install packages needed from apt for nginx
   apt:
     pkg: "{{ item }}"
@@ -18,39 +21,36 @@
 
 - name: Create uwsgi configuration dir for emperor mode
   file:
-    path: /etc/uwsgi/sites
+    path: /etc/uwsgi{{ item }}/sites
     state: directory
-
-- name: Create uwsgi logs directory
-  file:
-    path: /var/log/uwsgi
-    state: directory
-    owner: www-data
-    group: www-data
+  with_sequence: count={{ uwsgi_n }}
 
 - name: Install uwsgi Upstart conf file
-  copy:
+  template:
     src: uwsgi-upstart.conf
-    dest: /etc/init/uwsgi.conf
+    dest: /etc/init/uwsgi{{ item }}.conf
+  with_sequence: count={{ uwsgi_n }}
   when: ansible_service_mgr is undefined or ansible_service_mgr != "systemd"
   notify:
-  - restart uwsgi
+  - restart all uwsgi
+
+- name: Install uwsgi Systemd service file
+  template:
+    src: uwsgi-systemd.service
+    dest: /etc/systemd/system/uwsgi{{ item }}.service
+    mode: 0644
+  with_sequence: count={{ uwsgi_n }}
+  when: ansible_service_mgr is defined and ansible_service_mgr == "systemd"
+  notify:
+  - restart all uwsgi
 
 - name: Ensure uwsgi is started and enabled on boot (systemd)
   service:
-    name: uwsgi
+    name: uwsgi{{ item }}
     state: started
     enabled: yes
+  with_sequence: count={{ uwsgi_n }}
   when: ansible_service_mgr is undefined or ansible_service_mgr != "systemd"
-
-- name: Install uwsgi Systemd service file
-  copy:
-    src: uwsgi-systemd.service
-    dest: /etc/systemd/system/uwsgi.service
-    mode: 0644
-  when: ansible_service_mgr is defined and ansible_service_mgr == "systemd"
-  notify:
-  - restart uwsgi
 
 - name: Copy deny_raw_access.conf
   copy:

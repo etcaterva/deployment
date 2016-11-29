@@ -4,8 +4,9 @@
     state: restarted
     sleep: 5
 
-- name: restart uwsgi
+- name: restart all uwsgi
   service:
-    name: uwsgi
+    name: uwsgi{{ item }}
     state: restarted
     sleep: 5
+  with_sequence: count={{ uwsgi_n }}

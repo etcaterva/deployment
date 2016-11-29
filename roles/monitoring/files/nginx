@@ -1,0 +1,7 @@
+# nginx monitorization
+
+check process nginx with pidfile /var/run/nginx.pid
+  group www-data
+  start program = "/etc/init.d/nginx start"
+  stop program  = "/etc/init.d/nginx stop"
+  if 4 restarts within 20 cycles then timeout
