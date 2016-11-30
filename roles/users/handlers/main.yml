@@ -3,3 +3,4 @@
   service:
     name: ssh
     state: restarted
+  when: TRAVIS_DEPLOYMENT is not defined

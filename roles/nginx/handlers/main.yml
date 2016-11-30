@@ -10,3 +10,4 @@
     state: restarted
     sleep: 5
   with_sequence: count={{ uwsgi_n }}
+  when: TRAVIS_DEPLOYMENT is not defined
