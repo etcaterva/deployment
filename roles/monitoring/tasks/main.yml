@@ -1,4 +1,7 @@
 ---
+- set_fact:
+    uwsgi_n: 2
+
 - name: Install packages needed from apt
   apt:
     pkg: "{{ item }}"
@@ -7,11 +10,36 @@
   with_items:
   - monit
 
-- name: Set monit config file
+- name: Set monit master config file
   template:
     src: monitrc
     dest: "/etc/monit/monitrc"
     mode: 0700
+
+- name: Create custom monitrc folder
+  file:
+    path: /etc/monit/monitconf.d
+    owner: root
+    group: root
+    state: directory
+
+- name: Copy monit configuration for services
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/monit/monitconf.d/{{ item }}"
+    mode: 0700
+  with_items:
+  - fail2ban
+  - mongodb
+  - nginx
+  - system
+
+- name: Template uwsgi monit configuration file
+  template:
+    src: uwsgi
+    dest: "/etc/monit/monitconf.d/uwsgi{{ item }}"
+    mode: 0700
+  with_sequence: count={{ uwsgi_n }}
 
 - name: reload monit config
   shell: monit reload
