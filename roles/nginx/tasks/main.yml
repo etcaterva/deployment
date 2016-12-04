@@ -50,7 +50,6 @@
     state: started
     enabled: yes
   with_sequence: count={{ uwsgi_n }}
-  when: ansible_service_mgr is undefined or ansible_service_mgr != "systemd"
 
 - name: Copy deny_raw_access.conf
   copy:
