@@ -1,14 +1,47 @@
 ---
 - set_fact:
     uwsgi_n: 2
+    monit_version: "5.20.0"
 
-- name: Install packages needed from apt
-  apt:
-    pkg: "{{ item }}"
-    state: present
-    update-cache: yes
-  with_items:
-  - monit
+- name: Fetch monit binary
+  unarchive:
+    src: "https://mmonit.com/monit/dist/binary/{{ monit_version }}/monit-{{ monit_version }}-linux-x64.tar.gz"
+    dest: /tmp/
+    remote_src: yes
+    creates: /tmp/monit-{{ monit_version }}/bin/monit
+
+- name: Copy monit binary to /usr/bin
+  copy:
+    src: /tmp/monit-{{ monit_version }}/bin/monit
+    remote_src: yes
+    dest: /usr/bin/monit
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Install monit Upstart conf file
+  copy:
+    src: monit-upstart.conf
+    dest: /etc/init/monit.conf
+  when: ansible_service_mgr is undefined or ansible_service_mgr != "systemd"
+  notify:
+  - restart monit
+
+- name: Install monit Systemd service file
+  copy:
+    src: monit-systemd.service
+    dest: /etc/systemd/system/monit.service
+    mode: 0644
+  when: ansible_service_mgr is defined and ansible_service_mgr == "systemd"
+  notify:
+  - restart monit
+
+- name: Create custom monitrc folder
+  file:
+    path: /etc/monit/monitrc.d
+    owner: root
+    group: root
+    state: directory
 
 - name: Set monit master config file
   template:
@@ -16,17 +49,10 @@
     dest: "/etc/monit/monitrc"
     mode: 0700
 
-- name: Create custom monitrc folder
-  file:
-    path: /etc/monit/monitconf.d
-    owner: root
-    group: root
-    state: directory
-
 - name: Copy monit configuration for services
   copy:
     src: "{{ item }}"
-    dest: "/etc/monit/monitconf.d/{{ item }}"
+    dest: "/etc/monit/monitrc.d/{{ item }}"
     mode: 0700
   with_items:
   - fail2ban
@@ -37,15 +63,16 @@
 - name: Template uwsgi monit configuration file
   template:
     src: uwsgi
-    dest: "/etc/monit/monitconf.d/uwsgi{{ item }}"
+    dest: "/etc/monit/monitrc.d/uwsgi{{ item }}"
     mode: 0700
   with_sequence: count={{ uwsgi_n }}
 
 - name: reload monit config
-  shell: monit reload
+  shell: monit reload -c /etc/monit/monitrc
 
-- name: Ensure monit is running
+- name: Ensure monit is started and enabled on boot (systemd)
   service:
     name: monit
     state: started
+    enabled: yes
 

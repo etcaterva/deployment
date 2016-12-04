@@ -1,0 +1,13 @@
+[Unit]
+Description=Pro-active monitoring utility for unix systems
+After=network.target
+
+[Service]
+Type=simple
+KillMode=process
+ExecStart=/usr/bin/monit -I -c /etc/monit/monitrc
+ExecStop=/usr/bin/monit -c /etc/monit/monitrc quit
+ExecReload=/usr/bin/monit -c /etc/monit/monitrc reload
+
+[Install]
+WantedBy=multi-user.target

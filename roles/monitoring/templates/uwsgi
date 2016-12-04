@@ -3,7 +3,4 @@
 check process uwsgi{{ item }} with pidfile /var/run/uwsgi{{ item }}.pid
   start program = "/usr/sbin/service uwsgi{{ item }} start"
   stop program  = "/usr/sbin/service uwsgi{{ item }} stop"
-  # Commented out because this won't fix the uwsgi-eating-cpu problem.
-  # We need a full restart for this.
-  #if cpu > 10% for 2 cycles then exec "/bin/bash -c 'kill -SIGHUP `cat /var/run/uwsgi{{ item }}.pid`'"
-  if cpu > 10% for 2 cycles then restart
+  if total cpu > 30% for 2 cycles then restart

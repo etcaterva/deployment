@@ -19,4 +19,4 @@ set mailserver smtp.mailgun.org port 587
     password "{{ mail_password }}"
     using tlsv1 with timeout 30 seconds
 
-include /etc/monit/monitconf.d/*
+include /etc/monit/monitrc.d/*
