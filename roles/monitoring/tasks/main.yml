@@ -1,6 +1,5 @@
 ---
 - set_fact:
-    uwsgi_n: 2
     monit_version: "5.20.0"
 
 - name: Fetch monit binary

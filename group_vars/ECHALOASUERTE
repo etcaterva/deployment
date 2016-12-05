@@ -7,3 +7,5 @@ FQDN:
   - "{{ ES_FQDN }}"
   - "{{ EN_FQDN }}"
   - "{{ EN_FQDN2 }}"
+
+uwsgi_n: 2

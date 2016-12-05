@@ -1,7 +1,4 @@
 - set_fact:
-    uwsgi_n: 2
-
-- set_fact:
     echaloasuerte_root: "/var/www/echaloasuerte"
 - set_fact:
     echaloasuerte_app: "{{ echaloasuerte_root }}/web-app"

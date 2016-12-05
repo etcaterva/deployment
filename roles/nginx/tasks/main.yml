@@ -1,7 +1,4 @@
 ---
-- set_fact:
-    uwsgi_n: 2
-
 - name: Install packages needed from apt for nginx
   apt:
     pkg: "{{ item }}"
