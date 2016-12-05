@@ -3,6 +3,7 @@
 check process mongodb with pidfile /var/run/mongodb.pid
   start program = "/usr/sbin/service mongod start"
   stop program  = "/usr/sbin/service mongod stop"
-  if failed port 27017 protocol http
-    and request "/" with timeout 10 seconds then restart
+  if failed
+    unixsocket /tmp/mongodb-27017.sock
+      then restart
   if 5 restarts within 5 cycles then timeout
