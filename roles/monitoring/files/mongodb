@@ -1,6 +1,6 @@
 # MongoDB monitorization
 
-check process mongodb with pidfile /var/run/mongodb.pid
+check process mongodb with pidfile /var/lib/mongodb/mongodb.pid
   start program = "/usr/sbin/service mongod start"
   stop program  = "/usr/sbin/service mongod stop"
   if failed
