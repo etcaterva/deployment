@@ -14,7 +14,7 @@
 
 - name: Install the LTS version of uwsgi
   pip:
-    name: https://projects.unbit.it/downloads/uwsgi-lts.tar.gz
+    name: http://projects.unbit.it/downloads/uwsgi-lts.tar.gz
 
 - name: Create uwsgi configuration dir for emperor mode
   file:
