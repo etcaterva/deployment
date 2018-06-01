@@ -1,0 +1,13 @@
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted
+    sleep: 5
+
+- name: restart all uwsgi
+  service:
+    name: uwsgi{{ item }}
+    state: restarted
+    sleep: 5
+  with_sequence: count={{ uwsgi_n }}
+  when: TRAVIS_DEPLOYMENT is not defined

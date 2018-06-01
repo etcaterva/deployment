@@ -1,0 +1,121 @@
+- set_fact:
+    echaloasuerte_root: "/var/www/echaloasuerte-new"
+- set_fact:
+    echaloasuerte_app: "{{ echaloasuerte_root }}/web-app"
+    echaloasuerte_venv: "{{ echaloasuerte_root }}/venv"
+    echaloasuerte_static: "{{ echaloasuerte_root }}/static"
+    echaloasuerte_logs: "/var/log/echaloasuerte"
+
+- name: Create echaloasuerte application tree
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: www-data
+    recurse: yes
+  with_items:
+  - "{{ echaloasuerte_root }}"
+  - "{{ echaloasuerte_static }}"
+  - "{{ echaloasuerte_app }}"
+  - "{{ echaloasuerte_venv }}"
+  - "{{ echaloasuerte_logs }}"
+
+- name: Clone/update repository in {{ echaloasuerte_app }}
+  git:
+    repo: git://github.com/etcaterva/eas-flask.git
+    dest: "{{ echaloasuerte_app }}"
+    update: yes
+    accept_hostkey: yes
+    force: yes
+  notify:
+  - restart all uwsgi
+
+- name: Add xip.io to the ALLOWED_HOSTS list when TEST_DEPLOYMENT is defined
+  lineinfile:
+    dest: "{{ echaloasuerte_app }}/echaloasuerte/settings/common.py"
+    regexp: "xip.io"
+    insertafter: "^ALLOWED_HOSTS"
+    line: "    '.xip.io',"
+  when: TEST_DEPLOYMENT is defined
+
+- name: Setup virtual environment for the app using requirements.txt
+  pip:
+    requirements: "{{ echaloasuerte_app }}/requirements.txt"
+    virtualenv: "{{ echaloasuerte_venv }}"
+
+- name: Install python packages needed outside of the virtual environment
+  pip:
+    name: "{{ item }}"
+  with_items:
+  - pytz
+  - pymongo
+
+- name: Add virtualenv info in echaloasuerte.wsgi
+  template:
+    src: echaloasuerte.wsgi
+    dest: "{{ echaloasuerte_app }}/echaloasuerte.wsgi"
+  notify:
+  - restart all uwsgi
+
+- name: Compile messages of django application
+  shell: |
+         {{ echaloasuerte_venv }}/bin/python {{ echaloasuerte_app }}/manage.py compilemessages
+
+- name: Synchronize django app database
+  django_manage:
+    command: syncdb
+    app_path: "{{ echaloasuerte_app }}"
+    virtualenv: "{{ echaloasuerte_venv }}"
+
+- name: Collect statics files of django application
+  django_manage:
+    command: collectstatic
+    app_path: "{{ echaloasuerte_app }}"
+    virtualenv: "{{ echaloasuerte_venv }}"
+
+- name: Fix owners of echaloasuerte application tree
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: www-data
+    recurse: yes
+  with_items:
+  - "{{ echaloasuerte_root }}"
+  - "{{ echaloasuerte_static }}"
+  - "{{ echaloasuerte_app }}"
+  - "{{ echaloasuerte_venv }}"
+  - "{{ echaloasuerte_logs }}"
+
+- name: Create uwsgi config file for echaloasuerte
+  template:
+    src: echaloasuerte-uwsgi.ini
+    dest: /etc/uwsgi{{ item }}/sites/echaloasuerte.ini
+  with_sequence: count={{ uwsgi_n }}
+  notify:
+  - restart all uwsgi
+
+- name: Create the nginx config file for echaloasuerte
+  template:
+    src: echaloasuerte-nginx.conf
+    dest: /etc/nginx/sites-available/echaloasuerte.conf
+  notify:
+  - restart nginx
+
+- name: Enable nginx site ecaheloasuerte
+  file:
+    src: ../sites-available/echaloasuerte.conf
+    dest: /etc/nginx/sites-enabled/echaloasuerte.conf
+    state: link
+  notify:
+  - restart nginx
+
+- name: Ensure nginx is running
+  service:
+    name: nginx
+    state: started
+
+- name: Purge cloudflare cache
+  shell: 'curl -X DELETE "https://api.cloudflare.com/client/v4/zones/{{item}}/purge_cache" -H "X-Auth-Email: mariocj89@gmail.com" -H "X-Auth-Key: {{cloudflare_api_token}}" --data "{\"purge_everything\":true}" -H "Content-Type: application/json"'
+  with_items:
+    - "{{cloudflare_echaloasuerte_id}}"
+    - "{{cloudflare_pickforme_id}}"
+    - "{{cloudflare_chooserandom_id}}"
