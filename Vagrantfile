@@ -6,7 +6,8 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.box = "ubuntu/trusty64"
+  config.vm.box = "peru/ubuntu-18.04-server-amd64"
+  config.vm.box_version = "20180530.01"
 
   config.vm.define 'echaloasuerte1' do |machine|
     machine.vm.hostname = 'echaloasuerte1'
