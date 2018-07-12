@@ -86,6 +86,16 @@ configured to work:
 - <http://www.192.168.77.22.xip.io>
 - <http://2011.192.168.77.22.xip.io>
 
+
+Ansible Galaxy Dependencies
+---------------------------
+
+Just to make sure we will always have the ansible dependencies available, they
+are imported into our repository. These have been imported by running:
+
+    ansible-galaxy install --roles-path roles -r requirements.yml
+
+
 [Ansible install guide]: http://docs.ansible.com/intro_installation.html
 [Ansible]: http://docs.ansible.com/ansible/index.html
 [how to run a playbook with vault]: http://docs.ansible.com/ansible/playbooks_vault.html#running-a-playbook-with-vault
