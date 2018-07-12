@@ -13,7 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     machine.vm.network "private_network", ip: "192.168.77.22"
 
     machine.vm.provision :ansible do |ansible|
-      ansible.playbook = "site.yml"
+      ansible.playbook = "site-3.yml"
       ansible.sudo = true
       ansible.verbose = 'vvvv'
 

@@ -1,0 +1,7 @@
+- hosts: ECHALOASUERTE
+  vars_files:
+  - docker-vars.yml
+  remote_user: root
+  roles:
+  - { role: users, become: yes }
+  - { role: geerlingguy.docker, become: yes }
