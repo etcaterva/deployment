@@ -1,5 +1,5 @@
 - hosts: MONGO_DATABASES
   remote_user: root
   roles:
-  - users
-  - { role: mongodb, datadir: "/data" }
+  - { role: users, become: true }
+  - mongodb

@@ -1,5 +1,5 @@
 [ECHALOASUERTE]
-92.222.219.42 node_hostname=dev-ovh1
+54.38.215.150 node_hostname=dev-ovh2
 
 [MONGO_DATABASES]
-92.222.219.42 node_hostname=dev-ovh1
+54.38.215.150 node_hostname=dev-ovh2

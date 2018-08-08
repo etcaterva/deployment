@@ -1,23 +1,26 @@
 ---
 
 - set_fact:
-    mongodb_datadir_prefix: "{{ datadir }}/mongodb"
+    mongodb_datadir_prefix: "/var/lib/mongodb"
 
 # This apt_key may not be right
 - apt_key:
     keyserver: hkp://keyserver.ubuntu.com:80
-    id: 7F0CEB10
+    id: E52529D4
+  become: yes
 
 - apt_repository:
-    repo: deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse
+    repo: deb http://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse
     state: present
+  become: yes
 
 - name: Install the mongodb package
   apt:
     name: "{{ item }}"
-    state: installed
+    state: present
     update-cache: yes
     force: yes
+  become: yes
   with_items:
   - mongodb-org
   - python-pip
@@ -28,26 +31,10 @@
     state: latest
     use_mirrors: no
 
-- name: Create the data directory for the namenode metadata
-  file:
-    path: "{{ item }}"
-    owner: mongodb
-    group: mongodb
-    state: directory
-  with_items:
-  - "{{ mongodb_datadir_prefix }}/db"
-  - "{{ mongodb_datadir_prefix }}/log"
-
-- name: Fix datadir owner
-  file:
-    path: "{{ datadir }}"
-    owner: root
-    group: root
-    state: directory
-
 - template:
     src: mongod.conf
     dest: /etc/mongod.conf
+  become: yes
   notify:
   - restart mongod
 
@@ -55,7 +42,7 @@
   service:
     name: mongod
     state: restarted
-    sleep: 5
+  become: yes
 
 - mongodb_user:
     database: admin
@@ -64,7 +51,7 @@
     roles: userAdminAnyDatabase
     state: present
   register: result_mongodb_user
-  until: not result_mongodb_user|failed
+  until: not result_mongodb_user is failed
   retries: 5
   delay: 1
 
@@ -74,8 +61,3 @@
 
 - name: Add mongodb indexes
   shell: mongo < /tmp/indexes.js
-
-- name: Remove huge journal files not needed
-  file:
-    path: /var/lib/mongodb/journal
-    state: absent
