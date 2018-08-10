@@ -10,10 +10,18 @@
   - libssl-dev
   - libffi-dev
   - python-pip
+  - python3-pip
   - gettext
   - curl
   - fail2ban
 
+
 - name: Install virtualenv from pip
   pip:
+    executable: pip
+    name: virtualenv
+
+- name: Install virtualenv from pip3
+  pip:
+    executable: pip3
     name: virtualenv
