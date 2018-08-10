@@ -3,6 +3,11 @@
 - set_fact:
     mongodb_datadir_prefix: "/var/lib/mongodb"
 
+- name: Install the gpg package needed for apt_key
+  apt:
+    name: gpg
+    state: present
+
 # This apt_key may not be right
 - apt_key:
     keyserver: hkp://keyserver.ubuntu.com:80
