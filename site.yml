@@ -1,3 +1,4 @@
 ---
+- import_playbook: bootstrap-python.yml
 - import_playbook: databases.yml
 - import_playbook: webservers.yml
