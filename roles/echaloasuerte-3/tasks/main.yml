@@ -1,0 +1,129 @@
+- name: Create echaloasuerte application tree
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    recurse: yes
+  become: yes
+  with_items:
+  - "{{ echaloasuerte_3_root }}"
+  - "{{ echaloasuerte_3_static }}"
+  - "{{ echaloasuerte_3_app }}"
+  - "{{ echaloasuerte_3_venv }}"
+  - "{{ echaloasuerte_3_logs }}"
+
+- name: Clone/update repository in {{ echaloasuerte_3_app }}
+  git:
+    repo: https://github.com/etcaterva/eas-backend
+    dest: "{{ echaloasuerte_3_app }}"
+    update: yes
+    accept_hostkey: yes
+    force: yes
+  become: yes
+  become_user: www-data
+  notify:
+  - restart all uwsgi
+
+- name: Add xip.io to the ALLOWED_HOSTS list when TEST_DEPLOYMENT is defined
+  lineinfile:
+    dest: "{{ echaloasuerte_3_app }}/eas/settings/base.py"
+    regexp: "xip.io"
+    insertafter: "^ALLOWED_HOSTS"
+    line: "    '.xip.io',"
+  become: yes
+  become_user: www-data
+  when: TEST_DEPLOYMENT is defined
+
+- name: Manually create the initial virtualenv
+  command: virtualenv {{ echaloasuerte_3_venv }} -p python3
+  args:
+    creates: "{{ echaloasuerte_3_venv }}/bin/python3"
+  become: yes
+  become_user: www-data
+
+- name: Setup virtual environment for the app using requirements.txt
+  pip:
+    requirements: "{{ echaloasuerte_3_app }}/requirements/prod.txt"
+    virtualenv: "{{ echaloasuerte_3_venv }}"
+    virtualenv_python: python3
+  become: yes
+  become_user: www-data
+
+- name: Setup EXTRA deps needed
+  pip:
+    name: django-cors-headers
+    virtualenv: "{{ echaloasuerte_3_venv }}"
+  become: yes
+  become_user: www-data
+
+- name: Make manage.py executable, adding "+x"
+  file: 
+    dest: "{{ echaloasuerte_3_app }}/manage.py"
+    mode: a+x
+  become: yes
+  become_user: www-data
+
+- name: Update /etc/hosts to add 'db' IP address
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '127.0.0.1 db$'
+    line: '127.0.0.1 db'
+    state: present
+  become: yes
+
+- name: Synchronize django app database
+  django_manage:
+    command: migrate
+    app_path: "{{ echaloasuerte_3_app }}"
+    virtualenv: "{{ echaloasuerte_3_venv }}"
+    settings: "{{ echaloasuerte_3_app_settings }}"
+  become: yes
+  become_user: www-data
+
+- name: Fix owners of echaloasuerte application tree
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    recurse: yes
+  become: yes
+  with_items:
+  - "{{ echaloasuerte_3_root }}"
+  - "{{ echaloasuerte_3_static }}"
+  - "{{ echaloasuerte_3_app }}"
+  - "{{ echaloasuerte_3_venv }}"
+  - "{{ echaloasuerte_3_logs }}"
+
+- name: Create uwsgi config file for echaloasuerte
+  template:
+    src: echaloasuerte-uwsgi.ini
+    dest: /etc/uwsgi{{ item }}/sites/{{ echaloasuerte_3_app_name }}.ini
+  become: yes
+  with_sequence: count={{ uwsgi_n }}
+  notify:
+  - restart all uwsgi
+
+- name: Create the nginx config file for echaloasuerte
+  template:
+    src: echaloasuerte-nginx.conf
+    dest: /etc/nginx/sites-available/{{ echaloasuerte_3_app_name }}.conf
+  become: yes
+  notify:
+  - restart nginx
+
+- name: Enable nginx site ecaheloasuerte
+  file:
+    src: ../sites-available/{{ echaloasuerte_3_app_name }}.conf
+    dest: /etc/nginx/sites-enabled/{{ echaloasuerte_3_app_name }}.conf
+    state: link
+  become: yes
+  notify:
+  - restart nginx
+
+- name: Ensure nginx is running
+  service:
+    name: nginx
+    state: started
+  become: yes
