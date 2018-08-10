@@ -3,7 +3,7 @@ Description=uWSGI{{ item }} Emperor
 After=syslog.target
 
 [Service]
-ExecStart=/bin/sh -c '/usr/local/bin/uwsgi --uid www-data --gid www-data --emperor /etc/uwsgi{{ item }}/sites --pidfile /var/run/uwsgi{{ item }}.pid >> /var/log/uwsgi{{ item }}.log 2>&1'
+ExecStart=/bin/sh -c '/usr/bin/uwsgi --uid www-data --gid www-data --emperor /etc/uwsgi{{ item }}/sites --pidfile /var/run/uwsgi{{ item }}.pid >> /var/log/uwsgi{{ item }}.log 2>&1'
 Restart=always
 KillSignal=SIGQUIT
 Type=notify

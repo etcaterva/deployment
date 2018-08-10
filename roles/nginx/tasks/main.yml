@@ -1,4 +1,6 @@
 ---
+- import_tasks: uwsgi.yml
+
 - name: Install packages needed from apt for nginx
   apt:
     pkg: "{{ item }}"
@@ -11,42 +13,6 @@
   service:
     name: nginx
     state: started
-
-- name: Install the LTS version of uwsgi
-  pip:
-    name: http://projects.unbit.it/downloads/uwsgi-lts.tar.gz
-
-- name: Create uwsgi configuration dir for emperor mode
-  file:
-    path: /etc/uwsgi{{ item }}/sites
-    state: directory
-  with_sequence: count={{ uwsgi_n }}
-
-- name: Install uwsgi Upstart conf file
-  template:
-    src: uwsgi-upstart.conf
-    dest: /etc/init/uwsgi{{ item }}.conf
-  with_sequence: count={{ uwsgi_n }}
-  when: ansible_service_mgr is undefined or ansible_service_mgr != "systemd"
-  notify:
-  - restart all uwsgi
-
-- name: Install uwsgi Systemd service file
-  template:
-    src: uwsgi-systemd.service
-    dest: /etc/systemd/system/uwsgi{{ item }}.service
-    mode: 0644
-  with_sequence: count={{ uwsgi_n }}
-  when: ansible_service_mgr is defined and ansible_service_mgr == "systemd"
-  notify:
-  - restart all uwsgi
-
-- name: Ensure uwsgi is started and enabled on boot (systemd)
-  service:
-    name: uwsgi{{ item }}
-    state: started
-    enabled: yes
-  with_sequence: count={{ uwsgi_n }}
 
 - name: Copy deny_raw_access.conf
   copy:
