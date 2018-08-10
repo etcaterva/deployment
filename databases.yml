@@ -3,3 +3,4 @@
   roles:
   - { role: users, become: true }
   - mongodb
+  - { role: anxs.postgresql, become: yes }

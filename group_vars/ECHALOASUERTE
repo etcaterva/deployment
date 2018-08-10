@@ -9,3 +9,8 @@ FQDN:
   - "{{ EN_FQDN2 }}"
 
 uwsgi_n: 2
+
+postgresql_users:
+  - name: postgres
+    pass: postgres
+    encrypted: no
