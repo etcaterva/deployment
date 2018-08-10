@@ -11,7 +11,6 @@
     update_cache: yes
     cache_valid_time: "{{apt_cache_valid_time | default (3600)}}"
   become: yes
-
   with_items:
   - uwsgi
   - uwsgi-plugin-python
@@ -23,12 +22,14 @@
   file:
     path: /etc/uwsgi{{ item }}/sites
     state: directory
+  become: yes
   with_sequence: count={{ uwsgi_n }}
 
 - name: Install uwsgi Upstart conf file
   template:
     src: uwsgi-upstart.conf
     dest: /etc/init/uwsgi{{ item }}.conf
+  become: yes
   with_sequence: count={{ uwsgi_n }}
   when: ansible_service_mgr is undefined or ansible_service_mgr != "systemd"
   notify:
@@ -39,6 +40,7 @@
     src: uwsgi-systemd.service
     dest: /etc/systemd/system/uwsgi{{ item }}.service
     mode: 0644
+  become: yes
   with_sequence: count={{ uwsgi_n }}
   when: ansible_service_mgr is defined and ansible_service_mgr == "systemd"
   notify:
@@ -49,4 +51,5 @@
     name: uwsgi{{ item }}
     state: started
     enabled: yes
+  become: yes
   with_sequence: count={{ uwsgi_n }}
