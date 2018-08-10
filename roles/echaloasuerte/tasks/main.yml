@@ -37,10 +37,16 @@
     line: "    '.xip.io',"
   when: TEST_DEPLOYMENT is defined
 
+- name: Manually create the initial virtualenv
+  command: virtualenv {{ echaloasuerte_venv }} -p python2
+  args:
+    creates: "{{ echaloasuerte_venv }}/bin/python2"
+
 - name: Setup virtual environment for the app using requirements.txt
   pip:
     requirements: "{{ echaloasuerte_app }}/requirements.txt"
     virtualenv: "{{ echaloasuerte_venv }}"
+    virtualenv_python: python2
 
 - name: Install python packages needed outside of the virtual environment
   pip:
