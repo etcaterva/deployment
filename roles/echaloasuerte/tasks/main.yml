@@ -11,7 +11,9 @@
     path: "{{ item }}"
     state: directory
     owner: www-data
+    group: www-data
     recurse: yes
+  become: yes
   with_items:
   - "{{ echaloasuerte_root }}"
   - "{{ echaloasuerte_static }}"
@@ -26,6 +28,8 @@
     update: yes
     accept_hostkey: yes
     force: yes
+  become: yes
+  become_user: www-data
   notify:
   - restart all uwsgi
 
@@ -35,18 +39,24 @@
     regexp: "xip.io"
     insertafter: "^ALLOWED_HOSTS"
     line: "    '.xip.io',"
+  become: yes
+  become_user: www-data
   when: TEST_DEPLOYMENT is defined
 
 - name: Manually create the initial virtualenv
   command: virtualenv {{ echaloasuerte_venv }} -p python2
   args:
     creates: "{{ echaloasuerte_venv }}/bin/python2"
+  become: yes
+  become_user: www-data
 
 - name: Setup virtual environment for the app using requirements.txt
   pip:
     requirements: "{{ echaloasuerte_app }}/requirements.txt"
     virtualenv: "{{ echaloasuerte_venv }}"
     virtualenv_python: python2
+  become: yes
+  become_user: www-data
 
 - name: Install python packages needed outside of the virtual environment
   pip:
@@ -54,35 +64,45 @@
   with_items:
   - pytz
   - pymongo
+  become: yes
 
 - name: Add virtualenv info in echaloasuerte.wsgi
   template:
     src: echaloasuerte.wsgi
     dest: "{{ echaloasuerte_app }}/echaloasuerte.wsgi"
+  become: yes
+  become_user: www-data
   notify:
   - restart all uwsgi
 
 - name: Compile messages of django application
   shell: |
          {{ echaloasuerte_venv }}/bin/python {{ echaloasuerte_app }}/manage.py compilemessages
+  become: yes
+  become_user: www-data
 
 - name: Synchronize django app database
   django_manage:
     command: syncdb
     app_path: "{{ echaloasuerte_app }}"
     virtualenv: "{{ echaloasuerte_venv }}"
+  become: yes
+  become_user: www-data
 
 - name: Collect statics files of django application
   django_manage:
     command: collectstatic
     app_path: "{{ echaloasuerte_app }}"
     virtualenv: "{{ echaloasuerte_venv }}"
+  become: yes
+  become_user: www-data
 
 - name: Fix owners of echaloasuerte application tree
   file:
     path: "{{ item }}"
     state: directory
     owner: www-data
+    group: www-data
     recurse: yes
   with_items:
   - "{{ echaloasuerte_root }}"
@@ -95,6 +115,7 @@
   template:
     src: echaloasuerte-uwsgi.ini
     dest: /etc/uwsgi{{ item }}/sites/echaloasuerte.ini
+  become: yes
   with_sequence: count={{ uwsgi_n }}
   notify:
   - restart all uwsgi

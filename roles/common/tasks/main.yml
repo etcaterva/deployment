@@ -4,6 +4,7 @@
     pkg: "{{ item }}"
     state: present
     update-cache: yes
+  become: yes
   with_items:
   - git
   - python-dev
@@ -20,8 +21,10 @@
   pip:
     executable: pip
     name: virtualenv
+  become: yes
 
 - name: Install virtualenv from pip3
   pip:
     executable: pip3
     name: virtualenv
+  become: yes

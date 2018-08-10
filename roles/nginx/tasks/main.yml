@@ -6,6 +6,7 @@
     pkg: "{{ item }}"
     state: present
     update-cache: yes
+  become: yes
   with_items:
   - nginx
 
@@ -13,11 +14,13 @@
   service:
     name: nginx
     state: started
+  become: yes
 
 - name: Copy deny_raw_access.conf
   copy:
     src: "{{ item }}"
     dest: /etc/nginx/sites-available/{{ item }}
+  become: yes
   with_items:
   - deny_raw_access.conf
   notify:
@@ -28,6 +31,7 @@
     src: ../sites-available/{{ item }}
     dest: /etc/nginx/sites-enabled/{{ item }}
     state: link
+  become: yes
   with_items:
   - deny_raw_access.conf
   notify:
@@ -37,5 +41,6 @@
   file:
       path: /etc/nginx/sites-enabled/default
       state: absent
+  become: yes
   notify:
   - restart nginx
