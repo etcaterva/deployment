@@ -3,3 +3,6 @@
 
 [MONGO_DATABASES]
 54.38.215.150 node_hostname=dev-ovh2
+
+[POSTGRESQL_DATABASES]
+54.38.215.150 node_hostname=dev-ovh2

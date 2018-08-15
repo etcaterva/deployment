@@ -1,8 +1,4 @@
 - hosts: ECHALOASUERTE
   remote_user: root
   roles:
-  - { role: users, become: yes }
-  - nginx
   - { role: monitoring, become: yes  }
-  - echaloasuerte
-  - echaloasuerte-3

@@ -1,6 +1,0 @@
-- hosts: MONGO_DATABASES
-  remote_user: root
-  roles:
-  - { role: users, become: true }
-  - mongodb
-  - { role: anxs.postgresql, become: yes }

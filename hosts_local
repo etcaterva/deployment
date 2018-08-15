@@ -3,3 +3,6 @@ localhost ansible_connection=local
 
 [MONGO_DATABASES]
 localhost ansible_connection=local
+
+[POSTGRESQL_DATABASES]
+localhost ansible_connection=local
