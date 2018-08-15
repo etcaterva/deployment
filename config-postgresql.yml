@@ -1,0 +1,3 @@
+- hosts: POSTGRESQL_DATABASES
+  roles:
+  - { role: anxs.postgresql, become: yes }
