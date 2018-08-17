@@ -3,5 +3,5 @@ check system $HOST
   if cpu(user) > 70% 4 times within 5 cycles then alert
   if cpu(system) > 50% 4 times within 5 cycles then alert
 
-check device data with path /data
+check device rootfs with path /
     if SPACE usage > 70% then alert
