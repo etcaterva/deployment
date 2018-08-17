@@ -57,13 +57,6 @@
   become: yes
   become_user: www-data
 
-- name: Make manage.py executable, adding "+x"
-  file: 
-    dest: "{{ echaloasuerte_3_app }}/manage.py"
-    mode: a+x
-  become: yes
-  become_user: www-data
-
 - name: Update /etc/hosts to add 'db' IP address
   lineinfile:
     dest: /etc/hosts
