@@ -5,7 +5,6 @@ echaloasuerte_3_app_name:     "echaloasuerte-3"
 echaloasuerte_3_root:         "/var/www/{{ echaloasuerte_3_app_name }}"
 echaloasuerte_3_app:          "{{ echaloasuerte_3_root }}/web-app"
 echaloasuerte_3_venv:         "{{ echaloasuerte_3_root }}/venv"
-echaloasuerte_3_static:       "{{ echaloasuerte_3_root }}/static"
 echaloasuerte_3_logs:         "/var/log/{{ echaloasuerte_3_app_name }}"
 
 # Django settings file to use
