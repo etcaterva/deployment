@@ -8,7 +8,6 @@
   become: yes
   with_items:
   - "{{ echaloasuerte_3_root }}"
-  - "{{ echaloasuerte_3_static }}"
   - "{{ echaloasuerte_3_app }}"
   - "{{ echaloasuerte_3_venv }}"
   - "{{ echaloasuerte_3_logs }}"
@@ -84,7 +83,6 @@
   become: yes
   with_items:
   - "{{ echaloasuerte_3_root }}"
-  - "{{ echaloasuerte_3_static }}"
   - "{{ echaloasuerte_3_app }}"
   - "{{ echaloasuerte_3_venv }}"
   - "{{ echaloasuerte_3_logs }}"
