@@ -13,7 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     machine.vm.network "private_network", ip: "192.168.77.22"
 
     machine.vm.provision :ansible do |ansible|
-      ansible.playbook = "site.yml"
+      ansible.playbook = "site3.yml"
       ansible.verbose = 'vvvv'
 
       ansible.extra_vars = {
@@ -28,10 +28,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         cloudflare_pickforme_id: "fakeid",
         cloudflare_chooserandom_id: "fakeid",
         pusher_secret: "fakesecret",
+        sentry_dsn: "https://dead:beef@sentry.io/123456",
       }
 
       ansible.groups = {
-        "MONGO_DATABASES" => ["echaloasuerte1"],
+        "POSTGRESQL_DATABASES" => ["echaloasuerte1"],
         "ECHALOASUERTE" => ["echaloasuerte1"],
       }
 
