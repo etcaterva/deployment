@@ -9,10 +9,13 @@
   with_items:
   - "{{ echaloasuerte_3_root }}"
   - "{{ echaloasuerte_3_app }}"
+  - "{{ echaloasuerte_3_front }}"
+  - "{{ echaloasuerte_3_html }}"
   - "{{ echaloasuerte_3_venv }}"
   - "{{ echaloasuerte_3_logs }}"
+  - /var/www
 
-- name: Clone/update repository in {{ echaloasuerte_3_app }}
+- name: Clone/update backend repository in {{ echaloasuerte_3_app }}
   git:
     repo: https://github.com/etcaterva/eas-backend
     dest: "{{ echaloasuerte_3_app }}"
@@ -73,6 +76,45 @@
   become: yes
   become_user: www-data
 
+
+
+- name: Clone/update frontend repository in {{ echaloasuerte_3_front }}
+  git:
+    repo: https://github.com/etcaterva/eas-frontend
+    dest: "{{ echaloasuerte_3_front }}"
+    update: yes
+    accept_hostkey: yes
+    force: yes
+  become: yes
+  become_user: www-data
+
+- name: Install packages based on package.json
+  npm:
+    path: "{{ echaloasuerte_3_front }}"
+  become: yes
+  become_user: www-data
+
+- name: Clean previous builds
+  file:
+    state: absent
+    path: "{{ echaloasuerte_3_front }}/build"
+  become: yes
+  become_user: www-data
+
+- name: Build frontend using npm
+  command: npm run build:dev
+  args:
+    chdir: "{{ echaloasuerte_3_front }}"
+  become: yes
+  become_user: www-data
+
+- name: Copy compiled frontend to the right place
+  synchronize:
+    src: "{{ echaloasuerte_3_front }}/build/"
+    dest: "{{ echaloasuerte_3_html }}"
+  delegate_to: "{{ inventory_hostname }}"
+  become: yes
+
 - name: Fix owners of echaloasuerte application tree
   file:
     path: "{{ item }}"
@@ -84,6 +126,8 @@
   with_items:
   - "{{ echaloasuerte_3_root }}"
   - "{{ echaloasuerte_3_app }}"
+  - "{{ echaloasuerte_3_front }}"
+  - "{{ echaloasuerte_3_html }}"
   - "{{ echaloasuerte_3_venv }}"
   - "{{ echaloasuerte_3_logs }}"
 

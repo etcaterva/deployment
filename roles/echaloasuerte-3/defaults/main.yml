@@ -4,6 +4,8 @@ echaloasuerte_3_app_name:     "echaloasuerte-3"
 # Folder structure
 echaloasuerte_3_root:         "/var/www/{{ echaloasuerte_3_app_name }}"
 echaloasuerte_3_app:          "{{ echaloasuerte_3_root }}/web-app"
+echaloasuerte_3_front:        "{{ echaloasuerte_3_root }}/front"
+echaloasuerte_3_html:         "{{ echaloasuerte_3_root }}/html"
 echaloasuerte_3_venv:         "{{ echaloasuerte_3_root }}/venv"
 echaloasuerte_3_logs:         "/var/log/{{ echaloasuerte_3_app_name }}"
 
