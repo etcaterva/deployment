@@ -25,7 +25,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         TEST_DEPLOYMENT: "True",
         cloudflare_api_token: "faketoken",
         cloudflare_echaloasuerte_id: "fakeid",
-        cloudflare_pickforme_id: "fakeid",
+        cloudflare_woreep_id: "fakeid",
         cloudflare_chooserandom_id: "fakeid",
         pusher_secret: "fakesecret",
         sentry_dsn: "https://dead:beef@sentry.io/123456",
