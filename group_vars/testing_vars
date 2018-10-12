@@ -7,7 +7,7 @@ TEST_DEPLOYMENT: "True"
 TRAVIS_DEPLOYMENT: "True"
 cloudflare_api_token: "faketoken"
 cloudflare_echaloasuerte_id: "fakeid"
-cloudflare_pickforme_id: "fakeid"
+cloudflare_woreep_id: "fakeid"
 cloudflare_chooserandom_id: "fakeid"
 pusher_secret: "fakesecret"
 
