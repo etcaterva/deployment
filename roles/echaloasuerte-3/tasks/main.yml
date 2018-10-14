@@ -82,6 +82,7 @@
   git:
     repo: https://github.com/etcaterva/eas-frontend
     dest: "{{ echaloasuerte_3_front }}"
+    version: "{{ echaloasuerte_3_git_branch }}"
     update: yes
     accept_hostkey: yes
     force: yes

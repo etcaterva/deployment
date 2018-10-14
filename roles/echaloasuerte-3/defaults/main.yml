@@ -15,6 +15,9 @@ echaloasuerte_3_app_settings: "eas.settings.dev"
 # Wsgi file location
 echaloasuerte_3_app_wsgi: "eas/wsgi.py"
 
+# Version to deploy
+echaloasuerte_3_git_branch: "master"
+
 echaloasuerte_3_domains:
   - "woreep.com"
   - "beta.echaloasuerte.com"
