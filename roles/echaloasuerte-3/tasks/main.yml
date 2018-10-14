@@ -103,7 +103,7 @@
   become_user: www-data
 
 - name: Build frontend using npm
-  command: npm run build:dev
+  command: "npm run build{{ echaloasuerte_3_npm_config }}"
   args:
     chdir: "{{ echaloasuerte_3_front }}"
   become: yes
