@@ -1,5 +1,5 @@
 [ECHALOASUERTE]
-92.222.28.167 node_hostname=prod-ovh1
+193.70.1.6 node_hostname=dev-ovh2
 
-[MONGO_DATABASES]
-92.222.28.167 node_hostname=prod-ovh1
+[POSTGRESQL_DATABASES]
+193.70.1.6 node_hostname=dev-ovh2
