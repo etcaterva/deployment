@@ -15,3 +15,10 @@ echaloasuerte_3_app_settings: "eas.settings.dev"
 # Wsgi file location
 echaloasuerte_3_app_wsgi: "eas/wsgi.py"
 
+echaloasuerte_3_domains:
+  - "woreep.com"
+  - "beta.echaloasuerte.com"
+  - "beta.chooserandom.com"
+  - "dev.woreep.com"
+  - "beta-dev.echaloasuerte.com"
+  - "beta-dev.chooserandom.com"
