@@ -114,6 +114,8 @@
     dest: "{{ echaloasuerte_3_html }}"
   delegate_to: "{{ inventory_hostname }}"
   become: yes
+  notify:
+  - purge cloudflare cache
 
 - name: Fix owners of echaloasuerte application tree
   file:
@@ -147,6 +149,7 @@
   become: yes
   notify:
   - restart nginx
+  - purge cloudflare cache
 
 - name: Enable nginx site ecaheloasuerte
   file:
@@ -156,6 +159,7 @@
   become: yes
   notify:
   - restart nginx
+  - purge cloudflare cache
 
 - name: Ensure nginx is running
   service:
