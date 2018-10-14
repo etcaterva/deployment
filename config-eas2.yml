@@ -1,4 +1,4 @@
 - hosts: ECHALOASUERTE
   remote_user: root
   roles:
-  - echaloasuerte
+  - { role: echaloasuerte, become: yes  }
