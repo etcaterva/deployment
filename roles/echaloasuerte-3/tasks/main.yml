@@ -102,21 +102,30 @@
   become: yes
   become_user: www-data
 
-- name: Build frontend using npm
-  command: "npm run build{{ echaloasuerte_3_npm_config }}"
+- name: Generate the production bundle using `npm run build`
+  command: "npm run build"
   args:
     chdir: "{{ echaloasuerte_3_front }}"
+  environment:
+    REACT_APP_ENV: production
   become: yes
   become_user: www-data
 
-- name: Copy compiled frontend to the right place
-  synchronize:
-    src: "{{ echaloasuerte_3_front }}/build/"
-    dest: "{{ echaloasuerte_3_html }}"
-  delegate_to: "{{ inventory_hostname }}"
+- name: Install service to run nodejs app
+  template:
+    src: nodejs-eas3.service
+    dest: /etc/systemd/system/nodejs-eas3.service
   become: yes
-  notify:
-  - purge cloudflare cache
+  register: service_installed
+
+- name: Ensure nodejs app is started and enabled on boot
+  service:
+    name: nodejs-eas3
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+  when: service_installed.changed
+  become: yes
 
 - name: Fix owners of echaloasuerte application tree
   file:

@@ -1,0 +1,16 @@
+[Unit]
+Description=echaloasuerte 3.0 nodejs
+After=network.target
+
+[Service]
+Environment=REACT_APP_ENV=production
+Environment=PORT=8080
+User=www-data
+WorkingDirectory={{ echaloasuerte_3_front }}
+ExecStart=/usr/bin/npm start
+Restart=always
+RestartSec=500ms
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target
