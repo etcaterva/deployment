@@ -1,0 +1,6 @@
+# docker daemon monitorization
+
+check process dockerd with pidfile /var/run/docker.pid
+  start program = "systemctl start docker"
+  stop program = "systemctl start stop"
+  if 4 restarts within 20 cycles then timeout

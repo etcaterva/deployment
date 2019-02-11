@@ -1,8 +1,0 @@
-check host nodejs-eas3 with address "::1"
-    start program = "/bin/systemctl start nodejs-eas3"
-    stop program = "/bin/systemctl stop nodejs-eas3"
-    if failed
-        port 8080
-        protocol http
-        request "/"
-    then restart

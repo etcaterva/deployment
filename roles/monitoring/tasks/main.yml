@@ -58,7 +58,7 @@
   - mongodb
   - nginx
   - system
-  - nodejs-eas3
+  - docker
 
 - name: Template uwsgi monit configuration file
   template:
