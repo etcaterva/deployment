@@ -77,55 +77,33 @@
   become_user: www-data
 
 
-
-- name: Clone/update frontend repository in {{ echaloasuerte_3_front }}
-  git:
-    repo: https://github.com/etcaterva/eas-frontend
-    dest: "{{ echaloasuerte_3_front }}"
-    version: "{{ echaloasuerte_3_git_branch }}"
-    update: yes
-    accept_hostkey: yes
-    force: yes
+# Frontend
+- name: Install docker python package
+  pip:
+    name: docker
   become: yes
-  become_user: www-data
 
-- name: Install packages based on package.json
-  npm:
-    path: "{{ echaloasuerte_3_front }}"
-  become: yes
-  become_user: www-data
 
-- name: Clean previous builds
-  file:
-    state: absent
-    path: "{{ echaloasuerte_3_front }}/build"
-  become: yes
-  become_user: www-data
+- name: pull echaloasuerte image
+  docker_image:
+    name: etcaterva/echaloasuerte
+    tag: "{{ echaloasuerte_3_git_branch }}"
+  register: docker_pull
 
-- name: Generate the production bundle using `npm run build`
-  command: "npm run build"
-  args:
-    chdir: "{{ echaloasuerte_3_front }}"
-  environment:
-    REACT_APP_ENV: production
-  become: yes
-  become_user: www-data
+- name: Start eas docker container
+  docker_container: &container-config
+    name: "echaloasuerte-{{ echaloasuerte_3_git_branch }}"
+    image: "etcaterva/echaloasuerte:{{ echaloasuerte_3_git_branch }}"
+    state: started
+    restart_policy: always
+    published_ports:
+     - "8081:80"
 
-- name: Install service to run nodejs app
-  template:
-    src: nodejs-eas3.service
-    dest: /etc/systemd/system/nodejs-eas3.service
-  become: yes
-  register: service_installed
-
-- name: Ensure nodejs app is started and enabled on boot
-  service:
-    name: nodejs-eas3
-    state: restarted
-    enabled: yes
-    daemon_reload: yes
-  when: service_installed.changed
-  become: yes
+- name: Recreate eas if image was pulled
+  docker_container:
+    <<: *container-config
+    recreate: yes
+  when: docker_pull is changed
 
 - name: Fix owners of echaloasuerte application tree
   file:
