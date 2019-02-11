@@ -1,7 +1,5 @@
 - hosts: ECHALOASUERTE
   remote_user: root
-  vars:
-    nodejs_version: "8.x"
   roles:
-  - { role: geerlingguy.nodejs, become: yes  }
+  - { role: geerlingguy.docker, become: yes  }
   - echaloasuerte-3
