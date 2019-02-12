@@ -88,6 +88,7 @@
   docker_image:
     name: etcaterva/echaloasuerte
     tag: "{{ echaloasuerte_3_git_branch }}"
+  become: yes
   register: docker_pull
 
 - name: Start eas docker container
@@ -98,11 +99,13 @@
     restart_policy: always
     published_ports:
      - "8081:80"
+  become: yes
 
 - name: Recreate eas if image was pulled
   docker_container:
     <<: *container-config
     recreate: yes
+  become: yes
   when: docker_pull is changed
 
 - name: Fix owners of echaloasuerte application tree
