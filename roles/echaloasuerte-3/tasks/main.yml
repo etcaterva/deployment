@@ -88,6 +88,7 @@
   docker_image:
     name: etcaterva/echaloasuerte
     tag: "{{ echaloasuerte_3_git_branch }}"
+    force: yes
   become: yes
   register: docker_pull
 
