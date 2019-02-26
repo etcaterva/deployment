@@ -99,7 +99,7 @@
     state: started
     restart_policy: always
     published_ports:
-     - "8081:80"
+    - "127.0.0.1:8081:80"
   become: yes
 
 - name: Recreate eas if image was pulled
