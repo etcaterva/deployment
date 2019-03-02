@@ -4,7 +4,7 @@ ES_FQDN: echaloasuerte.com
 EN_FQDN2: chooserandom.com
 
 FQDN:
-  - "{{ EN_FQDN }}"
+  - "{{ ES_FQDN }}"
   - "{{ EN_FQDN2 }}"
 
 uwsgi_n: 2
