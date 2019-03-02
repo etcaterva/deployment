@@ -102,12 +102,13 @@
     - "127.0.0.1:8081:80"
   become: yes
 
-- name: Recreate eas if image was pulled
-  docker_container:
-    <<: *container-config
-    recreate: yes
-  become: yes
-  when: docker_pull is changed
+- name: Docker prune everything
+  docker_prune:
+    containers: yes
+    images: yes
+    networks: yes
+    volumes: yes
+    builder_cache: yes
 
 - name: Fix owners of echaloasuerte application tree
   file:
