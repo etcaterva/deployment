@@ -22,7 +22,6 @@ echaloasuerte_3_git_branch: "master"
 echaloasuerte_3_npm_config: ":dev"
 
 echaloasuerte_3_domains:
-  - "woreep.com"
   - "beta.echaloasuerte.com"
   - "beta.chooserandom.com"
   - "dev.woreep.com"
