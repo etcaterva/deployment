@@ -3,6 +3,7 @@
 
 [ECHALOASUERTE:vars]
 echaloasuerte_3_git_branch=prod
+echaloasuerte_git_branch=prod
 
 [POSTGRESQL_DATABASES]
 193.70.1.6 node_hostname=prod-ovh2

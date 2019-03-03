@@ -26,6 +26,7 @@
     repo: git://github.com/etcaterva/EchaloASuerte.git
     dest: "{{ echaloasuerte_app }}"
     update: yes
+    version: "{{ echaloasuerte_git_branch }}"
     accept_hostkey: yes
     force: yes
   become: yes
