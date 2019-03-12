@@ -102,6 +102,19 @@
     - "127.0.0.1:8081:80"
   become: yes
 
+- name: Wait for docker container port to become open
+  wait_for:
+    port: 8081
+    delay: 10
+
+- name: Start eas docker container2
+  docker_container:
+    <<: *container-config
+    name: "echaloasuerte-{{ echaloasuerte_3_git_branch }}-2"
+    published_ports:
+    - "127.0.0.1:8082:80"
+  become: yes
+
 # Reenable once ansible 2.8 is out
 #- name: Docker prune everything
 #  docker_prune:
