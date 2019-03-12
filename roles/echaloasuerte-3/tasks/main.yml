@@ -125,7 +125,7 @@
 #    builder_cache: yes
 
 - name: Prune docker images
-  command: docker image prune
+  command: docker image prune -f
   become: yes
 
 - name: Prune stopped containers
