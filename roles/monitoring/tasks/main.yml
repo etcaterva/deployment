@@ -59,6 +59,7 @@
   - nginx
   - system
   - docker
+  - postgresql
 
 - name: Template uwsgi monit configuration file
   template:
