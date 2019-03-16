@@ -1,7 +1,7 @@
 # PostgreSQL monitorization
 
 check process postgresql with pidfile /var/run/postgresql/9.6-main.pid
-  start program = "/bin/systemctl stop postgresql@9.6-main.service"
+  start program = "/bin/systemctl start postgresql@9.6-main.service"
   stop program = "/bin/systemctl stop postgresql@9.6-main.service"
 
   if failed unixsocket /run/postgresql/.s.PGSQL.5432 protocol pgsql then restart
