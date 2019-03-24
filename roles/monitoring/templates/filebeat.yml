@@ -1,0 +1,135 @@
+############################# Filebeat #####################################
+
+filebeat.inputs:
+
+- type: log
+  paths:
+    - /var/log/mongodb/mongod.log
+  fields:
+    logzio_codec: plain
+    token: {{ logzio_token }}
+    type: mongodb
+    env: {{ filebeat_env }}
+  fields_under_root: true
+  encoding: utf-8
+  ignore_older: 3h
+- type: log
+  paths:
+    - /var/log/echaloasuerte-3/echaloasuerte-uwsgi*.log
+  fields:
+    logzio_codec: plain
+    token: {{ logzio_token }}
+    type: echaloasuerte-3-uwsgi
+    env: {{ filebeat_env }}
+  fields_under_root: true
+  encoding: utf-8
+  ignore_older: 3h
+- type: log
+  paths:
+    - /var/log/echaloasuerte/echaloasuerte-uwsgi*.log
+  fields:
+    logzio_codec: plain
+    token: {{ logzio_token }}
+    type: echaloasuerte-uwsgi
+    env: {{ filebeat_env }}
+  fields_under_root: true
+  encoding: utf-8
+  ignore_older: 3h
+- type: log
+  paths:
+    - /var/log/postgresql/postgresql-*-main.log
+  fields:
+    logzio_codec: plain
+    token: {{ logzio_token }}
+    type: PostgreSQL
+    env: {{ filebeat_env }}
+  fields_under_root: true
+  encoding: utf-8
+  ignore_older: 3h
+- type: log
+  paths:
+    - /var/log/nginx/access.log
+  fields:
+    logzio_codec: plain
+    token: {{ logzio_token }}
+    type: nginx
+    env: {{ filebeat_env }}
+  fields_under_root: true
+  encoding: utf-8
+  ignore_older: 3h
+- type: log
+  paths:
+    - /var/log/nginx/error.log
+  fields:
+    logzio_codec: plain
+    token: {{ logzio_token }}
+    type: nginx-error
+    env: {{ filebeat_env }}
+  fields_under_root: true
+  encoding: utf-8
+  ignore_older: 3h
+- type: log
+  paths:
+    - /var/log/echaloasuerte/echaloasuerte_debug.txt
+  fields:
+    logzio_codec: plain
+    token: {{ logzio_token }}
+    type: echaloasuerte-debug
+    env: {{ filebeat_env }}
+  fields_under_root: true
+  encoding: utf-8
+  ignore_older: 3h
+- type: log
+  paths:
+    - /var/log/echaloasuerte/echaloasuerte_err.txt
+  fields:
+    logzio_codec: plain
+    token: {{ logzio_token }}
+    type: echaloasuerte-err
+    env: {{ filebeat_env }}
+  fields_under_root: true
+  encoding: utf-8
+  ignore_older: 3h
+- type: log
+  paths:
+    - /var/log/echaloasuerte/echaloasuerte_log.txt
+  fields:
+    logzio_codec: plain
+    token: {{ logzio_token }}
+    type: echaloasuerte-log
+    env: {{ filebeat_env }}
+  fields_under_root: true
+  encoding: utf-8
+  ignore_older: 3h
+- type: log
+  paths:
+    - /var/log/fail2ban.log
+  fields:
+    logzio_codec: plain
+    token: {{ logzio_token }}
+    type: fail2ban
+    env: {{ filebeat_env }}
+  fields_under_root: true
+  encoding: utf-8
+  ignore_older: 3h
+- type: log
+  paths:
+    - /var/log/uwsgi*.log
+  fields:
+    logzio_codec: plain
+    token: {{ logzio_token }}
+    type: uwsgi
+    env: {{ filebeat_env }}
+  fields_under_root: true
+  encoding: utf-8
+  ignore_older: 3h
+
+registry_file: /var/lib/filebeat/registry
+
+############################# Output ##########################################
+
+output:
+  logstash:
+    hosts: ["listener.logz.io:5015"]
+    ssl:
+      certificate_authorities: ['/etc/filebeat/COMODORSADomainValidationSecureServerCA.crt']

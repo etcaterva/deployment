@@ -3,3 +3,8 @@
     name: monit
     state: restarted
   when: TRAVIS_DEPLOYMENT is not defined
+
+- name: restart filebeat
+  service:
+    name: filebeat
+    state: restarted
