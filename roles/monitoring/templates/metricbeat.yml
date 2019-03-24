@@ -1,9 +1,10 @@
 metricbeat.modules:
 - module: system
-  metricsets: ["cpu","memory","network"]
+  metricsets: ["cpu", "memory", "network", "filesystem"]
   enabled: true
   period: 15s
   processes: ['.*']
+  filesystem.ignore_types: [nfs, smbfs, autofs, tmpfs, devtmpfs, vfat, shm, overlay]
 
 fields:
   logzio_codec: json
