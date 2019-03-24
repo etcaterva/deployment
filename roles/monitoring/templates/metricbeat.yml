@@ -1,0 +1,20 @@
+metricbeat.modules:
+- module: system
+  metricsets: ["cpu","memory","network"]
+  enabled: true
+  period: 15s
+  processes: ['.*']
+
+fields:
+  logzio_codec: json
+  token: {{ logzio_token }}
+  env: {{ filebeat_env }}
+fields_under_root: true
+ignore_older: 3hr
+type: system_metrics
+
+output:
+  logstash:
+    hosts: ["listener.logz.io:5015"]
+    ssl:
+      certificate_authorities: ['/etc/filebeat/COMODORSADomainValidationSecureServerCA.crt']

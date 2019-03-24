@@ -97,16 +97,22 @@
     state: present
     update_cache: true
 
-- name: Install Filebeat.
+- name: Install Filebeat and metricbeat
   package:
-    name: filebeat
+    name: "{{ item }}"
     state: present
+  with_items:
+  - filebeat
+  - metricbeat
 
 - name: Ensure Filebeat is started and enabled at boot.
   service:
-    name: filebeat
+    name: "{{ item }}"
     state: started
     enabled: true
+  with_items:
+  - filebeat
+  - metricbeat
 
 - name: Get logzio certificate
   get_url:
@@ -120,3 +126,10 @@
     dest: "/etc/filebeat/filebeat.yml"
   notify:
   - restart filebeat
+
+- name: Set metricbeat config file
+  template:
+    src: metricbeat.yml
+    dest: "/etc/metricbeat/metricbeat.yml"
+  notify:
+  - restart metricbeat
