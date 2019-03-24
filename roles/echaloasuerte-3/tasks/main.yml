@@ -100,6 +100,8 @@
     restart_policy: always
     published_ports:
     - "127.0.0.1:8081:80"
+    volumes:
+    - "{{ echaloasuerte_3_logs }}:/usr/src/app/server/logs/"
   become: yes
 
 # Reenable once ansible 2.8 is out
