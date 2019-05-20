@@ -101,7 +101,7 @@
     published_ports:
     - "127.0.0.1:8081:80"
     volumes:
-    - "{{ echaloasuerte_3_logs }}:/usr/src/app/server/logs/"
+    - "{{ echaloasuerte_3_logs }}:/var/log/eas3/"
   become: yes
 
 # Reenable once ansible 2.8 is out
