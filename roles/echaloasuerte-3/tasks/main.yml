@@ -91,6 +91,8 @@
     force: yes
   become: yes
   register: docker_pull
+  tags:
+  - cd-frontend
 
 - name: Start eas docker container
   docker_container: &container-config
@@ -103,6 +105,8 @@
     volumes:
     - "{{ echaloasuerte_3_logs }}:/var/log/eas3/"
   become: yes
+  tags:
+  - cd-frontend
 
 # Reenable once ansible 2.8 is out
 #- name: Docker prune everything
@@ -116,10 +120,14 @@
 - name: Prune docker images
   command: docker image prune -f
   become: yes
+  tags:
+  - cd-frontend
 
 - name: Prune stopped containers
   command: docker container prune
   become: yes
+  tags:
+  - cd-frontend
 
 - name: Fix owners of echaloasuerte application tree
   file:
