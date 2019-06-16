@@ -96,8 +96,9 @@ filebeat.inputs:
   fields:
     logzio_codec: plain
     token: {{ logzio_token }}
-    type: echaloasuerte-debug
+    type: echaloasuerte
     env: {{ filebeat_env }}
+    level: debug
   fields_under_root: true
   encoding: utf-8
   ignore_older: 3h
@@ -107,8 +108,9 @@ filebeat.inputs:
   fields:
     logzio_codec: plain
     token: {{ logzio_token }}
-    type: echaloasuerte-err
+    type: echaloasuerte
     env: {{ filebeat_env }}
+    level: error
   fields_under_root: true
   encoding: utf-8
   ignore_older: 3h
@@ -118,8 +120,9 @@ filebeat.inputs:
   fields:
     logzio_codec: plain
     token: {{ logzio_token }}
-    type: echaloasuerte-log
+    type: echaloasuerte
     env: {{ filebeat_env }}
+    level: info
   fields_under_root: true
   encoding: utf-8
   ignore_older: 3h
