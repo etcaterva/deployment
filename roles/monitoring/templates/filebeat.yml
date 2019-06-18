@@ -99,6 +99,10 @@ filebeat.inputs:
     type: echaloasuerte
     env: {{ filebeat_env }}
     level: debug
+  multiline:
+    pattern: '^\['
+    negate: true
+    match: after
   fields_under_root: true
   encoding: utf-8
   ignore_older: 3h
@@ -111,6 +115,10 @@ filebeat.inputs:
     type: echaloasuerte
     env: {{ filebeat_env }}
     level: error
+  multiline:
+    pattern: '^\['
+    negate: true
+    match: after
   fields_under_root: true
   encoding: utf-8
   ignore_older: 3h
@@ -123,6 +131,10 @@ filebeat.inputs:
     type: echaloasuerte
     env: {{ filebeat_env }}
     level: info
+  multiline:
+    pattern: '^\['
+    negate: true
+    match: after
   fields_under_root: true
   encoding: utf-8
   ignore_older: 3h
