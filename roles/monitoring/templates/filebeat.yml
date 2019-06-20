@@ -35,28 +35,57 @@ filebeat.inputs:
   fields_under_root: true
   encoding: utf-8
   ignore_older: 3h
+
 - type: log
   paths:
-    - /var/log/echaloasuerte-3/echaloasuerte-uwsgi*.log
+    - /var/log/echaloasuerte-3/echaloasuerte-uwsgi*-req.log
   fields:
     logzio_codec: plain
     token: {{ logzio_token }}
     type: echaloasuerte-3-uwsgi
     env: {{ filebeat_env }}
+    level: info
   fields_under_root: true
   encoding: utf-8
   ignore_older: 3h
 - type: log
   paths:
-    - /var/log/echaloasuerte/echaloasuerte-uwsgi*.log
+    - /var/log/echaloasuerte-3/echaloasuerte-uwsgi*-err.log
+  fields:
+    logzio_codec: plain
+    token: {{ logzio_token }}
+    type: echaloasuerte-3-uwsgi
+    env: {{ filebeat_env }}
+    level: error
+  fields_under_root: true
+  encoding: utf-8
+  ignore_older: 3h
+
+- type: log
+  paths:
+    - /var/log/echaloasuerte/echaloasuerte-uwsgi*-req.log
   fields:
     logzio_codec: plain
     token: {{ logzio_token }}
     type: echaloasuerte-uwsgi
     env: {{ filebeat_env }}
+    level: info
   fields_under_root: true
   encoding: utf-8
   ignore_older: 3h
+- type: log
+  paths:
+    - /var/log/echaloasuerte/echaloasuerte-uwsgi*-err.log
+  fields:
+    logzio_codec: plain
+    token: {{ logzio_token }}
+    type: echaloasuerte-uwsgi
+    env: {{ filebeat_env }}
+    level: error
+  fields_under_root: true
+  encoding: utf-8
+  ignore_older: 3h
+
 - type: log
   paths:
     - /var/log/postgresql/postgresql-*-main.log
