@@ -178,6 +178,56 @@ filebeat.inputs:
   encoding: utf-8
   ignore_older: 3h
 
+# EAS3 django logs
+- type: log
+  paths:
+    - /var/log/echaloasuerte-3/echaloasuerte_debug.txt
+  fields:
+    logzio_codec: plain
+    token: {{ logzio_token }}
+    type: echaloasuerte-3
+    env: {{ filebeat_env }}
+    level: debug
+  multiline:
+    pattern: '^\['
+    negate: true
+    match: after
+  fields_under_root: true
+  encoding: utf-8
+  ignore_older: 3h
+- type: log
+  paths:
+    - /var/log/echaloasuerte-3/echaloasuerte_err.txt
+  fields:
+    logzio_codec: plain
+    token: {{ logzio_token }}
+    type: echaloasuerte-3
+    env: {{ filebeat_env }}
+    level: error
+  multiline:
+    pattern: '^\['
+    negate: true
+    match: after
+  fields_under_root: true
+  encoding: utf-8
+  ignore_older: 3h
+- type: log
+  paths:
+    - /var/log/echaloasuerte-3/echaloasuerte_log.txt
+  fields:
+    logzio_codec: plain
+    token: {{ logzio_token }}
+    type: echaloasuerte-3
+    env: {{ filebeat_env }}
+    level: info
+  multiline:
+    pattern: '^\['
+    negate: true
+    match: after
+  fields_under_root: true
+  encoding: utf-8
+  ignore_older: 3h
+
 # Fail2ban logs
 - type: log
   paths:
