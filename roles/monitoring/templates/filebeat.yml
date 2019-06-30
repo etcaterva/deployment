@@ -122,7 +122,7 @@ filebeat.inputs:
   fields:
     logzio_codec: plain
     token: {{ logzio_token }}
-    type: nginx-error
+    type: nginx
     env: {{ filebeat_env }}
     level: error
   fields_under_root: true
