@@ -124,6 +124,7 @@ filebeat.inputs:
     token: {{ logzio_token }}
     type: nginx-error
     env: {{ filebeat_env }}
+    level: error
   fields_under_root: true
   encoding: utf-8
   ignore_older: 3h
