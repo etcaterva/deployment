@@ -125,6 +125,8 @@ filebeat.inputs:
     type: nginx
     env: {{ filebeat_env }}
     level: error
+  exclude_lines:
+    - ".*access forbidden by rule.*"
   fields_under_root: true
   encoding: utf-8
   ignore_older: 3h
