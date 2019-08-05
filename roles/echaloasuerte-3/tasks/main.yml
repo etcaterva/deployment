@@ -83,28 +83,30 @@
     name: docker
   become: yes
 
+- name: Init a new swarm with default parameters
+  docker_swarm:
+    state: present
 
-- name: pull echaloasuerte image
-  docker_image:
-    name: etcaterva/echaloasuerte
-    tag: "{{ echaloasuerte_3_git_branch }}"
-    force: yes
-  become: yes
-  register: docker_pull
-  tags:
-  - cd-frontend
-
-- name: Start eas docker container
-  docker_container: &container-config
-    name: "echaloasuerte-{{ echaloasuerte_3_git_branch }}"
+- name: Start eas service in docker swarm
+  docker_swarm_service:
+    name: eas-service
     image: "etcaterva/echaloasuerte:{{ echaloasuerte_3_git_branch }}"
-    state: started
-    restart_policy: always
-    published_ports:
-    - "127.0.0.1:8081:80"
-    volumes:
-    - "{{ echaloasuerte_3_logs }}:/var/log/eas3/"
-  become: yes
+    resolve_image: yes
+    update_config:
+      order: start-first
+      parallelism: 2
+      delay: 10s
+    restart_config:
+      condition: any
+      delay: 5s
+    healthcheck:
+      # Check if eas server is healthy by curl'ing the server.
+      # If this fails or timeouts, the healthcheck fails.
+      test: ["CMD", "curl", "--fail", "http://localhost:80"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
   tags:
   - cd-frontend
 
