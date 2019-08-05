@@ -107,6 +107,10 @@
       timeout: 10s
       retries: 10
       start_period: 30s
+    publish:
+    - mode: host
+      published_port: 8081
+      target_port: 80
   tags:
   - cd-frontend
 
