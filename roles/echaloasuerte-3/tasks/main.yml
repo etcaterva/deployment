@@ -123,6 +123,10 @@
     - mode: ingress
       published_port: 8081
       target_port: 80
+    mounts:
+      - source: "{{ echaloasuerte_3_logs }}"
+        target: /var/log/eas3/
+        type: bind
   become: yes
   tags:
   - cd-frontend
