@@ -119,6 +119,9 @@
       timeout: 10s
       retries: 10
       start_period: 30s
+    replicas: 5
+    env:
+      NEWKEY: "{{ '{{' }}.Task.Slot{{ '}}' }}"
     publish:
     - mode: ingress
       published_port: 8081
