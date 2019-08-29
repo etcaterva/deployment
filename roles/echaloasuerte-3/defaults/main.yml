@@ -27,3 +27,6 @@ echaloasuerte_3_domains:
   - "dev.woreep.com"
   - "beta-dev.echaloasuerte.com"
   - "beta-dev.chooserandom.com"
+
+# Number of docker swarm replicas
+echaloasuerte_3_replicas: 1

@@ -119,7 +119,7 @@
       timeout: 10s
       retries: 10
       start_period: 30s
-    replicas: 1
+    replicas: "{{ echaloasuerte_3_replicas }}"
     env:
       LOG_NUMBER: "{{'{{.Task.Slot}}'}}"
     publish:
