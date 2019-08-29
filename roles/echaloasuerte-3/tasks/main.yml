@@ -106,7 +106,7 @@
     force_update: yes
     update_config:
       order: start-first
-      parallelism: 2
+      parallelism: 1
       delay: 10s
     restart_config:
       condition: any
