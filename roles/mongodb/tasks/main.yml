@@ -1,5 +1,4 @@
 ---
-
 - set_fact:
     mongodb_datadir_prefix: "/var/lib/mongodb"
 
@@ -27,21 +26,20 @@
     force: yes
   become: yes
   with_items:
-  - mongodb-org
-  - python-pip
+    - mongodb-org
+    - python-pip
 
 - name: Install the latest pymongo package
   pip:
     name: pymongo
     state: latest
-    use_mirrors: no
 
 - template:
     src: mongod.conf
     dest: /etc/mongod.conf
   become: yes
   notify:
-  - restart mongod
+    - restart mongod
 
 - name: Start mongod before creating users
   service:
