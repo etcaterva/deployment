@@ -34,7 +34,6 @@
   pip:
     name: pymongo
     state: latest
-    use_mirrors: no
 
 - template:
     src: mongod.conf
