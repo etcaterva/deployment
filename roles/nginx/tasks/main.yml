@@ -3,12 +3,11 @@
 
 - name: Install packages needed from apt for nginx
   apt:
-    pkg: "{{ item }}"
+    pkg:
+    - nginx
     state: present
     update-cache: yes
   become: yes
-  with_items:
-  - nginx
 
 - name: Ensure nginx is running
   service:

@@ -1,20 +1,19 @@
 ---
 - name: Install packages needed from apt
   apt:
-    pkg: "{{ item }}"
+    pkg:
+    - git
+    - python-dev
+    - libssl-dev
+    - libffi-dev
+    - python-pip
+    - python3-pip
+    - gettext
+    - curl
+    - fail2ban
     state: present
     update-cache: yes
   become: yes
-  with_items:
-  - git
-  - python-dev
-  - libssl-dev
-  - libffi-dev
-  - python-pip
-  - python3-pip
-  - gettext
-  - curl
-  - fail2ban
 
 
 - name: Install virtualenv from pip

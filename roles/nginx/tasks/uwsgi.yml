@@ -6,15 +6,14 @@
 
 - name: Install uwsgi packages
   apt:
-    name: "{{item}}"
+    name:
+    - uwsgi
+    - uwsgi-plugin-python
+    - uwsgi-plugin-python3
     state: present
     update_cache: yes
     cache_valid_time: "{{apt_cache_valid_time | default (3600)}}"
   become: yes
-  with_items:
-  - uwsgi
-  - uwsgi-plugin-python
-  - uwsgi-plugin-python3
   notify:
   - restart all uwsgi
 
