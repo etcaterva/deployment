@@ -121,7 +121,7 @@
       start_period: 30s
     replicas: "{{ echaloasuerte_3_replicas }}"
     env:
-      LOGS_SUFFIX: "{{'{{.Task.Slot}}'}}"
+      LOGS_SUFFIX: "{{'{{.Task.Slot}}_{{.Task.ID}}'}}"
     publish:
     - mode: ingress
       published_port: 8081
