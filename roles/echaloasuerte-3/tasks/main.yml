@@ -121,6 +121,8 @@
       retries: 10
       start_period: 30s
     replicas: "{{ echaloasuerte_3_replicas }}"
+    limits:
+      memory: 300M
     env:
       LOGS_SUFFIX: "{{'{{.Task.Slot}}_{{.Task.ID}}'}}"
     publish:
