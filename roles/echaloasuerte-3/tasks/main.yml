@@ -104,7 +104,6 @@
     name: eas-service
     image: "etcaterva/echaloasuerte:{{ echaloasuerte_3_git_branch }}"
     resolve_image: yes
-    force_update: yes
     update_config:
       order: start-first
       parallelism: 1
