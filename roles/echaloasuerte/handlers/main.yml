@@ -9,7 +9,8 @@
   service:
     name: uwsgi{{ item }}
     state: restarted
-    sleep: 5
   become: yes
   with_sequence: count={{ uwsgi_n }}
+  loop_control:
+    pause: 3
   when: TRAVIS_DEPLOYMENT is not defined
