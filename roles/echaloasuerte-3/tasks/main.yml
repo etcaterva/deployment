@@ -135,23 +135,10 @@
   tags:
   - cd-frontend
 
-# Reenable once ansible 2.8 is out
-#- name: Docker prune everything
-#  docker_prune:
-#    containers: yes
-#    images: yes
-#    networks: yes
-#    volumes: yes
-#    builder_cache: yes
-
-- name: Prune docker images
-  command: docker image prune -f
-  become: yes
-  tags:
-  - cd-frontend
-
-- name: Prune stopped containers
-  command: docker container prune
+- name: Docker prune old images and containers
+  docker_prune:
+    containers: yes
+    images: yes
   become: yes
   tags:
   - cd-frontend
