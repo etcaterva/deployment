@@ -88,7 +88,7 @@
     state: present
   become: yes
 
-- name: pull echaloasuerte image
+- name: pull echaloasuerte A image
   docker_image:
     name: etcaterva/echaloasuerte
     tag: "{{ echaloasuerte_3_git_branch }}"
@@ -99,7 +99,19 @@
   tags:
   - cd-frontend
 
-- name: Start eas service in docker swarm
+- name: pull echaloasuerte B image
+  docker_image:
+    name: etcaterva/echaloasuerte
+    tag: "{{ echaloasuerte_3_git_branch_b}}"
+    source: pull
+    force_source: yes
+  become: yes
+  register: docker_pull
+  tags:
+  - cd-frontend-b
+  when: echaloasuerte_3_git_branch_b is defined
+
+- name: Start eas A service in docker swarm
   docker_swarm_service:
     name: eas-service
     image: "etcaterva/echaloasuerte:{{ echaloasuerte_3_git_branch }}"
@@ -134,6 +146,47 @@
   tags:
   - cd-frontend
 
+- name: Start eas B service in docker swarm
+  docker_swarm_service:
+    name: eas-service-b
+    image: "etcaterva/echaloasuerte:{{ echaloasuerte_3_git_branch_b }}"
+    resolve_image: yes
+    update_config:
+      order: start-first
+      parallelism: 1
+      delay: 10s
+    restart_config:
+      condition: any
+      delay: 5s
+    healthcheck:
+      # Check if eas server is healthy by curl'ing the server.
+      # If this fails or timeouts, the healthcheck fails.
+      test: ["CMD", "curl", "--fail", "http://localhost:80"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    replicas: "{{ echaloasuerte_3_replicas }}"
+    env:
+      LOGS_SUFFIX: "{{'{{.Task.Slot}}_{{.Task.ID}}'}}"
+    publish:
+    - mode: ingress
+      published_port: 8082
+      target_port: 80
+    mounts:
+      - source: "{{ echaloasuerte_3_logs }}"
+        target: /var/log/eas3/
+        type: bind
+  become: yes
+  tags:
+  - cd-frontend-b
+  when: echaloasuerte_3_git_branch_b is defined
+
+- name: Delete docker service if no A/B testing
+  command: docker service rm eas-service-b
+  become: yes
+  when: echaloasuerte_3_git_branch_b is not defined
+
 - name: Docker prune old images and containers
   docker_prune:
     containers: yes
@@ -141,6 +194,7 @@
   become: yes
   tags:
   - cd-frontend
+  - cd-frontend-b
 
 - name: Fix owners of echaloasuerte application tree
   file:
