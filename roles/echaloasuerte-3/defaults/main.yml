@@ -18,9 +18,6 @@ echaloasuerte_3_app_wsgi: "eas/wsgi.py"
 # Version to deploy
 echaloasuerte_3_git_branch: "master"
 
-# NPM build config to use
-echaloasuerte_3_npm_config: ":dev"
-
 echaloasuerte_3_domains:
   - "beta.echaloasuerte.com"
   - "beta.chooserandom.com"
