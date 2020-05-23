@@ -119,6 +119,8 @@
     dest: /etc/nginx/sites-available/echaloasuerte.conf
   notify:
   - restart nginx
+  tags:
+  - nginx-conf
 
 - name: Enable nginx site ecaheloasuerte
   file:

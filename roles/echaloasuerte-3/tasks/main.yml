@@ -229,6 +229,8 @@
   notify:
   - restart nginx
   - purge cloudflare cache
+  tags:
+  - nginx-conf
 
 - name: Enable nginx site ecaheloasuerte
   file:
