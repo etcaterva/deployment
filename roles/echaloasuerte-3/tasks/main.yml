@@ -9,8 +9,6 @@
   with_items:
   - "{{ echaloasuerte_3_root }}"
   - "{{ echaloasuerte_3_app }}"
-  - "{{ echaloasuerte_3_front }}"
-  - "{{ echaloasuerte_3_html }}"
   - "{{ echaloasuerte_3_venv }}"
   - "{{ echaloasuerte_3_logs }}"
   - /var/www
@@ -207,8 +205,6 @@
   with_items:
   - "{{ echaloasuerte_3_root }}"
   - "{{ echaloasuerte_3_app }}"
-  - "{{ echaloasuerte_3_front }}"
-  - "{{ echaloasuerte_3_html }}"
   - "{{ echaloasuerte_3_venv }}"
   - "{{ echaloasuerte_3_logs }}"
 
