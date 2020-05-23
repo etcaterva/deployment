@@ -1,11 +1,3 @@
-- set_fact:
-    echaloasuerte_root: "/var/www/echaloasuerte"
-- set_fact:
-    echaloasuerte_app: "{{ echaloasuerte_root }}/web-app"
-    echaloasuerte_venv: "{{ echaloasuerte_root }}/venv"
-    echaloasuerte_static: "{{ echaloasuerte_root }}/static"
-    echaloasuerte_logs: "/var/log/echaloasuerte"
-
 - name: Create echaloasuerte application tree
   file:
     path: "{{ item }}"
