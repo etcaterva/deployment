@@ -3,7 +3,6 @@
 
 [ECHALOASUERTE:vars]
 echaloasuerte_3_git_branch=master
-echaloasuerte_3_git_branch_b=try-next
 echaloasuerte_git_branch=master
 
 [MONGO_DATABASES]
