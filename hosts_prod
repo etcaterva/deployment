@@ -3,7 +3,6 @@
 
 [ECHALOASUERTE:vars]
 echaloasuerte_3_git_branch=prod
-echaloasuerte_3_git_branch_b=prod-next
 echaloasuerte_git_branch=prod
 filebeat_env=prod
 
