@@ -27,3 +27,19 @@
     executable: pip3
     name: virtualenv
   become: yes
+
+- name: Install fail2ban filter echaloasuerte-nginx
+  copy:
+    src: echaloasuerte-nginx.conf.filter
+    dest: /etc/fail2ban/filter.d/echaloasuerte-nginx.conf
+    mode: 0644
+  notify:
+  - restart fail2ban
+
+- name: Install fail2ban jail for echaloasuerte
+  copy:
+    src: echaloasuerte.conf.jail
+    dest: /etc/fail2ban/jail.d/echaloasuerte.conf
+    mode: 0644
+  notify:
+  - restart fail2ban
