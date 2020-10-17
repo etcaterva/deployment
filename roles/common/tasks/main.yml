@@ -11,6 +11,7 @@
     - gettext
     - curl
     - fail2ban
+    - jq
     state: present
     update-cache: yes
   become: yes
@@ -27,6 +28,15 @@
     executable: pip3
     name: virtualenv
   become: yes
+
+- name: Install fail2ban action for echaluasuerte CF
+  template:
+    src: cloudflare-account.conf.action.j2
+    dest: /etc/fail2ban/action.d/cloudflare-account.conf
+    mode: 0640
+  notify:
+  - restart fail2ban
+
 
 - name: Install fail2ban filter echaloasuerte-nginx
   copy:

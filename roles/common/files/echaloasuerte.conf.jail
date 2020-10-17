@@ -8,3 +8,5 @@ maxretry = 50
 findtime = 60
 # ban on 1 h
 bantime = 3600
+# action
+action = cloudflare-account
