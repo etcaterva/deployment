@@ -4,7 +4,7 @@ port     = http,https
 filter   = echaloasuerte-nginx
 logpath  = /var/log/nginx/access.log
 # 50 times on 1 minute
-maxretry = 50
+maxretry = 200
 findtime = 60
 # ban on 1 h
 bantime = 3600
