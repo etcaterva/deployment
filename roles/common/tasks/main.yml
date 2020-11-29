@@ -34,6 +34,7 @@
     src: cloudflare-account.conf.action.j2
     dest: /etc/fail2ban/action.d/cloudflare-account.conf
     mode: 0640
+  become: yes
   notify:
   - restart fail2ban
 
@@ -43,6 +44,7 @@
     src: echaloasuerte-nginx.conf.filter
     dest: /etc/fail2ban/filter.d/echaloasuerte-nginx.conf
     mode: 0644
+  become: yes
   notify:
   - restart fail2ban
 
@@ -51,5 +53,6 @@
     src: echaloasuerte.conf.jail
     dest: /etc/fail2ban/jail.d/echaloasuerte.conf
     mode: 0644
+  become: yes
   notify:
   - restart fail2ban
