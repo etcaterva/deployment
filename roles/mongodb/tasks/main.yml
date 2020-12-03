@@ -28,10 +28,11 @@
   become: yes
   with_items:
   - mongodb-org
-  - python-pip
+  - python3-pip
 
 - name: Install the latest pymongo package
   pip:
+    executable: pip3
     name: pymongo
     state: latest
 

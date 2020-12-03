@@ -37,9 +37,9 @@
   when: TEST_DEPLOYMENT is defined
 
 - name: Manually create the initial virtualenv
-  command: virtualenv {{ echaloasuerte_venv }} -p python2
+  command: virtualenv {{ echaloasuerte_venv }} -p python3
   args:
-    creates: "{{ echaloasuerte_venv }}/bin/python2"
+    creates: "{{ echaloasuerte_venv }}/bin/python3"
   become: yes
   become_user: www-data
 

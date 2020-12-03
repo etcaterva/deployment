@@ -16,13 +16,6 @@
     update-cache: yes
   become: yes
 
-
-- name: Install virtualenv from pip
-  pip:
-    executable: pip
-    name: virtualenv
-  become: yes
-
 - name: Install virtualenv from pip3
   pip:
     executable: pip3
