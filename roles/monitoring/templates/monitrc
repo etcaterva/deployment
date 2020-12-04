@@ -1,10 +1,10 @@
 set daemon 120
-set alert mariocj89@gmail.com but not on {instance, action}
-set alert palvarez89@gmail.com but not on {instance, action}
-set alert dnaranjo89@gmail.com but not on {instance, action}
+{% for mail in alerts_destination_mails %}
+set alert {{ mail }} but not on {instance, action}
+{% endfor %}
 
 set mail-format {
-    from: postmaster@chooserandom.com
+    from: {{ alerts_mail_username }}
     subject: [echaloasuerte][monitoring] $SERVICE $EVENT at $DATE
     message: Monit $ACTION $SERVICE at $DATE on $HOST: $DESCRIPTION.
         by monit
@@ -14,9 +14,9 @@ set httpd port 2812
     use address 0.0.0.0
     allow @dev read-only
 
-set mailserver smtp.mailgun.org port 587
-    username "postmaster@chooserandom.com"
-    password "{{ mail_password }}"
+set mailserver {{ alerts_mail_smtp }} port 587
+    username "{{ alerts_mail_username}}"
+    password "{{ alerts_mail_password }}"
     using tlsv1 with timeout 30 seconds
 
 include /etc/monit/monitrc.d/*
