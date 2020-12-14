@@ -18,19 +18,10 @@ filebeat.inputs:
 # EAS3 uwsgi logs
 - type: log
   paths:
-    - /var/log/echaloasuerte-3/echaloasuerte-uwsgi*-req.log
-  fields:
-    logzio_codec: plain
-    token: {{ logzio_token }}
-    type: echaloasuerte-3-uwsgi
-    env: {{ filebeat_env }}
-    level: info
-  fields_under_root: true
-  encoding: utf-8
-  ignore_older: 3h
-- type: log
-  paths:
     - /var/log/echaloasuerte-3/echaloasuerte-uwsgi*-err.log
+  exclude_lines:
+    - '^worker . lifetime reached'
+    - '^Respawned uWSGI worker'
   fields:
     logzio_codec: plain
     token: {{ logzio_token }}
@@ -44,19 +35,10 @@ filebeat.inputs:
 # EAS2 uwsgi logs
 - type: log
   paths:
-    - /var/log/echaloasuerte/echaloasuerte-uwsgi*-req.log
-  fields:
-    logzio_codec: plain
-    token: {{ logzio_token }}
-    type: echaloasuerte-uwsgi
-    env: {{ filebeat_env }}
-    level: info
-  fields_under_root: true
-  encoding: utf-8
-  ignore_older: 3h
-- type: log
-  paths:
     - /var/log/echaloasuerte/echaloasuerte-uwsgi*-err.log
+  exclude_lines:
+    - '^worker . lifetime reached'
+    - '^Respawned uWSGI worker'
   fields:
     logzio_codec: plain
     token: {{ logzio_token }}

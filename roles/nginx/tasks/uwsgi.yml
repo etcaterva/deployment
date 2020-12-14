@@ -3,6 +3,8 @@
     uwsgi_version: "2.0.17.1"
     uwsgi_build_dir: /opt/uwsgi
     uwsgi_plugins_dir: /usr/lib/uwsgi/plugins/
+  tags:
+  - uwsgi
 
 - name: Install uwsgi packages
   apt:

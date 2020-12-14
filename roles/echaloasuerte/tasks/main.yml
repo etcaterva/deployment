@@ -112,6 +112,9 @@
   with_sequence: count={{ uwsgi_n }}
   notify:
   - restart all uwsgi
+  tags:
+  - uwsgi
+
 
 - name: Create the nginx config file for echaloasuerte
   template:
