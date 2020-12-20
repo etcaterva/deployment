@@ -2,11 +2,7 @@
 dependency:
   name: galaxy
 driver:
-  name: delegated
-lint: |
-  #set -e
-  yamllint .
-  ansible-lint
+  name: docker
 platforms:
   - name: instance
     image: geerlingguy/docker-ubuntu1804-ansible
