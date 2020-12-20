@@ -1,9 +1,17 @@
 ---
-- group:
+- name: Create dev group
+  group:
     name: dev
     state: present
 
-- user:
+- name: Install openssh-server
+  apt:
+    name: openssh-server
+    state: present
+    update_cache: yes
+
+- name: Create users and add them to groups (dev, sudo)
+  user:
     name: "{{ item }}"
     shell: /bin/bash
     groups: sudo,dev
@@ -16,7 +24,8 @@
     key: "{{ lookup('file', 'public_keys/' + item) }}"
   with_items: "{{ users }}"
 
-- lineinfile:
+- name: Configure sudo rules
+  lineinfile:
     dest: /etc/sudoers
     state: present
     regexp: '^%sudo'
@@ -31,6 +40,7 @@
   notify:
   - restart ssh
 
-- hostname:
+- name: Set hostname
+  hostname:
     name: "{{ node_hostname }}"
   when: node_hostname is defined
