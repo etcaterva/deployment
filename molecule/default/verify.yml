@@ -1,0 +1,15 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Check that the somefile.conf exists
+    stat:
+      path: /home/pedro
+    register: pedro_result
+
+  - name: Example assertion
+    assert:
+      that: pedro_result.stat.isreg is defined

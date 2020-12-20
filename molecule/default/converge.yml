@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  import_playbook: ../../config-users.yml
+  tasks:
+    - name: "Include deployment"
+      include_role:
+        name: "deployment"
