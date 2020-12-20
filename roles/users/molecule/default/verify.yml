@@ -1,0 +1,20 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+  - name: Stat over user folders
+    stat:
+      path: "/home/{{ item }}"
+    loop:
+      - pedro
+      - david
+      - mario
+      - automation
+    register: user_home_stats
+
+  - name: Check user home dirs exsist
+    assert:
+      that: item.stat.exists and item.stat.isdir
+    loop: "{{ user_home_stats.results }}"
