@@ -38,7 +38,7 @@
     line: PasswordAuthentication no
     state: present
   notify:
-  - restart ssh
+    - restart ssh
 
 - name: Set hostname
   hostname:

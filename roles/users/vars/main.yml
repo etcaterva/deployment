@@ -1,6 +1,6 @@
 ---
 users:
-- pedro
-- mario
-- david
-- automation
+  - pedro
+  - mario
+  - david
+  - automation
