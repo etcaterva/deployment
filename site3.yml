@@ -1,5 +1,4 @@
 ---
-- import_playbook: bootstrap-python.yml
 - import_playbook: config-users.yml
 - import_playbook: config-postgresql.yml
 - import_playbook: config-eas3.yml
