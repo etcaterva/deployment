@@ -1,4 +1,4 @@
 ---
 - name: Converge
   hosts: all
-- import_playbook: ../../config-users.yml
+- import_playbook: ../../full-site.yml
