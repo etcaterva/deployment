@@ -11,7 +11,15 @@ platforms:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
     privileged: true
     pre_build_image: true
+    groups:
+      - ECHALOASUERTE
+      - POSTGRESQL_DATABASES
 provisioner:
   name: ansible
+  inventory:
+    group_vars:
+      all:
+        ansible_python_interpreter: "/usr/bin/python3"
+
 verifier:
   name: ansible

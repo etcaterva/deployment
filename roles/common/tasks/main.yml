@@ -12,6 +12,7 @@
     - curl
     - fail2ban
     - jq
+    - gpg-agent
     state: present
     update-cache: yes
   become: yes
