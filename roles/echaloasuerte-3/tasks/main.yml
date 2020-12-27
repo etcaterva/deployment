@@ -158,7 +158,7 @@
       interval: 1m30s
       timeout: 10s
       retries: 10
-      start_period: 30s
+      start_period: 5s
     replicas: "{{ echaloasuerte_3_replicas }}"
     env:
       LOGS_SUFFIX: "{{'{{.Task.Slot}}_{{.Task.ID}}'}}"
@@ -193,7 +193,7 @@
       interval: 1m30s
       timeout: 10s
       retries: 10
-      start_period: 30s
+      start_period: 5s
     replicas: "{{ echaloasuerte_3_replicas }}"
     env:
       LOGS_SUFFIX: "{{'{{.Task.Slot}}_{{.Task.ID}}'}}"
