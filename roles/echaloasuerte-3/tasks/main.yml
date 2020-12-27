@@ -74,6 +74,41 @@
   become: yes
   become_user: www-data
 
+# Superuser
+
+- name: Check if django superuser exists
+  django_manage:
+    app_path: "{{ echaloasuerte_3_app }}"
+    virtualenv: "{{ echaloasuerte_3_venv }}"
+    settings: "{{ echaloasuerte_3_app_settings }}"
+    command: shell -c 'import sys; from django.contrib.auth.models import User; sys.exit(0 if User.objects.filter(username="{{ eas_admin_username }}").count() > 0 else 1)'
+  register: checksuperuser
+  ignore_errors: True
+  changed_when: False
+  tags:
+  - superuser
+
+- name: django create superuser
+  django_manage:
+    app_path: "{{ echaloasuerte_3_app }}"
+    virtualenv: "{{ echaloasuerte_3_venv }}"
+    settings: "{{ echaloasuerte_3_app_settings }}"
+    command: "createsuperuser --noinput --username={{ eas_admin_username }} --email={{ eas_admin_email }}"
+  when: checksuperuser.failed
+  tags:
+  - superuser
+
+- name: django set superuser pass
+  django_manage:
+    app_path: "{{ echaloasuerte_3_app }}"
+    virtualenv: "{{ echaloasuerte_3_venv }}"
+    settings: "{{ echaloasuerte_3_app_settings }}"
+    command: shell -c 'from django.contrib.auth.models import User; u = User.objects.get(username="{{ eas_admin_username }}"); u.set_password("{{ eas_admin_pass }}"); u.save()'
+  when: checksuperuser.failed
+  tags:
+  - superuser
+
+
 # Database cleanup
 
 - name: Install purge script
