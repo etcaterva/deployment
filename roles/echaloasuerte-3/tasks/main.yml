@@ -74,6 +74,8 @@
   become: yes
   become_user: www-data
 
+# Database cleanup
+
 - name: Install purge script
   template:
     src: purge-old-draws.sh
@@ -81,6 +83,27 @@
     mode: 0755
   become: yes
   become_user: www-data
+
+- name: Install echaloasuerte-purge Systemd service file
+  template:
+    src: echaloasuerte-purge.service
+    dest: /etc/systemd/system/echaloasuerte-purge.service
+    mode: 0644
+  become: yes
+
+- name: Install echaloasuerte-purge Systemd timer file
+  copy:
+    src: echaloasuerte-purge.timer
+    dest: /etc/systemd/system/echaloasuerte-purge.timer
+    mode: 0644
+  become: yes
+
+- name: Ensure echaloasuerte-purge.timer is started and enabled on boot (systemd)
+  service:
+    name: echaloasuerte-purge.timer
+    state: started
+    enabled: yes
+  become: yes
 
 # Frontend
 - name: Install docker python package

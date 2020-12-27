@@ -1,0 +1,10 @@
+[Unit]
+Description=Purges eas database every day at 9am
+
+[Timer]
+OnCalendar=*-*-* 9:00:00
+Unit=echaloasuerte-purge.service
+
+[Install]
+WantedBy=multi-user.target
+

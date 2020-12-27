@@ -1,0 +1,12 @@
+[Unit]
+Description=eas purge service
+After=syslog.target
+Requisite=postgresql.service
+
+[Service]
+User=www-data
+ExecStart={{ echaloasuerte_3_root }}/purge-old-draws.sh
+Type=simple
+
+[Install]
+WantedBy=multi-user.target
