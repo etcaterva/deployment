@@ -74,6 +74,13 @@
   become: yes
   become_user: www-data
 
+- name: Install purge script
+  template:
+    src: purge-old-draws.sh
+    dest: "{{ echaloasuerte_3_root }}/purge-old-draws.sh"
+    mode: 0755
+  become: yes
+  become_user: www-data
 
 # Frontend
 - name: Install docker python package
