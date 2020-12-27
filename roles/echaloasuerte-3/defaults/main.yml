@@ -17,11 +17,14 @@ echaloasuerte_3_app_wsgi: "eas/wsgi.py"
 echaloasuerte_3_git_branch: "master"
 
 echaloasuerte_3_domains:
-  - "beta.echaloasuerte.com"
-  - "beta.chooserandom.com"
-  - "dev.woreep.com"
-  - "beta-dev.echaloasuerte.com"
-  - "beta-dev.chooserandom.com"
+  - "echaloasuerte.com"
+  - "chooserandom.com"
+  - "dev.echaloasuerte.com"
+  - "dev.chooserandom.com"
+  - "www.echaloasuerte.com"
+  - "www.chooserandom.com"
+  - "mobile.echaloasuerte.com"
+  - "mobile.chooserandom.com"
 
 # Number of docker swarm replicas
 echaloasuerte_3_replicas: 1

@@ -1,11 +1,10 @@
 ---
-EN_FQDN: woreep.com
 ES_FQDN: echaloasuerte.com
-EN_FQDN2: chooserandom.com
+EN_FQDN: chooserandom.com
 
 FQDN:
   - "{{ ES_FQDN }}"
-  - "{{ EN_FQDN2 }}"
+  - "{{ EN_FQDN }}"
 
 uwsgi_n: 2
 
