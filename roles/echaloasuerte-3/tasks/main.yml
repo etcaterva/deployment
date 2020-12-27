@@ -82,6 +82,8 @@
     virtualenv: "{{ echaloasuerte_3_venv }}"
     settings: "{{ echaloasuerte_3_app_settings }}"
     command: shell -c 'import sys; from django.contrib.auth.models import User; sys.exit(0 if User.objects.filter(username="{{ eas_admin_username }}").count() > 0 else 1)'
+  become: yes
+  become_user: www-data
   register: checksuperuser
   ignore_errors: True
   changed_when: False
@@ -94,6 +96,8 @@
     virtualenv: "{{ echaloasuerte_3_venv }}"
     settings: "{{ echaloasuerte_3_app_settings }}"
     command: "createsuperuser --noinput --username={{ eas_admin_username }} --email={{ eas_admin_email }}"
+  become: yes
+  become_user: www-data
   when: checksuperuser.failed
   tags:
   - superuser
@@ -104,6 +108,8 @@
     virtualenv: "{{ echaloasuerte_3_venv }}"
     settings: "{{ echaloasuerte_3_app_settings }}"
     command: shell -c 'from django.contrib.auth.models import User; u = User.objects.get(username="{{ eas_admin_username }}"); u.set_password("{{ eas_admin_pass }}"); u.save()'
+  become: yes
+  become_user: www-data
   when: checksuperuser.failed
   tags:
   - superuser
