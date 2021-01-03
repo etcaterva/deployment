@@ -23,6 +23,14 @@ metricbeat.modules:
   period: 10s
   enabled: true
 
+- module: uwsgi
+  metricsets:
+    - status
+  period: 10s
+  hosts:
+    - unix:///var/www/echaloasuerte-3/echaloasuerte-uwsgi1-stats.sock
+    - unix:///var/www/echaloasuerte-3/echaloasuerte-uwsgi2-stats.sock
+
 fields:
   logzio_codec: json
   token: {{ logzio_token }}
