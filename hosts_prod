@@ -6,6 +6,7 @@ echaloasuerte_3_git_branch=prod
 echaloasuerte_git_branch=prod
 filebeat_env=prod
 echaloasuerte_3_app_settings=eas.settings.prod
+echaloasuerte_3_replicas=2
 
 [POSTGRESQL_DATABASES]
 193.70.1.6 node_hostname=prod-ovh2
