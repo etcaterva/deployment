@@ -25,6 +25,6 @@ before_deploy:
 deploy:
   provider: script
   skip_cleanup: true
-  script: ansible-playbook -i hosts_dev full-site.yml --vault-password-file=vault-pass --extra-vars "ansible_user=automation"
+  script: ansible-playbook -i environments/dev/hosts full-site.yml --vault-password-file=vault-pass --extra-vars "ansible_user=automation"
   on:
     branch: master
