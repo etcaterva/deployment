@@ -42,6 +42,22 @@
   become: yes
   become_user: www-data
 
+- name: Update pip to latest
+  pip:
+    name: pip
+    state: latest
+    virtualenv: "{{ echaloasuerte_3_venv }}"
+  become: yes
+  become_user: www-data
+
+- name: Update setuptools to latest
+  pip:
+    name: setuptools
+    state: latest
+    virtualenv: "{{ echaloasuerte_3_venv }}"
+  become: yes
+  become_user: www-data
+
 - name: Setup virtual environment for the app using requirements.txt
   pip:
     requirements: "{{ echaloasuerte_3_app }}/requirements/prod.txt"
