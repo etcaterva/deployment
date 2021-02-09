@@ -88,6 +88,8 @@
     app_path: "{{ echaloasuerte_3_app }}"
     virtualenv: "{{ echaloasuerte_3_venv }}"
     settings: "{{ echaloasuerte_3_app_settings }}"
+  environment:
+    ECHALOASUERTE_LOGS_PATH: "{{ echaloasuerte_3_logs }}"
   become: yes
   become_user: www-data
 
