@@ -213,7 +213,7 @@
       # If this fails or timeouts, the healthcheck fails.
       test: ["CMD", "curl", "--fail", "http://localhost:80"]
       interval: 1m30s
-      timeout: 10s
+      timeout: 30s
       retries: 10
       start_period: 5s
     replicas: "{{ echaloasuerte_3_replicas }}"
@@ -248,7 +248,7 @@
       # If this fails or timeouts, the healthcheck fails.
       test: ["CMD", "curl", "--fail", "http://localhost:80"]
       interval: 1m30s
-      timeout: 10s
+      timeout: 30s
       retries: 10
       start_period: 5s
     replicas: "{{ echaloasuerte_3_replicas }}"
