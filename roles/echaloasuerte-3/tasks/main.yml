@@ -80,6 +80,7 @@
     line: '127.0.0.1 db'
     state: present
   become: yes
+  ignore_errors: yes
 
 - name: Synchronize django app database
   django_manage:
