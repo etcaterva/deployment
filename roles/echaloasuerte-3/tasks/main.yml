@@ -22,6 +22,8 @@
     force: yes
   become: yes
   become_user: www-data
+  tags:
+  - cd-backend
   notify:
   - restart all uwsgi
 
@@ -49,6 +51,8 @@
     virtualenv: "{{ echaloasuerte_3_venv }}"
   become: yes
   become_user: www-data
+  tags:
+  - cd-backend
 
 - name: Update setuptools to latest
   pip:
@@ -57,6 +61,8 @@
     virtualenv: "{{ echaloasuerte_3_venv }}"
   become: yes
   become_user: www-data
+  tags:
+  - cd-backend
 
 - name: Setup virtual environment for the app using requirements.txt
   pip:
@@ -65,6 +71,8 @@
     virtualenv_python: python3
   become: yes
   become_user: www-data
+  tags:
+  - cd-backend
 
 - name: Setup EXTRA deps needed
   pip:
@@ -72,6 +80,8 @@
     virtualenv: "{{ echaloasuerte_3_venv }}"
   become: yes
   become_user: www-data
+  tags:
+  - cd-backend
 
 - name: Update /etc/hosts to add 'db' IP address
   lineinfile:
@@ -89,6 +99,8 @@
     settings: "{{ echaloasuerte_3_app_settings }}"
   become: yes
   become_user: www-data
+  tags:
+  - cd-backend
 
 # Superuser
 
@@ -295,6 +307,8 @@
   - "{{ echaloasuerte_3_app }}"
   - "{{ echaloasuerte_3_venv }}"
   - "{{ echaloasuerte_3_logs }}"
+  tags:
+  - cd-backend
 
 - name: Create uwsgi config file for echaloasuerte
   template:
