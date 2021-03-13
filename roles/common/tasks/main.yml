@@ -2,6 +2,7 @@
 - name: Install packages needed from apt
   apt:
     pkg:
+    - python2-minimal
     - git
     - python-dev
     - libssl-dev

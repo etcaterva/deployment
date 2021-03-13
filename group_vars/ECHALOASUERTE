@@ -8,15 +8,23 @@ FQDN:
 
 uwsgi_n: 2
 
+
+postgresql_python_library: python3-psycopg2
+
 postgresql_users:
   - name: postgres
-    pass: postgres
-    encrypted: no
+    password: postgres
   - name: root
-    pass: root
-    encrypted: no
+    password: root
 
 # Extra database for monit checking
 postgresql_databases:
   - name: root
     owner: root
+
+# allow local paswordless conection
+postgresql_hba_entries:
+  - { type: local, database: all, user: postgres, auth_method: trust }
+  - { type: local, database: all, user: all, auth_method: trust }
+  - { type: host, database: all, user: all, address: '127.0.0.1/32', auth_method: trust }
+  - { type: host, database: all, user: all, address: '::1/128', auth_method: trust }

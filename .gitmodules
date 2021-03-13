@@ -1,6 +1,6 @@
-[submodule "roles/anxs.postgresql"]
-	path = roles/anxs.postgresql
-	url = https://github.com/ANXS/postgresql
+[submodule "roles/geerlingguy.postgresql"]
+	path = roles/geerlingguy.postgresql
+	url = https://github.com/geerlingguy/ansible-role-postgresql.git
 [submodule "roles/geerlingguy.nodejs"]
 	path = roles/geerlingguy.nodejs
 	url = https://github.com/geerlingguy/ansible-role-nodejs.git
