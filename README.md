@@ -42,6 +42,11 @@ execute:
 > `--ask-vault-pass` or `--vault-password-file`. For more information see
 > [how to run a playbook with vault] documentation.
 
+If you need to pick the target username, you can simply add
+`--extra-vars "ansible_user=root"`. For example, for an initial deployment of
+the production server, you can run:
+
+    ansible-playbook -i environments/prod/hosts full-site.yml --vault-password-file ../vault --extra-vars "ansible_user=root"
 
 Testing changes
 ---------------

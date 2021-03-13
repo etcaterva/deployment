@@ -1,5 +1,5 @@
 [ECHALOASUERTE]
-193.70.1.6 node_hostname=prod-ovh2
+157.90.174.97 node_hostname=prod-ovh2
 
 [ECHALOASUERTE:vars]
 echaloasuerte_3_git_branch=prod
@@ -9,7 +9,7 @@ echaloasuerte_3_app_settings=eas.settings.prod
 echaloasuerte_3_replicas=2
 
 [POSTGRESQL_DATABASES]
-193.70.1.6 node_hostname=prod-ovh2
+157.90.174.97 node_hostname=prod-ovh2
 
 [MONGO_DATABASES]
-193.70.1.6 node_hostname=prod-ovh2
+157.90.174.97 node_hostname=prod-ovh2
