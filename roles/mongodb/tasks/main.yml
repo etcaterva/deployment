@@ -28,7 +28,6 @@
   become: yes
   with_items:
   - mongodb-org
-  - python-pip
 
 - name: Install the latest pymongo package
   pip:
