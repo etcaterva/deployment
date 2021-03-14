@@ -1,20 +1,70 @@
 ---
 - set_fact:
-    uwsgi_version: "2.0.17.1"
+    uwsgi_version: "2.0.19.1"
     uwsgi_build_dir: /opt/uwsgi
-    uwsgi_plugins_dir: /usr/lib/uwsgi/plugins/
+    uwsgi_plugins_dir: /usr/local/lib/uwsgi/plugins/
+    uwsgi_bin_dir: /usr/local/bin/
   tags:
   - uwsgi
 
-- name: Install uwsgi packages
+
+- name: Clone uwsgi
+  git:
+    repo: "https://github.com/unbit/uwsgi.git"
+    dest: "{{ uwsgi_build_dir }}"
+    version: "{{ uwsgi_version }}"
+  become: yes
+
+- name: Install build-essential compilers
   apt:
     name:
-    - uwsgi
-    - uwsgi-plugin-python
-    - uwsgi-plugin-python3
+    - build-essential
     state: present
     update_cache: yes
     cache_valid_time: "{{apt_cache_valid_time | default (3600)}}"
+  become: yes
+
+- name: Build core
+  command:
+    cmd: python3 uwsgiconfig.py --build nolang
+    chdir: "{{ uwsgi_build_dir }}"
+    creates: /opt/uwsgi/uwsgi
+  become: yes
+
+- name: Build python3 plugin
+  command:
+    cmd: python3 uwsgiconfig.py --plugin plugins/python nolang python3
+    chdir: "{{ uwsgi_build_dir }}"
+    creates: "{{ uwsgi_build_dir }}/python3_plugin.so"
+  become: yes
+
+- name: Build python2 plugin
+  command:
+    cmd: python2 uwsgiconfig.py --plugin plugins/python nolang python2
+    chdir: "{{ uwsgi_build_dir }}"
+    creates: "{{ uwsgi_build_dir }}/python2_plugin.so"
+  become: yes
+
+- name: Create uwsgi dirs
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+  become: yes
+  with_items:
+  - "{{ uwsgi_bin_dir }}"
+  - "{{ uwsgi_plugins_dir }}"
+
+- name: Install uwsgi and plugins
+  copy:
+    src: "{{ uwsgi_build_dir }}/{{ item.name }}"
+    dest: "{{ item.dest }}/{{ item.name }}"
+    remote_src: yes
+    mode: 0755
+  with_items:
+    - { name: 'uwsgi', dest: "{{ uwsgi_bin_dir }}" }
+    - { name: 'python2_plugin.so', dest: "{{ uwsgi_plugins_dir }}" }
+    - { name: 'python3_plugin.so', dest: "{{ uwsgi_plugins_dir }}" }
   become: yes
   notify:
   - restart all uwsgi
@@ -26,16 +76,6 @@
   become: yes
   with_sequence: count={{ uwsgi_n }}
 
-- name: Install uwsgi Upstart conf file
-  template:
-    src: uwsgi-upstart.conf
-    dest: /etc/init/uwsgi{{ item }}.conf
-  become: yes
-  with_sequence: count={{ uwsgi_n }}
-  when: ansible_service_mgr is undefined or ansible_service_mgr != "systemd"
-  notify:
-  - restart all uwsgi
-
 - name: Install uwsgi Systemd service file
   template:
     src: uwsgi-systemd.service
@@ -43,7 +83,6 @@
     mode: 0644
   become: yes
   with_sequence: count={{ uwsgi_n }}
-  when: ansible_service_mgr is defined and ansible_service_mgr == "systemd"
   notify:
   - restart all uwsgi
 

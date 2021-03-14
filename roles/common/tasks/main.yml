@@ -5,9 +5,9 @@
     - python2-minimal
     - git
     - python-dev
+    - python3-dev
     - libssl-dev
     - libffi-dev
-    - python-pip
     - python3-pip
     - gettext
     - curl
@@ -17,6 +17,16 @@
     update-cache: yes
   become: yes
 
+- name: Download get-pip.py
+  get_url:
+    url: https://bootstrap.pypa.io/pip/2.7/get-pip.py
+    dest: /tmp/get-pip.py
+
+- name: Install pip2
+  command: python2 /tmp/get-pip.py
+  args:
+    creates: /usr/local/bin/pip2
+  become: yes
 
 - name: Install virtualenv from pip
   pip:

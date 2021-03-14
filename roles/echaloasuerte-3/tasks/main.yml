@@ -11,6 +11,7 @@
   - "{{ echaloasuerte_3_app }}"
   - "{{ echaloasuerte_3_venv }}"
   - "{{ echaloasuerte_3_logs }}"
+  - "/var/log/echaloasuerte" # FIXME: this is needed because is the default log location. If not existing, migrate command will fail
   - /var/www
 
 - name: Clone/update backend repository in {{ echaloasuerte_3_app }}
@@ -183,6 +184,7 @@
 - name: Init a new swarm with default parameters
   docker_swarm:
     state: present
+    advertise_addr: "{{ ansible_default_ipv4.address }}"
   become: yes
 
 - name: pull echaloasuerte A image
