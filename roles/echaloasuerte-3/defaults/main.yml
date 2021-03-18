@@ -21,6 +21,8 @@ echaloasuerte_3_domains:
   - "chooserandom.com"
   - "dev.echaloasuerte.com"
   - "dev.chooserandom.com"
+  - "prod.echaloasuerte.com"
+  - "prod.chooserandom.com"
   - "www.echaloasuerte.com"
   - "www.chooserandom.com"
   - "mobile.echaloasuerte.com"
