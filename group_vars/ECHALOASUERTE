@@ -7,16 +7,3 @@ FQDN:
   - "{{ EN_FQDN }}"
 
 uwsgi_n: 2
-
-postgresql_users:
-  - name: postgres
-    pass: postgres
-    encrypted: no
-  - name: root
-    pass: root
-    encrypted: no
-
-# Extra database for monit checking
-postgresql_databases:
-  - name: root
-    owner: root
