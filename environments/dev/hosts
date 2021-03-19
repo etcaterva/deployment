@@ -2,11 +2,8 @@
 54.38.215.150 node_hostname=dev-ovh2
 
 [ECHALOASUERTE:vars]
-echaloasuerte_3_git_branch=prod
-echaloasuerte_git_branch=prod
-filebeat_env=prod
-echaloasuerte_3_app_settings=eas.settings.prod
-
+echaloasuerte_3_git_branch=master
+echaloasuerte_git_branch=master
 
 [MONGO_DATABASES]
 54.38.215.150 node_hostname=dev-ovh2
