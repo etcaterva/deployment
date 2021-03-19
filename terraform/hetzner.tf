@@ -45,7 +45,7 @@ resource "hcloud_network_subnet" "network-subnet" {
 }
 
 resource "hcloud_server" "het-prod1" {
-  name        = "het-prod1"
+  name        = "prod-het1"
   server_type = "cx21"
   image       = "ubuntu-20.04"
   location    = "nbg1"
