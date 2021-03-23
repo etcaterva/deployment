@@ -59,6 +59,10 @@ resource "hcloud_server" "het-prod1" {
       ]
   }
 
+  labels = {
+    "environment": "prod"
+  }
+
   ssh_keys = [
     hcloud_ssh_key.mario-key.id,
     hcloud_ssh_key.pedro-key.id,
