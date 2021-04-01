@@ -20,7 +20,8 @@
 - name: Download get-pip.py
   get_url:
     url: https://bootstrap.pypa.io/pip/2.7/get-pip.py
-    dest: /tmp/get-pip.py
+    dest: /opt/get-pip.py
+  become: yes
 
 - name: Install pip2
   command: python2 /tmp/get-pip.py
