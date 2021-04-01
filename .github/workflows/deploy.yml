@@ -34,6 +34,11 @@ jobs:
         with:
           submodules: true
 
+      - name: Turnstyle
+        uses: softprops/turnstyle@8db075d65b19bf94e6e8687b504db69938dc3c65
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Set up Python 3.9
         uses: actions/setup-python@v1
         with:
