@@ -1,0 +1,47 @@
+name: Sync database from prod to dev
+on:
+  schedule:
+    - cron: '*/30 * * * *' # Every minute 0 (every hour)
+
+jobs:
+  sync-db:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Turnstyle
+        uses: softprops/turnstyle@8db075d65b19bf94e6e8687b504db69938dc3c65
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible==2.9.2 requests
+
+      - name: set ansible config secrets
+        env:
+          ANSIBLE_VAULT_PASSWORD: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
+        run: |
+          echo "$ANSIBLE_VAULT_PASSWORD" > .ansible-vault-password
+
+      - name: Load ssh key
+        uses: webfactory/ssh-agent@v0.4.1
+        with:
+          ssh-private-key: ${{ secrets.AUTOMATION_SSH_KEY }}
+
+      - name: run playbook
+        run: |
+          ansible-playbook -i environments/prod/hosts sync-backup-database.yml \
+            --vault-password-file .ansible-vault-password \
+            --tags sync-db \
+            --extra-vars "ansible_user=automation"
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: 'False'
