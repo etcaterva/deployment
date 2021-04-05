@@ -1,0 +1,36 @@
+- name: Sync pull dump, pulling from host "{{groups['ECHALOASUERTE_BACKUP'][0]}}"
+  hosts: ECHALOASUERTE
+  user: root
+  roles:
+  - echaloasuerte-3
+  tasks:
+    - debug:
+        var: echaloasuerte_3_root
+      tags: sync-db
+
+    - name: Dump delta backup
+      command: "{{ echaloasuerte_3_root }}/generate-delta-backup.sh"
+      become: yes
+      become_user: www-data
+      tags: sync-db
+
+    - name: Copy the backup file from prod to dev
+      synchronize:
+        src: "{{ item }}"
+        dest: "{{ item }}"
+        mode: pull
+      delegate_to: "{{ groups['ECHALOASUERTE_BACKUP'][0] }}"
+      register: syncfile
+      run_once: true
+      with_items:
+       - "/tmp/backend-backup"
+      become: yes
+      become_user: www-data
+      tags: sync-db
+
+    - name: Load delta backup
+      command: "{{ echaloasuerte_3_root }}/load-delta-backup.sh"
+      delegate_to: "{{ groups['ECHALOASUERTE_BACKUP'][0] }}"
+      become: yes
+      become_user: www-data
+      tags: sync-db

@@ -14,3 +14,6 @@ ansible_python_interpreter=python3
 
 [MONGO_DATABASES]
 157.90.174.97 node_hostname=prod-het1
+
+[ECHALOASUERTE_BACKUP]
+54.38.215.150

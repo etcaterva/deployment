@@ -146,11 +146,16 @@
 
 # Database cleanup
 
-- name: Install purge script
+- name: Install purge and backup scripts
   template:
-    src: purge-old-draws.sh
-    dest: "{{ echaloasuerte_3_root }}/purge-old-draws.sh"
+    src: "{{ item }}"
+    dest: "{{ echaloasuerte_3_root }}/{{ item }}"
     mode: 0755
+  with_items:
+  - generate-delta-backup.sh
+  - purge-old-draws.sh
+  - load-delta-backup.sh
+  tags: sync-db
   become: yes
   become_user: www-data
 
