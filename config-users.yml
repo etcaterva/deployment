@@ -1,3 +1,6 @@
-- hosts: all
+- hosts:
+  - ECHALOASUERTE
+  - POSTGRESQL_DATABASES
+  - MONGO_DATABASES
   roles:
   - { role: users, become: true }
