@@ -1,6 +1,6 @@
 - name: Sync pull dump, pulling from host "{{groups['ECHALOASUERTE_BACKUP'][0]}}"
   hosts: ECHALOASUERTE
-  user: root
+  user: automation
   roles:
   - echaloasuerte-3
   tasks:
@@ -24,8 +24,6 @@
       run_once: true
       with_items:
        - "/tmp/backend-backup"
-      become: yes
-      become_user: www-data
       tags: sync-db
 
     - name: Load delta backup
