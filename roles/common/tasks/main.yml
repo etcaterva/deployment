@@ -24,7 +24,7 @@
   become: yes
 
 - name: Install pip2
-  command: python2 /tmp/get-pip.py
+  command: python2 /opt/get-pip.py
   args:
     creates: /usr/local/bin/pip2
   become: yes
