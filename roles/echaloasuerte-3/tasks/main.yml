@@ -172,7 +172,7 @@
 
 # Celery task
 - name: Install echaloasuerte-celery-task Systemd service file
-  copy:
+  template:
     src: echaloasuerte-celery-task.service
     dest: /etc/systemd/system/echaloasuerte-celery-task.service
     mode: 0644

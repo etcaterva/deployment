@@ -8,7 +8,7 @@
 - name: restart celery worker
   service:
     name: echaloasuerte-celery-task
-    starte restarted
+    state: restarted
   become: yes
 
 - name: restart all uwsgi
