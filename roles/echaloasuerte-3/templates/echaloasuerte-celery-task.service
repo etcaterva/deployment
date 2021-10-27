@@ -1,0 +1,12 @@
+[Unit]
+Description=eas celery mail service
+After=syslog.target
+Requisite=rabbitmq-server.service
+
+[Service]
+User=www-data
+WorkingDirectory={{ echaloasuerte_3_app }}
+ExecStart={{ echaloasuerte_3_root }}/run-celery-task.sh
+
+[Install]
+WantedBy=multi-user.target
