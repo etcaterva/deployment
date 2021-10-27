@@ -7,7 +7,6 @@ Requisite=rabbitmq-server.service
 User=www-data
 WorkingDirectory={{ echaloasuerte_3_app }}
 ExecStart={{ echaloasuerte_3_root }}/run-celery-task.sh
-Type=simple
 
 [Install]
 WantedBy=multi-user.target
