@@ -27,6 +27,14 @@
   - cd-backend
   notify:
   - restart all uwsgi
+  - restart celery worker
+
+- name: Install rabbitmq
+  apt:
+    pkg:
+    - rabbitmq-server
+    state: present
+    update-cache: yes
 
 - name: Add xip.io to the ALLOWED_HOSTS list when TEST_DEPLOYMENT is defined
   lineinfile:
@@ -144,6 +152,34 @@
   - superuser
 
 
+# Celery task
+- name: Install celery script
+  template:
+    src: "{{ item }}"
+    dest: "{{ echaloasuerte_3_root }}/{{ item }}"
+    mode: 0755
+  with_items:
+  - run-celery-task.sh
+  become: yes
+  become_user: www-data
+  notify:
+  - restart celery worker
+
+- name: Install echaloasuerte-celery-task Systemd service file
+  template:
+    src: echaloasuerte-celery-task.service
+    dest: /etc/systemd/system/echaloasuerte-celery-task.service
+    mode: 0644
+  become: yes
+
+- name: Ensure echaloasuerte-celery-task.service is started and enabled on boot (systemd)
+  service:
+    name: echaloasuerte-celery-task.service
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  become: yes
+
 # Database cleanup
 
 - name: Install purge and backup scripts
@@ -178,6 +214,7 @@
     name: echaloasuerte-purge.timer
     state: started
     enabled: yes
+    daemon_reload: yes
   become: yes
 
 # Frontend
