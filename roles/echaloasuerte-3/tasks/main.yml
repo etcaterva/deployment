@@ -156,7 +156,7 @@
 
 
 
-- name: Install purge, backup and celery scripts
+- name: Install purge and backup scripts
   template:
     src: "{{ item }}"
     dest: "{{ echaloasuerte_3_root }}/{{ item }}"
@@ -165,10 +165,22 @@
   - generate-delta-backup.sh
   - purge-old-draws.sh
   - load-delta-backup.sh
-  - run-celery-task.sh
   tags: sync-db
   become: yes
   become_user: www-data
+
+
+- name: Install celery script
+  template:
+    src: "{{ item }}"
+    dest: "{{ echaloasuerte_3_root }}/{{ item }}"
+    mode: 0755
+  with_items:
+  - run-celery-task.sh
+  become: yes
+  become_user: www-data
+  notify:
+  - restart celery worker
 
 # Celery task
 - name: Install echaloasuerte-celery-task Systemd service file
