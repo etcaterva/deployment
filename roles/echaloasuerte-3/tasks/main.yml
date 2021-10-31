@@ -21,7 +21,7 @@
     update: yes
     accept_hostkey: yes
     force: yes
-    version: "pedro/async-emails"
+    version: "pu/mail-async"
   become: yes
   become_user: www-data
   tags:
