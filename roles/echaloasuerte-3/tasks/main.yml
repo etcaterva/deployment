@@ -152,21 +152,7 @@
   - superuser
 
 
-
-- name: Install purge and backup scripts
-  template:
-    src: "{{ item }}"
-    dest: "{{ echaloasuerte_3_root }}/{{ item }}"
-    mode: 0755
-  with_items:
-  - generate-delta-backup.sh
-  - purge-old-draws.sh
-  - load-delta-backup.sh
-  tags: sync-db
-  become: yes
-  become_user: www-data
-
-
+# Celery task
 - name: Install celery script
   template:
     src: "{{ item }}"
@@ -179,7 +165,6 @@
   notify:
   - restart celery worker
 
-# Celery task
 - name: Install echaloasuerte-celery-task Systemd service file
   template:
     src: echaloasuerte-celery-task.service
@@ -196,6 +181,20 @@
   become: yes
 
 # Database cleanup
+
+- name: Install purge and backup scripts
+  template:
+    src: "{{ item }}"
+    dest: "{{ echaloasuerte_3_root }}/{{ item }}"
+    mode: 0755
+  with_items:
+  - generate-delta-backup.sh
+  - purge-old-draws.sh
+  - load-delta-backup.sh
+  tags: sync-db
+  become: yes
+  become_user: www-data
+
 - name: Install echaloasuerte-purge Systemd service file
   template:
     src: echaloasuerte-purge.service
