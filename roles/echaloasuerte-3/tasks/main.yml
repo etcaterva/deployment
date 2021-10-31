@@ -35,8 +35,6 @@
     - rabbitmq-server
     state: present
     update-cache: yes
-  tags:
-  - cd-backend
 
 - name: Add xip.io to the ALLOWED_HOSTS list when TEST_DEPLOYMENT is defined
   lineinfile:
