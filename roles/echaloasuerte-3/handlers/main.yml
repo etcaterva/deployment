@@ -5,12 +5,6 @@
     sleep: 5
   become: yes
 
-- name: restart celery worker
-  service:
-    name: echaloasuerte-celery-task
-    state: restarted
-  become: yes
-
 - name: restart all uwsgi
   service:
     name: uwsgi{{ item }}
