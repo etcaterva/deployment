@@ -21,6 +21,7 @@
     update: yes
     accept_hostkey: yes
     force: yes
+    version: master
   become: yes
   become_user: www-data
   tags:
