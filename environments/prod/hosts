@@ -1,5 +1,5 @@
 [ECHALOASUERTE]
-157.90.174.97 node_hostname=prod-het1
+prod-het1
 
 [ECHALOASUERTE:vars]
 echaloasuerte_3_git_branch=prod
@@ -10,10 +10,10 @@ echaloasuerte_3_replicas=2
 ansible_python_interpreter=python3
 
 [POSTGRESQL_DATABASES]
-157.90.174.97 node_hostname=prod-het1
+prod-het1
 
 [MONGO_DATABASES]
-157.90.174.97 node_hostname=prod-het1
+prod-het1
 
 [ECHALOASUERTE_BACKUP]
-54.38.215.150
+dev-ovh2
