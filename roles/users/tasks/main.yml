@@ -32,5 +32,4 @@
   - restart ssh
 
 - hostname:
-    name: "{{ node_hostname }}"
-  when: node_hostname is defined
+    name: "{{ inventory_hostname }}"
