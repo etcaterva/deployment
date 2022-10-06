@@ -7,3 +7,5 @@ FQDN:
   - "{{ EN_FQDN }}"
 
 uwsgi_n: 2
+
+eas_ig_cache_file: /var/run/eas-instagram-cache.pickle
