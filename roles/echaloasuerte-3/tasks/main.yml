@@ -85,6 +85,11 @@
   tags:
   - cd-backend
 
+- name: Inject IG pass
+  shell: echo {{ instagram_password }} > {{ echaloasuerte_3_root }}/eas-instagram.pass
+  args:
+      creates: "{{ echaloasuerte_3_root }}/eas-instagram.pass"
+
 - name: Update /etc/hosts to add 'db' IP address
   lineinfile:
     dest: /etc/hosts
