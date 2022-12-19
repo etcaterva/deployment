@@ -19,17 +19,17 @@ jobs:
         id: set_vars
         run: |
           if [[ "${{github.ref}}" == "refs/heads/prod" ]]; then
-              echo "::set-output name=hosts_file::environments/prod/hosts"
+              echo "hosts_file=environments/prod/hosts" >> $GITHUB_OUTPUT
           elif [[ "${{github.ref}}" == "refs/heads/master" ]]; then
-              echo "::set-output name=hosts_file::environments/dev/hosts"
+              echo "hosts_file=environments/dev/hosts" >> $GITHUB_OUTPUT
           else
               echo "BRANCH NOT SUPPORTED: ${{github.ref}}"
               exit 1
           fi
           if [[ "${{github.event_name}}" == "push" ]]; then
-              echo "::set-output name=tags::all"
+              echo "tags=all" >> $GITHUB_OUTPUT
           else
-              echo "::set-output name=tags::${{ github.event.inputs.tags }}"
+              echo "tags=${{ github.event.inputs.tags }}" >> $GITHUB_OUTPUT
           fi
 
 
