@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - master
+      - prod
 jobs:
   generate-vars:
     runs-on: ubuntu-latest
