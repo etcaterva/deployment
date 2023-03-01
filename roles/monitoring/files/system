@@ -4,4 +4,4 @@ check system $HOST
   if cpu(system) > 50% 4 times within 5 cycles then alert
 
 check device rootfs with path /
-    if SPACE usage > 70% then alert
+    if SPACE usage > 80% then alert
