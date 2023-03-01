@@ -1,0 +1,3 @@
+# lamadava balance monitorization
+check program lamadava_balance with path "/etc/monit/scripts/check-lamadava-balance.sh"
+  if status < 5 then alert

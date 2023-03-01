@@ -36,17 +36,26 @@
   notify:
   - restart monit
 
-- name: Create custom monitrc folder
+- name: Create custom monitrc folders
   file:
-    path: /etc/monit/monitrc.d
+    path: "/etc/monit/{{ item }}"
     owner: root
     group: root
     state: directory
+  with_items:
+  - monitrc.d
+  - scripts
 
 - name: Set monit master config file
   template:
     src: monitrc
     dest: "/etc/monit/monitrc"
+    mode: 0700
+
+- name: Install lamadava balance check script
+  template:
+    src: check-lamadava-balance.sh
+    dest: /etc/monit/scripts/check-lamadava-balance.sh
     mode: 0700
 
 - name: Copy monit configuration for services
@@ -61,6 +70,7 @@
   - system
   - docker
   - postgresql
+  - lamadava
 
 - name: Template uwsgi monit configuration file
   template:
