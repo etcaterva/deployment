@@ -74,7 +74,15 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.AUTOMATION_SSH_KEY }}
 
-      - name: run playbook
+      - name: Install/update users and keys
+        run: |
+          ansible-playbook -i ${{ needs.generate-vars.outputs.ansible_hosts }} config-users.yml \
+            --vault-password-file .ansible-vault-password \
+            --user automation
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: 'False'
+
+      - name: Playbook deploy eas3
         run: |
           ansible-playbook -i ${{ needs.generate-vars.outputs.ansible_hosts }} config-eas3.yml \
             --vault-password-file .ansible-vault-password \
