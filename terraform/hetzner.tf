@@ -68,6 +68,11 @@ resource "hcloud_server" "het-prod1" {
     hcloud_ssh_key.pedro-key.id,
     hcloud_ssh_key.david-key.id
   ]
+  lifecycle {
+      ignore_changes = [
+          ssh_keys,
+      ]
+  }
 
   # **Note**: the depends_on is important when directly attaching the
   # server to a network. Otherwise Terraform will attempt to create
