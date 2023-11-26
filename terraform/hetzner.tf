@@ -1,20 +1,3 @@
-terraform {
-  required_providers {
-    hcloud = {
-      source = "hetznercloud/hcloud"
-      version = "1.25.1"
-    }
-  }
-}
-
-variable "hcloud_token" {}
-
-# Configure the Hetzner Cloud Provider
-provider "hcloud" {
-  token = var.hcloud_token
-}
-
-
 # SSH keys
 resource "hcloud_ssh_key" "pedro-key" {
   name = "Pedro"
