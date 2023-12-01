@@ -95,6 +95,7 @@ resource "aws_lambda_function" "eas_email_consumer" {
   function_name = "eas-email-consumer"
   role          = aws_iam_role.eas_mail_consumer_role.arn
   handler       = "aws_lambda.lambda_handler"
+  timeout       = "15"
 
   source_code_hash = file("eas-email-consumer-0.0.3.sha256")
 
@@ -107,6 +108,7 @@ resource "aws_lambda_function" "eas_email_consumer_test" {
   function_name = "eas-email-consumer_test"
   role          = aws_iam_role.eas_mail_consumer_role.arn
   handler       = "aws_lambda.lambda_handler"
+  timeout       = "15"
 
   source_code_hash = file("eas-email-consumer-0.0.4.sha256")
 
