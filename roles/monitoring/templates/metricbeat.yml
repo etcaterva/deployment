@@ -33,6 +33,6 @@ type: system_metrics
 
 output:
   logstash:
-    hosts: ["listener-uk.logz.io:5015"]
+    hosts: ["listener.logz.io:5015"]
     ssl:
       certificate_authorities: ['/etc/filebeat/COMODORSADomainValidationSecureServerCA.crt']
