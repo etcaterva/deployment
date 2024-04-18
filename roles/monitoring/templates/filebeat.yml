@@ -150,22 +150,6 @@ filebeat.inputs:
 # EAS3 django logs
 - type: log
   paths:
-    - /var/log/echaloasuerte-3/echaloasuerte_debug.txt
-  fields:
-    logzio_codec: plain
-    token: {{ logzio_token }}
-    type: echaloasuerte-3
-    env: {{ filebeat_env }}
-    level: debug
-  multiline:
-    pattern: '^\['
-    negate: true
-    match: after
-  fields_under_root: true
-  encoding: utf-8
-  ignore_older: 3h
-- type: log
-  paths:
     - /var/log/echaloasuerte-3/echaloasuerte_err.txt
   fields:
     logzio_codec: plain
@@ -182,7 +166,25 @@ filebeat.inputs:
   ignore_older: 3h
 - type: log
   paths:
-    - /var/log/echaloasuerte-3/echaloasuerte_log.txt
+    - /var/log/echaloasuerte-3/echaloasuerte_debug.txt
+  fields:
+    logzio_codec: plain
+    token: {{ logzio_token }}
+    type: echaloasuerte-3
+    env: {{ filebeat_env }}
+    level: debug
+  multiline:
+    pattern: '^\['
+    negate: true
+    match: after
+  fields_under_root: true
+  include_lines:
+    - '^\[.*\] DEBUG'
+  encoding: utf-8
+  ignore_older: 3h
+- type: log
+  paths:
+    - /var/log/echaloasuerte-3/echaloasuerte_debug.txt
   fields:
     logzio_codec: plain
     token: {{ logzio_token }}
@@ -194,6 +196,26 @@ filebeat.inputs:
     negate: true
     match: after
   fields_under_root: true
+  include_lines:
+    - '^\[.*\] INFO'
+  encoding: utf-8
+  ignore_older: 3h
+- type: log
+  paths:
+    - /var/log/echaloasuerte-3/echaloasuerte_debug.txt
+  fields:
+    logzio_codec: plain
+    token: {{ logzio_token }}
+    type: echaloasuerte-3
+    env: {{ filebeat_env }}
+    level: warning
+  multiline:
+    pattern: '^\['
+    negate: true
+    match: after
+  fields_under_root: true
+  include_lines:
+    - '^\[.*\] warning'
   encoding: utf-8
   ignore_older: 3h
 
