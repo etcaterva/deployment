@@ -84,17 +84,6 @@ filebeat.inputs:
 # Nginx logs
 - type: log
   paths:
-    - /var/log/nginx/access.log
-  fields:
-    logzio_codec: plain
-    token: {{ logzio_token }}
-    type: nginx
-    env: {{ filebeat_env }}
-  fields_under_root: true
-  encoding: utf-8
-  ignore_older: 3h
-- type: log
-  paths:
     - /var/log/nginx/error.log
   fields:
     logzio_codec: plain
