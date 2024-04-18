@@ -1,7 +1,7 @@
 ---
 - set_fact:
     monit_version: "5.20.0"
-    filebeat_version: "6.x"
+    filebeat_version: "8.x"
 
 - name: Fetch monit binary
   unarchive:

@@ -245,8 +245,6 @@ filebeat.inputs:
   encoding: utf-8
   ignore_older: 3h
 
-filebeat.registry_file: /var/lib/filebeat/registry
-
 ############################# Output ##########################################
 
 output:
