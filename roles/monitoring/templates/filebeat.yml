@@ -229,6 +229,8 @@ filebeat.inputs:
     type: fail2ban
     env: {{ filebeat_env }}
   fields_under_root: true
+  exclude_lines:
+    - '[echaloasuerte] Found'
   encoding: utf-8
   ignore_older: 3h
 
