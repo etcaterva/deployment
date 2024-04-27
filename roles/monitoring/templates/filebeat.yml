@@ -230,7 +230,7 @@ filebeat.inputs:
     env: {{ filebeat_env }}
   fields_under_root: true
   exclude_lines:
-    - '[echaloasuerte] Found'
+    - '.*[echaloasuerte] Found'
   encoding: utf-8
   ignore_older: 3h
 
