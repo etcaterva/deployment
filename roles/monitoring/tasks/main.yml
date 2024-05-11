@@ -65,12 +65,18 @@
     mode: 0700
   with_items:
   - fail2ban
-  - mongodb
   - nginx
   - system
   - docker
   - postgresql
   - lamadava
+
+- name: Delete old monit configuration files
+  file:
+    path: "/etc/monit/monitrc.d/{{ item }}"
+    state: absent
+  with_items:
+  - mongodb
 
 - name: Template uwsgi monit configuration file
   template:
