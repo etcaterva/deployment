@@ -3,6 +3,12 @@
 - set_fact:
     mongodb_datadir_prefix: "/var/lib/mongodb"
 
+- name: Remove custom mongod.conf file
+  ansible.builtin.file:
+    path: /etc/mongod.conf
+    state: absent
+  become: yes
+
 - name: Install the gpg package needed for apt_key
   apt:
     name: gpg
@@ -12,55 +18,24 @@
 - apt_key:
     keyserver: hkp://keyserver.ubuntu.com:80
     id: E52529D4
+    state: absent
   become: yes
 
 - apt_repository:
     repo: deb http://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse
-    state: present
+    state: absent
   become: yes
 
-- name: Install the mongodb package
+- name: Uninstall the mongodb package
   apt:
     name: "{{ item }}"
-    state: present
-    update-cache: yes
+    state: absent
     force: yes
   become: yes
   with_items:
   - mongodb-org
 
-- name: Install the latest pymongo package
+- name: Uninstall pymongo package
   pip:
     name: pymongo
-    state: latest
-
-- template:
-    src: mongod.conf
-    dest: /etc/mongod.conf
-  become: yes
-  notify:
-  - restart mongod
-
-- name: Start mongod before creating users
-  service:
-    name: mongod
-    state: restarted
-  become: yes
-
-- mongodb_user:
-    database: admin
-    name: "{{ mongodb_admin_user }}"
-    password: "{{ mongodb_admin_password }}"
-    roles: userAdminAnyDatabase
-    state: present
-  register: result_mongodb_user
-  until: not result_mongodb_user is failed
-  retries: 5
-  delay: 1
-
-- copy:
-    src: indexes.js
-    dest: /tmp
-
-- name: Add mongodb indexes
-  shell: mongo < /tmp/indexes.js
+    state: absent
