@@ -1,146 +1,44 @@
-- name: Create echaloasuerte application tree
-  file:
-    path: "{{ item }}"
-    state: directory
-    owner: www-data
-    group: www-data
-    recurse: yes
-  become: yes
-  with_items:
-  - "{{ echaloasuerte_root }}"
-  - "{{ echaloasuerte_static }}"
-  - "{{ echaloasuerte_app }}"
-  - "{{ echaloasuerte_venv }}"
-  - "{{ echaloasuerte_logs }}"
 
-- name: Clone/update repository in {{ echaloasuerte_app }}
-  git:
-    repo: git://github.com/etcaterva/EchaloASuerte.git
-    dest: "{{ echaloasuerte_app }}"
-    update: yes
-    version: "{{ echaloasuerte_git_branch }}"
-    accept_hostkey: yes
-    force: yes
-  become: yes
-  become_user: www-data
-  notify:
-  - restart all uwsgi
-
-- name: Add xip.io to the ALLOWED_HOSTS list when TEST_DEPLOYMENT is defined
-  lineinfile:
-    dest: "{{ echaloasuerte_app }}/echaloasuerte/settings/common.py"
-    regexp: "xip.io"
-    insertafter: "^ALLOWED_HOSTS"
-    line: "    '.xip.io',"
-  become: yes
-  become_user: www-data
-  when: TEST_DEPLOYMENT is defined
-
-- name: Manually create the initial virtualenv
-  command: virtualenv {{ echaloasuerte_venv }} -p python2
-  args:
-    creates: "{{ echaloasuerte_venv }}/bin/python2"
-  become: yes
-  become_user: www-data
-
-- name: Setup virtual environment for the app using requirements.txt
-  pip:
-    requirements: "{{ echaloasuerte_app }}/requirements.txt"
-    virtualenv: "{{ echaloasuerte_venv }}"
-    virtualenv_python: python2
-  become: yes
-  become_user: www-data
-
-- name: Install python packages needed outside of the virtual environment
+- name: Delete python packages needed outside of the virtual environment (this was pytz and pymongo)
   pip:
     name: "{{ item }}"
+    state: absent
   with_items:
-  - pytz
   - pymongo
   become: yes
 
-- name: Add virtualenv info in echaloasuerte.wsgi
-  template:
-    src: echaloasuerte.wsgi
-    dest: "{{ echaloasuerte_app }}/echaloasuerte.wsgi"
-  become: yes
-  become_user: www-data
-  notify:
-  - restart all uwsgi
-
-- name: Compile messages of django application
-  shell: |
-         {{ echaloasuerte_venv }}/bin/python {{ echaloasuerte_app }}/manage.py compilemessages
-  become: yes
-  become_user: www-data
-
-- name: Synchronize django app database
-  django_manage:
-    command: syncdb
-    app_path: "{{ echaloasuerte_app }}"
-    virtualenv: "{{ echaloasuerte_venv }}"
-  become: yes
-  become_user: www-data
-
-- name: Collect statics files of django application
-  django_manage:
-    command: collectstatic
-    app_path: "{{ echaloasuerte_app }}"
-    virtualenv: "{{ echaloasuerte_venv }}"
-  become: yes
-  become_user: www-data
-
-- name: Fix owners of echaloasuerte application tree
-  file:
-    path: "{{ item }}"
-    state: directory
-    owner: www-data
-    group: www-data
-    recurse: yes
-  with_items:
-  - "{{ echaloasuerte_root }}"
-  - "{{ echaloasuerte_static }}"
-  - "{{ echaloasuerte_app }}"
-  - "{{ echaloasuerte_venv }}"
-  - "{{ echaloasuerte_logs }}"
-
-- name: Create uwsgi config file for echaloasuerte
-  template:
-    src: echaloasuerte-uwsgi.ini
-    dest: /etc/uwsgi{{ item }}/sites/echaloasuerte.ini
+- name: Remove uwsgi files
+  ansible.builtin.file:
+    path: /etc/uwsgi{{ item }}/sites/echaloasuerte.ini
+    state: absent
   become: yes
   with_sequence: count={{ uwsgi_n }}
   notify:
   - restart all uwsgi
-  tags:
-  - uwsgi
 
 
-- name: Create the nginx config file for echaloasuerte
-  template:
-    src: echaloasuerte-nginx.conf
-    dest: /etc/nginx/sites-available/echaloasuerte.conf
+- name: Remove uwsgi files
+  ansible.builtin.file:
+    path: /etc/nginx/sites-available/echaloasuerte.conf
+    state: absent
+  become: yes
   notify:
   - restart nginx
-  tags:
-  - nginx-conf
 
-- name: Enable nginx site ecaheloasuerte
+- name: Disable nginx site ecaheloasuerte
   file:
-    src: ../sites-available/echaloasuerte.conf
     dest: /etc/nginx/sites-enabled/echaloasuerte.conf
-    state: link
+    state: absent
   notify:
   - restart nginx
 
-- name: Ensure nginx is running
-  service:
-    name: nginx
-    state: started
+- name: Force all notified handlers to run at this point, not waiting for normal sync points
+  ansible.builtin.meta: flush_handlers
 
-- name: Purge cloudflare cache
-  shell: 'curl -X DELETE "https://api.cloudflare.com/client/v4/zones/{{item}}/purge_cache" -H "X-Auth-Email: mariocj89@gmail.com" -H "X-Auth-Key: {{cloudflare_api_token}}" --data "{\"purge_everything\":true}" -H "Content-Type: application/json"'
+- name: Recursively remove directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
   with_items:
-    - "{{cloudflare_echaloasuerte_id}}"
-    - "{{cloudflare_woreep_id}}"
-    - "{{cloudflare_chooserandom_id}}"
+  - "{{ echaloasuerte_root }}"
+  - "{{ echaloasuerte_logs }}"
