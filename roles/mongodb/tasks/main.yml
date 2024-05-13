@@ -3,6 +3,13 @@
 - set_fact:
     mongodb_datadir_prefix: "/var/lib/mongodb"
 
+- name: Stop and disable mongod
+  service:
+    name: mongod
+    state: stopped
+    enabled: false
+  become: yes
+
 - name: Remove custom mongod.conf file
   ansible.builtin.file:
     path: /etc/mongod.conf
@@ -30,10 +37,10 @@
   apt:
     name: "{{ item }}"
     state: absent
-    force: yes
+    purge: yes
   become: yes
   with_items:
-  - mongodb-org
+  - mongodb-org*
 
 - name: Uninstall pymongo package
   pip:
