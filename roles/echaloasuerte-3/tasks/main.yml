@@ -232,7 +232,7 @@
     healthcheck:
       # Check if eas server is healthy by curl'ing the server.
       # If this fails or timeouts, the healthcheck fails.
-      test: ["CMD", "curl", "--fail", "http://localhost:80"]
+      test: ["CMD", "curl", "--fail", "http://localhost:80/api/bff/healthcheck"]
       interval: 1m30s
       timeout: 30s
       retries: 10
@@ -267,7 +267,7 @@
     healthcheck:
       # Check if eas server is healthy by curl'ing the server.
       # If this fails or timeouts, the healthcheck fails.
-      test: ["CMD", "curl", "--fail", "http://localhost:80"]
+      test: ["CMD", "curl", "--fail", "http://localhost:80/api/bff/healthcheck"]
       interval: 1m30s
       timeout: 30s
       retries: 10
