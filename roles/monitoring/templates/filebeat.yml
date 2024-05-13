@@ -35,25 +35,6 @@ filebeat.inputs:
   encoding: utf-8
   ignore_older: 3h
 
-# EAS2 uwsgi logs
-- type: log
-  paths:
-    - /var/log/echaloasuerte/echaloasuerte-uwsgi*-err.log
-  exclude_lines:
-    - '^worker . lifetime reached'
-    - '^Respawned uWSGI worker'
-    - '^spawned uWSGI worker'
-    - '^announcing my loyalty to the Emperor'
-  fields:
-    logzio_codec: plain
-    token: {{ logzio_token }}
-    type: echaloasuerte-uwsgi
-    env: {{ filebeat_env }}
-    level: error
-  fields_under_root: true
-  encoding: utf-8
-  ignore_older: 3h
-
 # PostreSQL database logs
 - type: log
   paths:
@@ -64,19 +45,6 @@ filebeat.inputs:
     type: PostgreSQL
     env: {{ filebeat_env }}
     level: error
-  fields_under_root: true
-  encoding: utf-8
-  ignore_older: 3h
-
-# MongoDB database logs
-- type: log
-  paths:
-    - /var/log/mongodb/mongod.log
-  fields:
-    logzio_codec: plain
-    token: {{ logzio_token }}
-    type: mongodb
-    env: {{ filebeat_env }}
   fields_under_root: true
   encoding: utf-8
   ignore_older: 3h
@@ -93,56 +61,6 @@ filebeat.inputs:
     level: error
   exclude_lines:
     - ".*access forbidden by rule.*"
-  fields_under_root: true
-  encoding: utf-8
-  ignore_older: 3h
-
-# EAS2 django logs
-- type: log
-  paths:
-    - /var/log/echaloasuerte/echaloasuerte_debug.txt
-  fields:
-    logzio_codec: plain
-    token: {{ logzio_token }}
-    type: echaloasuerte
-    env: {{ filebeat_env }}
-    level: debug
-  multiline:
-    pattern: '^\['
-    negate: true
-    match: after
-  fields_under_root: true
-  encoding: utf-8
-  ignore_older: 3h
-- type: log
-  paths:
-    - /var/log/echaloasuerte/echaloasuerte_err.txt
-  fields:
-    logzio_codec: plain
-    token: {{ logzio_token }}
-    type: echaloasuerte
-    env: {{ filebeat_env }}
-    level: error
-  multiline:
-    pattern: '^\['
-    negate: true
-    match: after
-  fields_under_root: true
-  encoding: utf-8
-  ignore_older: 3h
-- type: log
-  paths:
-    - /var/log/echaloasuerte/echaloasuerte_log.txt
-  fields:
-    logzio_codec: plain
-    token: {{ logzio_token }}
-    type: echaloasuerte
-    env: {{ filebeat_env }}
-    level: info
-  multiline:
-    pattern: '^\['
-    negate: true
-    match: after
   fields_under_root: true
   encoding: utf-8
   ignore_older: 3h
