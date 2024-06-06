@@ -3,7 +3,7 @@
 export EAS_LAMADAVA_APIK={{ lamadava_token }}
 
 
-url="https://api.lamadava.com/sys/balance"
+url="https://api.hikerapi.com/sys/balance"
 api_key=${EAS_LAMADAVA_APIK}
 if [ -z "$api_key" ]; then
   echo "Set EAS_LAMADAVA_APIK env var"
@@ -36,4 +36,5 @@ if [ "$balance" -le 0 ]; then
   exit 1
 fi
 
+echo $balance
 exit $balance
