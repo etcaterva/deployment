@@ -52,11 +52,14 @@
     dest: "/etc/monit/monitrc"
     mode: 0700
 
-- name: Install lamadava balance check script
+- name: Install balance check scripts
   template:
-    src: check-lamadava-balance.sh
-    dest: /etc/monit/scripts/check-lamadava-balance.sh
+    src: "{{ item }}"
+    dest: "/etc/monit/scripts/{{ item }}"
     mode: 0700
+  with_items:
+  - check-lamadava-balance.sh
+  - check-lamatok-balance.sh
 
 - name: Copy monit configuration for services
   copy:
@@ -70,6 +73,7 @@
   - docker
   - postgresql
   - lamadava
+  - lamatok
 
 - name: Delete old monit configuration files
   file:
