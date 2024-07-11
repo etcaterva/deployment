@@ -1,5 +1,0 @@
----
-- import_playbook: config-users.yml
-- import_playbook: config-mongodb.yml
-- import_playbook: config-eas2.yml
-- import_playbook: config-monitoring.yml
