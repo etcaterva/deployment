@@ -91,13 +91,13 @@ resource "aws_iam_role_policy_attachment" "eas_mail_consumer_role_ses_full" {
 # Lambda function
 
 resource "aws_lambda_function" "eas_email_consumer" {
-  filename      = "eas-email-consumer-0.0.5.zip"
+  filename      = "eas-email-consumer-0.0.6.zip"
   function_name = "eas-email-consumer"
   role          = aws_iam_role.eas_mail_consumer_role.arn
   handler       = "aws_lambda.lambda_handler"
   timeout       = "15"
 
-  source_code_hash = file("eas-email-consumer-0.0.5.sha256")
+  source_code_hash = file("eas-email-consumer-0.0.6.sha256")
 
   runtime = "python3.9"
 
