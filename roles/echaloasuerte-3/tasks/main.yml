@@ -351,6 +351,13 @@
   - restart nginx
   - purge cloudflare cache
 
+- name: Test NGINX configuration for validity
+  ansible.builtin.command:
+    cmd: nginx -t
+  register: nginx_test_result
+  changed_when: false
+  failed_when: nginx_test_result.rc != 0
+
 - name: Ensure nginx is running
   service:
     name: nginx
