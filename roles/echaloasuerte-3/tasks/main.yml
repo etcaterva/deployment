@@ -357,6 +357,7 @@
   register: nginx_test_result
   changed_when: false
   failed_when: nginx_test_result.rc != 0
+  become: yes
 
 - name: Ensure nginx is running
   service:
