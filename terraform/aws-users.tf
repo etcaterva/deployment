@@ -39,8 +39,18 @@ resource "aws_iam_policy" "mfa_enforce_policy" {
     "Version": "2012-10-17",
     "Statement": [
       {
+        "Sid": "DenyAllExceptListedIfNoMFA",
         "Effect": "Deny",
-        "Action": "*",
+        "NotAction": [
+          "iam:CreateVirtualMFADevice",
+          "iam:EnableMFADevice",
+          "iam:GetUser",
+          "iam:GetMFADevice",
+          "iam:ListMFADevices",
+          "iam:ListVirtualMFADevices",
+          "iam:ResyncMFADevice",
+          "sts:GetSessionToken"
+        ],
         "Resource": "*",
         "Condition": {
           "BoolIfExists": {
