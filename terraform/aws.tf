@@ -99,6 +99,13 @@ resource "aws_lambda_function" "eas_email_consumer" {
 
   source_code_hash = file("eas-email-consumer-0.0.9.sha256")
 
+  environment {
+    variables = {
+      EAS_WAAPI_TOKEN      = var.eas_waapi_token
+      EAS_WHATSAPP_TOKEN   = var.eas_whatsapp_token
+    }
+  }
+
   runtime = "python3.9"
 
 }
@@ -111,6 +118,13 @@ resource "aws_lambda_function" "eas_email_consumer_test" {
   timeout       = "15"
 
   source_code_hash = file("eas-email-consumer-0.0.9.sha256")
+
+  environment {
+    variables = {
+      EAS_WAAPI_TOKEN      = var.eas_waapi_token
+      EAS_WHATSAPP_TOKEN   = var.eas_whatsapp_token
+    }
+  }
 
   runtime = "python3.9"
 
