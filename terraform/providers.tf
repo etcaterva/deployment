@@ -16,8 +16,6 @@ provider "aws" {
   region                   = "us-east-2"
 }
 
-variable "hcloud_token" {}
-
 # Configure the Hetzner Cloud Provider
 provider "hcloud" {
   token = var.hcloud_token
