@@ -90,14 +90,39 @@ resource "aws_iam_role_policy_attachment" "eas_mail_consumer_role_ses_full" {
 
 # Lambda function
 
+resource "null_resource" "download_lambda_prod" {
+  provisioner "local-exec" {
+    command = "./download-eas-secret-santa-release.sh ${var.eas_secret_santa_version_prod}"
+    environment = {
+      GITHUB_TOKENS = var.releases_ro_token
+    }
+  }
+  triggers = {
+    version = var.eas_secret_santa_version_prod
+  }
+}
+
+resource "null_resource" "download_lambda_test" {
+  provisioner "local-exec" {
+    command = "./download-eas-secret-santa-release.sh ${var.eas_secret_santa_version_test}"
+    environment = {
+      GITHUB_TOKENS = var.releases_ro_token
+    }
+  }
+  triggers = {
+    version = var.eas_secret_santa_version_test
+  }
+
+}
+
 resource "aws_lambda_function" "eas_email_consumer" {
-  filename      = "eas-email-consumer-0.1.0.zip"
+  filename      = "releases/eas-email-consumer-${var.eas_secret_santa_version_prod}.zip"
   function_name = "eas-email-consumer"
   role          = aws_iam_role.eas_mail_consumer_role.arn
   handler       = "aws_lambda.lambda_handler"
   timeout       = "15"
 
-  source_code_hash = file("eas-email-consumer-0.1.0.sha256")
+  source_code_hash = file("releases/eas-email-consumer-${var.eas_secret_santa_version_prod}.sha256")
 
   environment {
     variables = {
@@ -107,17 +132,18 @@ resource "aws_lambda_function" "eas_email_consumer" {
   }
 
   runtime = "python3.9"
+  depends_on = [null_resource.download_lambda_prod]
 
 }
 
 resource "aws_lambda_function" "eas_email_consumer_test" {
-  filename      = "eas-email-consumer-0.1.0.zip"
+  filename      = "releases/eas-email-consumer-${var.eas_secret_santa_version_test}.zip"
   function_name = "eas-email-consumer_test"
   role          = aws_iam_role.eas_mail_consumer_role.arn
   handler       = "aws_lambda.lambda_handler"
   timeout       = "15"
 
-  source_code_hash = file("eas-email-consumer-0.1.0.sha256")
+  source_code_hash = file("releases/eas-email-consumer-${var.eas_secret_santa_version_test}.sha256")
 
   environment {
     variables = {
@@ -127,6 +153,7 @@ resource "aws_lambda_function" "eas_email_consumer_test" {
   }
 
   runtime = "python3.9"
+  depends_on = [null_resource.download_lambda_test]
 
 }
 
