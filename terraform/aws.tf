@@ -111,13 +111,13 @@ resource "aws_lambda_function" "eas_email_consumer" {
 }
 
 resource "aws_lambda_function" "eas_email_consumer_test" {
-  filename      = "eas-email-consumer-0.1.0.zip"
+  filename      = "eas-email-consumer-0.2.0.zip"
   function_name = "eas-email-consumer_test"
   role          = aws_iam_role.eas_mail_consumer_role.arn
   handler       = "aws_lambda.lambda_handler"
   timeout       = "15"
 
-  source_code_hash = file("eas-email-consumer-0.1.0.sha256")
+  source_code_hash = file("eas-email-consumer-0.2.0.sha256")
 
   environment {
     variables = {
