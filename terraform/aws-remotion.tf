@@ -294,19 +294,37 @@ data "aws_region" "current" {}
 # Create the S3 bucket with dynamic region name
 resource "aws_s3_bucket" "remotion_bucket" {
   bucket = "remotionlambda-${data.aws_region.current.name}"
-
-  # Enforce object ownership settings
-  object_ownership = "BucketOwnerEnforced"
-
-  # Block public ACLs and ignore public ACLs (optional)
-  block_public_acls = true
-  ignore_public_acls = true
-
-  acl = "private"
   tags = {
     Name        = "remotionlambda-${data.aws_region.current.name}"
     Environment = "Production"
   }
+}
+
+
+resource "aws_s3_bucket_ownership_controls" "remotion_bucket_ownership_controls" {
+  bucket = aws_s3_bucket.remotion_bucket.id
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "remotion_bucket_public_access_block" {
+  bucket = aws_s3_bucket.remotion_bucket.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
+resource "aws_s3_bucket_acl" "remotion_bucket_acl" {
+  depends_on = [
+    aws_s3_bucket_ownership_controls.remotion_bucket_ownership_controls,
+    aws_s3_bucket_public_access_block.remotion_bucket_public_access_block,
+  ]
+
+  bucket = aws_s3_bucket.remotion_bucket.id
+  acl    = "public-read"
 }
 
 output "remotion_bucket_name" {
