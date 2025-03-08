@@ -295,6 +295,14 @@ data "aws_region" "current" {}
 resource "aws_s3_bucket" "remotion_bucket" {
   bucket = "remotionlambda-${data.aws_region.current.name}"
 
+  # Enforce object ownership settings
+  object_ownership = "BucketOwnerEnforced"
+
+  # Block public ACLs and ignore public ACLs (optional)
+  block_public_acls = true
+  ignore_public_acls = true
+
+  acl = "private"
   tags = {
     Name        = "remotionlambda-${data.aws_region.current.name}"
     Environment = "Production"
