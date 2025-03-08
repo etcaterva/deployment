@@ -158,10 +158,12 @@ resource "aws_iam_access_key" "remotion_user_access_key" {
 
 output "remotion_user_access_key_id" {
   value = aws_iam_access_key.remotion_user_access_key.id
+  sensitive = true
 }
 
 output "remotion_user_secret_access_key" {
   value = aws_iam_access_key.remotion_user_access_key.secret
+  sensitive = true
 }
 
 resource "aws_iam_user_policy" "remotion_user_policy" {
