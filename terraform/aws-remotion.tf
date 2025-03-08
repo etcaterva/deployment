@@ -277,8 +277,18 @@ resource "aws_iam_user_policy" "remotion_user_policy" {
           "arn:aws:lambda:*:678892195805:layer:remotion-binaries-*",
           "arn:aws:lambda:*:580247275435:layer:LambdaInsightsExtension*"
         ]
+      },
+      {
+        Sid    = "SessionTokenAccess"
+        Effect = "Allow"
+        Action = ["sts:GetSessionToken"]
+        Resource = ["*"]
       }
     ]
   })
 }
 
+resource "aws_iam_user_policy_attachment" "attach_remotion_user_policy" {
+  user       = aws_iam_user.remotion_user.name
+  policy_arn = aws_iam_policy.remotion_user_policy.arn
+}
