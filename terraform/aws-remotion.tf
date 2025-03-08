@@ -300,6 +300,18 @@ resource "aws_s3_bucket" "remotion_bucket" {
   }
 }
 
+resource "aws_s3_bucket_lifecycle_configuration" "remotion_lifecycle" {
+  bucket = aws_s3_bucket.remotion_bucket.id
+
+  rule {
+    id     = "delete-old-objects"
+    status = "Enabled"
+
+    expiration {
+      days = 1
+    }
+  }
+}
 
 resource "aws_s3_bucket_ownership_controls" "remotion_bucket_ownership_controls" {
   bucket = aws_s3_bucket.remotion_bucket.id
