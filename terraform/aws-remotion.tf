@@ -304,8 +304,12 @@ resource "aws_s3_bucket_lifecycle_configuration" "remotion_lifecycle" {
   bucket = aws_s3_bucket.remotion_bucket.id
 
   rule {
-    id     = "delete-old-objects"
+    id     = "delete-old-renders"
     status = "Enabled"
+
+    filter {
+      prefix = "renders/"
+    }
 
     expiration {
       days = 1
