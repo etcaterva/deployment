@@ -287,8 +287,3 @@ resource "aws_iam_user_policy" "remotion_user_policy" {
     ]
   })
 }
-
-resource "aws_iam_user_policy_attachment" "attach_remotion_user_policy" {
-  user       = aws_iam_user.remotion_user.name
-  policy_arn = aws_iam_user_policy.remotion_user_policy.arn
-}
