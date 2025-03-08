@@ -147,3 +147,136 @@ resource "aws_iam_role_policy_attachment" "remotion_attach_logs_lambda_stream" {
   role       = aws_iam_role.remotion_lambda_role.name
   policy_arn = aws_iam_policy.remotion_logs_lambda_stream.arn
 }
+
+resource "aws_iam_user" "remotion_user" {
+  name = "remotion-user"
+}
+
+resource "aws_iam_access_key" "remotion_user_access_key" {
+  user = aws_iam_user.remotion_user.name
+}
+
+output "remotion_user_access_key_id" {
+  value = aws_iam_access_key.remotion_user_access_key.id
+}
+
+output "remotion_user_secret_access_key" {
+  value = aws_iam_access_key.remotion_user_access_key.secret
+}
+
+resource "aws_iam_user_policy" "remotion_user_policy" {
+  name = "remotion-user-policy"
+  user = aws_iam_user.remotion_user.name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "HandleQuotas"
+        Effect    = "Allow"
+        Action    = [
+          "servicequotas:GetServiceQuota",
+          "servicequotas:GetAWSDefaultServiceQuota",
+          "servicequotas:RequestServiceQuotaIncrease",
+          "servicequotas:ListRequestedServiceQuotaChangeHistoryByQuota"
+        ]
+        Resource  = ["*"]
+      },
+      {
+        Sid       = "PermissionValidation"
+        Effect    = "Allow"
+        Action    = [
+          "iam:SimulatePrincipalPolicy"
+        ]
+        Resource  = ["*"]
+      },
+      {
+        Sid       = "LambdaInvokation"
+        Effect    = "Allow"
+        Action    = [
+          "iam:PassRole"
+        ]
+        Resource  = [
+          "arn:aws:iam::*:role/remotion-lambda-role"
+        ]
+      },
+      {
+        Sid       = "Storage"
+        Effect    = "Allow"
+        Action    = [
+          "s3:GetObject",
+          "s3:DeleteObject",
+          "s3:PutObjectAcl",
+          "s3:PutObject",
+          "s3:CreateBucket",
+          "s3:ListBucket",
+          "s3:GetBucketLocation",
+          "s3:PutBucketAcl",
+          "s3:DeleteBucket",
+          "s3:PutBucketOwnershipControls",
+          "s3:PutBucketPublicAccessBlock",
+          "s3:PutLifecycleConfiguration"
+        ]
+        Resource  = [
+          "arn:aws:s3:::remotionlambda-*"
+        ]
+      },
+      {
+        Sid       = "BucketListing"
+        Effect    = "Allow"
+        Action    = [
+          "s3:ListAllMyBuckets"
+        ]
+        Resource  = ["*"]
+      },
+      {
+        Sid       = "FunctionListing"
+        Effect    = "Allow"
+        Action    = [
+          "lambda:ListFunctions",
+          "lambda:GetFunction"
+        ]
+        Resource  = ["*"]
+      },
+      {
+        Sid       = "FunctionManagement"
+        Effect    = "Allow"
+        Action    = [
+          "lambda:InvokeAsync",
+          "lambda:InvokeFunction",
+          "lambda:CreateFunction",
+          "lambda:DeleteFunction",
+          "lambda:PutFunctionEventInvokeConfig",
+          "lambda:PutRuntimeManagementConfig",
+          "lambda:TagResource"
+        ]
+        Resource  = [
+          "arn:aws:lambda:*:*:function:remotion-render-*"
+        ]
+      },
+      {
+        Sid       = "LogsRetention"
+        Effect    = "Allow"
+        Action    = [
+          "logs:CreateLogGroup",
+          "logs:PutRetentionPolicy"
+        ]
+        Resource  = [
+          "arn:aws:logs:*:*:log-group:/aws/lambda/remotion-render-*"
+        ]
+      },
+      {
+        Sid       = "FetchBinaries"
+        Effect    = "Allow"
+        Action    = [
+          "lambda:GetLayerVersion"
+        ]
+        Resource  = [
+          "arn:aws:lambda:*:678892195805:layer:remotion-binaries-*",
+          "arn:aws:lambda:*:580247275435:layer:LambdaInsightsExtension*"
+        ]
+      }
+    ]
+  })
+}
+
