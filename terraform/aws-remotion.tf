@@ -292,7 +292,7 @@ resource "aws_iam_user_policy" "remotion_user_policy" {
 data "aws_region" "current" {}
 
 # Create the S3 bucket with dynamic region name
-resource "aws_s3_bucket" "remotionlambda" {
+resource "aws_s3_bucket" "remotion_bucket" {
   bucket = "remotionlambda-${data.aws_region.current.name}"
 
   tags = {
