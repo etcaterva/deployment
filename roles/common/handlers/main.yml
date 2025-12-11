@@ -1,8 +1,7 @@
 - name: purge cloudflare cache
-  shell: 'curl -X DELETE "https://api.cloudflare.com/client/v4/zones/{{item}}/purge_cache" -H "X-Auth-Email: mariocj89@gmail.com" -H "X-Auth-Key: {{cloudflare_api_token}}" --data "{\"purge_everything\":true}" -H "Content-Type: application/json"'
+  shell: 'curl -X POST "https://api.cloudflare.com/client/v4/zones/{{item}}/purge_cache" -H "Authorization: Bearer {{cloudflare_api_token}}" -H "Content-Type: application/json" --data "{\"purge_everything\":true}"'
   with_items:
     - "{{cloudflare_echaloasuerte_id}}"
-    - "{{cloudflare_woreep_id}}"
     - "{{cloudflare_chooserandom_id}}"
 
 - name: restart fail2ban

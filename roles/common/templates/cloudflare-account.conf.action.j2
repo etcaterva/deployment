@@ -26,10 +26,9 @@ actioncheck =
 #          <time>  unix timestamp of the ban time
 # Values:  CMD
 #
-# API v4
+# API v4 - Using API Token
 actionban = curl -X POST 'https://api.cloudflare.com/client/v4/accounts/<cfaccount>/firewall/access_rules/rules' \
-              -H 'X-Auth-Email: <cfuser>' \
-              -H 'X-Auth-Key: <cftoken>' \
+              -H 'Authorization: Bearer <cftoken>' \
               -H "Content-Type: application/json" \
               --data '{"mode":"block","configuration":{"target":"ip","value":"<ip>"},"notes":"fail2ban"}'
 
@@ -42,19 +41,16 @@ actionban = curl -X POST 'https://api.cloudflare.com/client/v4/accounts/<cfaccou
 #          <time>  unix timestamp of the ban time
 # Values:  CMD
 #
-# API v4
+# API v4 - Using API Token
 actionunban = curl -X DELETE "https://api.cloudflare.com/client/v4/accounts/<cfaccount>/firewall/access_rules/rules/$( \
                 curl -X GET "https://api.cloudflare.com/client/v4/accounts/<cfaccount>/firewall/access_rules/rules?page=1&per_page=20&mode=block&configuration.target=ip&configuration.value=<ip>&match=all" \
-                  -H "X-Auth-Email: <cfuser>" \
-                  -H "X-Auth-Key: <cftoken>" \
+                  -H "Authorization: Bearer <cftoken>" \
                   -H "Content-Type: application/json" | jq -r '.result[0] | .id')" \
-                -H "X-Auth-Email: <cfuser>" \
-                -H "X-Auth-Key: <cftoken>" \
+                -H "Authorization: Bearer <cftoken>" \
                 -H "Content-Type: application/json"
 
 [Init]
 
-cfuser = {{ cf_user }}
 cftoken = {{ cf_token }}
 cfaccount = {{ cf_account }}
 
