@@ -4,7 +4,7 @@ set alert {{ mail }} but not on {instance, action}
 {% endfor %}
 
 set mail-format {
-    from: {{ alerts_mail_username }}
+    from: {{ alerts_mail_from | default(alerts_mail_username) }}
     subject: [echaloasuerte][monitoring] $SERVICE $EVENT at $DATE
     message: Monit $ACTION $SERVICE at $DATE on $HOST: $DESCRIPTION.
         by monit
