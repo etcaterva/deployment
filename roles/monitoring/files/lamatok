@@ -1,3 +1,3 @@
 # lamatok balance monitorization
 check program lamatok_balance with path "/etc/monit/scripts/check-lamatok-balance.sh"
-  if status < 10 then alert
+  if status < 50 then alert
