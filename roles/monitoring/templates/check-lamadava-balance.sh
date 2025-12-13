@@ -10,11 +10,12 @@ if [ -z "$api_key" ]; then
   exit 1
 fi
 
-response=$(curl -s -G "$url" --data-urlencode "access_key=$api_key")
+response=$(curl -s -k --connect-timeout 10 --max-time 30 -G "$url" --data-urlencode "access_key=$api_key")
 # Check if the curl command was successful
+# Exit 100 to prevent sending alert to monit
 if [ $? -ne 0 ]; then
   echo "API call failed"
-  exit 1
+  exit 100
 fi
 
 # Extract balance from the JSON response
@@ -29,7 +30,7 @@ balance=${balance%.*}
 
 if ! [[ "$balance" =~ ^[0-9]+$ ]]; then
   echo "Balance is not a valid integer: $balance"
-  exit 20
+  exit 1
 fi
 
 if [ "$balance" -le 0 ]; then
