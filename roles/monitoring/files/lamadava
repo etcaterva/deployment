@@ -1,4 +1,4 @@
 # lamadava balance monitorization
 check program lamadava_balance with path "/etc/monit/scripts/check-lamadava-balance.sh"
-  every 3600 seconds
+  every 30 cycles
   if status < 50 then alert
